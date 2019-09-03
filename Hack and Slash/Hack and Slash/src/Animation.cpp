@@ -1,11 +1,11 @@
 #include "Animation.h"
 
-Animation::Animation(string name) : m_name(name) {
+Animation::Animation(string name) : name(name) {
 
 }
 
 int Animation::GetNextFrameNumber(int frameNumber) {
-	if (frameNumber + 1 < m_frames.size()) {
+	if (frameNumber + 1 < frames.size()) {
 		return frameNumber + 1;
 	}
 	else {
@@ -14,19 +14,19 @@ int Animation::GetNextFrameNumber(int frameNumber) {
 }
 
 Frame* Animation::GetNextFrame(Frame *frame) {
-	return GetFrame(GetNextFrameNumber(frame->m_frameNumber));
+	return GetFrame(GetNextFrameNumber(frame->frameNumber));
 }
 
 int Animation::GetEndFrameNumber() {
-	return m_frames.size() - 1;
+	return frames.size() - 1;
 }
 
 Frame* Animation::GetFrame(int frameNumber) {
-	if (m_frames.size() == 0) {
+	if (frames.size() == 0) {
 		return nullptr;
 	}
 
-	auto it = m_frames.begin(); // point iterator to first frame in the m_frames list
+	auto it = frames.begin(); // point iterator to first frame in the m_frames list
 	int counter = 0;
 	for (counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
 		it++; // make iterator point to the next frame in the list
@@ -40,7 +40,7 @@ Frame* Animation::GetFrame(int frameNumber) {
 }
 
 void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
-	getline(file, m_name);
+	getline(file, name);
 	string buffer;
 	getline(file, buffer);
 	stringstream ss;
@@ -52,6 +52,6 @@ void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
 	for (int i = 0; i < numberOfFrames; i++) {
 		Frame newFrame;
 		newFrame.LoadFrame(file, groupTypes);
-		m_frames.push_back(newFrame);
+		frames.push_back(newFrame);
 	}
 }

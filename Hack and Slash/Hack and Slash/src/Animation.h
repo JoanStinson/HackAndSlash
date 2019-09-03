@@ -1,12 +1,13 @@
 #pragma once
 #include <string>
 #include "Frame.h"
+#include "Globals.h"
 using namespace std;
 
 class Animation {
 public:
-	string m_name; 
-	list<Frame> m_frames;
+	string name; 
+	list<Frame> frames;
 
 	Animation(string name = "");
 

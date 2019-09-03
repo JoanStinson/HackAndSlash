@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Include\SDL">
       <UniqueIdentifier>{6dd9656d-25ff-4945-9b32-6a0e962cc0f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Groups">
+      <UniqueIdentifier>{ded74c9d-ba91-4438-9e4c-de72f1c37222}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Lib\x86\SDL2test.lib">
@@ -218,6 +221,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimationSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -501,27 +507,6 @@
     <ClInclude Include="src\Singleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DataGroupType.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Group.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GroupBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GroupBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GroupNumber.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GroupPosition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GroupString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -530,6 +515,30 @@
     </ClInclude>
     <ClInclude Include="src\AnimationSet.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataGroupType.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Group.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GroupBox.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GroupBuilder.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GroupNumber.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GroupPosition.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GroupString.h">
+      <Filter>Header Files\Groups</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

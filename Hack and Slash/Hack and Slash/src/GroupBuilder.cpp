@@ -106,7 +106,7 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 				group = addGroupStringToGroup(line.substr(0, pos), groups);
 			}
 			//clean up string so we can add data to the group
-			line = Globals::clipOffDataHeader(line);//get rid of the 'groupName: '
+			line = globals::clipOffDataHeader(line);//get rid of the 'groupName: '
 			group->addToGroup(line);
 			//done, keep going
 			

@@ -1,18 +1,19 @@
 #include "AnimationSet.h"
 #include "Screen.h"
+#include "Globals.h"
 
 AnimationSet::~AnimationSet() {
-	SDL_DestroyTexture(m_spriteSheet);
-	if (m_whiteSpriteSheet != nullptr)
-		SDL_DestroyTexture(m_whiteSpriteSheet);
+	SDL_DestroyTexture(spriteSheet);
+	if (whiteSpriteSheet != nullptr)
+		SDL_DestroyTexture(whiteSpriteSheet);
 }
 
 Animation* AnimationSet::getAnimation(string name) {
 	Animation *anim = nullptr;
 
-	for (auto a : m_animations) {
+	for (auto a : animations) {
 
-		if (name == anim->m_name) {
+		if (name == anim->name) {
 			anim = &a; // &a if it's an object, &(*a) if it's an iterator
 			break;
 		}
@@ -32,32 +33,32 @@ void AnimationSet::loadAnimationSet(string fileName, list<DataGroupType>& groupT
 	string resPath = getResourcePath();
 	file.open(resPath + fileName);
 	if (file.good()) {
-		getline(file, m_imageName);
+		getline(file, imageName);
 		if (setColorKey) {
-			SDL_Surface* spriteSurface = loadSurface(resPath + m_imageName, Screen::GetRenderer());
+			SDL_Surface* spriteSurface = loadSurface(resPath + imageName, globals::renderer);
 
 			//for transparency, we will grab the [transparentPixelIndex] from the surface we just made
 			SDL_Color* transparentPixel = &spriteSurface->format->palette->colors[transparentPixelIndex];
 			SDL_SetColorKey(spriteSurface, 1, SDL_MapRGB(spriteSurface->format, transparentPixel->r, transparentPixel->g, transparentPixel->b));
 
-			m_spriteSheet = convertSurfaceToTexture(spriteSurface, Screen::GetRenderer(), false);
+			spriteSheet = convertSurfaceToTexture(spriteSurface, globals::renderer, false);
 
 			if (createWhiteTexture) {
-				SDL_Surface* whiteSurface = loadSurface(resPath + "allwhite.png", Screen::GetRenderer());
+				SDL_Surface* whiteSurface = loadSurface(resPath + "allwhite.png", globals::renderer);
 				surfacePaletteSwap(spriteSurface, whiteSurface);
 				SDL_SetColorKey(spriteSurface, 1, SDL_MapRGB(spriteSurface->format, transparentPixel->r, transparentPixel->g, transparentPixel->b));
-				m_whiteSpriteSheet = convertSurfaceToTexture(spriteSurface, Screen::GetRenderer(), false); //create the texture whilst destroying the surface
+				whiteSpriteSheet = convertSurfaceToTexture(spriteSurface, globals::renderer, false); //create the texture whilst destroying the surface
 
 				SDL_FreeSurface(whiteSurface);
 			}
 			else {
-				m_whiteSpriteSheet = nullptr;
+				whiteSpriteSheet = nullptr;
 			}
 
 			SDL_FreeSurface(spriteSurface);
 		}
 		else
-			m_spriteSheet = loadTexture(resPath + m_imageName, Screen::GetRenderer());
+			spriteSheet = loadTexture(resPath + imageName, globals::renderer);
 
 		string buffer;
 		getline(file, buffer);
@@ -70,7 +71,7 @@ void AnimationSet::loadAnimationSet(string fileName, list<DataGroupType>& groupT
 		for (int i = 0; i < numberOfAnimations; i++) {
 			Animation newAnimation;
 			newAnimation.LoadAnimation(file, groupTypes);
-			m_animations.push_back(newAnimation);
+			animations.push_back(newAnimation);
 		}
 
 	}

@@ -1,20 +1,21 @@
 #include "Frame.h"
 #include "Frame.h"
 #include "Screen.h"
+#include "Globals.h"
 
 void Frame::Draw(SDL_Texture *spritesheet, float x, float y) {
 	SDL_Rect dest; // destination of where we want to draw this frame
-	dest.x = x - m_offSet.x;
-	dest.y = y - m_offSet.y;
-	dest.w = m_clip.w;
-	dest.h = m_clip.h;
+	dest.x = x - offSet.x;
+	dest.y = y - offSet.y;
+	dest.w = clip.w;
+	dest.h = clip.h;
 
-	renderTexture(spritesheet, Screen::GetRenderer(), dest, &m_clip);
+	renderTexture(spritesheet, globals::renderer, dest, &clip);
 }
 
 void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes) {
 	// Ok, we dragged these groupTypes allllll the way here, so we could construct groups on our frame to hold the data in
-	GroupBuilder::buildGroups(groupTypes, m_frameData);
+	GroupBuilder::buildGroups(groupTypes, frameData);
 
 	string buffer;
 	// frame - dud data saying this is a frame
@@ -24,25 +25,25 @@ void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes) {
 	stringstream ss;
 	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
-	ss >> m_clip.x >> m_clip.y >> m_clip.w >> m_clip.h; // cin >> clip.x >> clip.y >> etc
+	ss >> clip.x >> clip.y >> clip.w >> clip.h; // cin >> clip.x >> clip.y >> etc
 	// offset/pivot
 	getline(file, buffer);
 	ss.clear();
 	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
-	ss >> m_offSet.x >> m_offSet.y;
+	ss >> offSet.x >> offSet.y;
 	// duration
 	getline(file, buffer);
 	ss.clear();
 	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
-	ss >> m_duration;
+	ss >> duration;
 	// index
 	getline(file, buffer);
 	ss.clear();
 	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
-	ss >> m_frameNumber;
+	ss >> frameNumber;
 
-	GroupBuilder::loadGroups(file, m_frameData);
+	GroupBuilder::loadGroups(file, frameData);
 }

@@ -203,6 +203,7 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\AnimationSet.cpp" />
     <ClCompile Include="src\DrawingFunctions.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Frame.cpp" />
     <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\GroupBuilder.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="src\AnimationSet.h" />
     <ClInclude Include="src\DataGroupType.h" />
     <ClInclude Include="src\DrawingFunctions.h" />
+    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Frame.h" />
     <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Group.h" />

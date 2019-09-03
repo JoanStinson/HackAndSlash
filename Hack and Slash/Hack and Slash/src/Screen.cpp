@@ -5,9 +5,10 @@
 #include "Screen.h"
 #include "ResPath.h"
 #include "DrawingFunctions.h"
+#include "Globals.h"
 using namespace std;
 
-Screen::Screen() : m_window(nullptr), /*m_renderer(nullptr),*/ m_texture(nullptr), m_buffer(nullptr) {
+Screen::Screen() : window(nullptr), /*renderer(nullptr),*/ texture(nullptr), buffer(nullptr) {
 
 }
 
@@ -19,24 +20,24 @@ bool Screen::Start() {
 	}
 
 	// Setup window
-	m_window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH*SCREEN_SCALE, SCREEN_HEIGHT*SCREEN_SCALE,
+	window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH*SCREEN_SCALE, SCREEN_HEIGHT*SCREEN_SCALE,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI); // SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN
-	if (m_window == nullptr) {
+	if (window == nullptr) {
 		SDL_Quit();
 		cout << "Window error!" << endl;
 		return false;
 	}
 
 	// Setup renderer
-	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (m_renderer == nullptr) {
-		SDL_DestroyWindow(m_window);
+	globals::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (globals::renderer == nullptr) {
+		SDL_DestroyWindow(window);
 		SDL_Quit();
 		cout << "Renderer error!" << endl;
 		return false;
 	}
 	// This is the size to draaaw things at, before we scale it to the screen size dimensions mentioned in createWindow
-	SDL_RenderSetLogicalSize(m_renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+	SDL_RenderSetLogicalSize(globals::renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Initialise sdl_image
 	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
@@ -61,7 +62,7 @@ bool Screen::Start() {
 
 	// Load up a texture to draw
 	string resPath = getResourcePath();
-	m_texture = loadTexture(resPath + "map.png", m_renderer);
+	texture = loadTexture(resPath + "map.png", globals::renderer);
 
 	return true;
 }
@@ -70,24 +71,21 @@ bool Screen::Update() {
 	// Run game for 5000 ticks (5000ms)
 	while (SDL_GetTicks() < 5000) {
 		// Clear the screen
-		SDL_RenderClear(m_renderer);
+		SDL_RenderClear(globals::renderer);
 		// Draw what we want to the screen
-		renderTexture(m_texture, m_renderer, 0, 0);
+		renderTexture(texture, globals::renderer, 0, 0);
 		// Show image we've been rendering
-		SDL_RenderPresent(m_renderer);
+		SDL_RenderPresent(globals::renderer);
 	}
 	return true;
 }
 
 void Screen::Quit() {
-	delete[] m_buffer;
-	SDL_DestroyRenderer(m_renderer);
-	SDL_FreeSurface(m_surface);
-	SDL_DestroyTexture(m_texture);
-	SDL_DestroyWindow(m_window);
+	delete[] buffer;
+	SDL_DestroyRenderer(globals::renderer);
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
-SDL_Renderer* Screen::GetRenderer() {
-	return m_renderer;
-}
