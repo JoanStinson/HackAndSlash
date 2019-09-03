@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>COPY /Y "$(SolutionDir)$(SolutionName)\Lib\x86\SDL2.dll" "$(TargetDir)SDL2.dll"</Command>
@@ -108,7 +108,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>COPY /Y "$(SolutionDir)$(SolutionName)\Lib\x64\SDL2.dll" "$(TargetDir)SDL2.dll"</Command>
@@ -200,11 +200,17 @@
     <Library Include="Lib\x86\SDL2_ttf.lib" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\AnimationSet.cpp" />
     <ClCompile Include="src\DrawingFunctions.cpp" />
+    <ClCompile Include="src\Frame.cpp" />
+    <ClCompile Include="src\Globals.cpp" />
+    <ClCompile Include="src\GroupBuilder.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RandomNumber.cpp" />
     <ClCompile Include="src\ResPath.cpp" />
     <ClCompile Include="src\Screen.cpp" />
+    <ClCompile Include="src\TimeController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\SDL.h" />
@@ -293,10 +299,23 @@
     <ClInclude Include="Include\SDL\SDL_version.h" />
     <ClInclude Include="Include\SDL\SDL_video.h" />
     <ClInclude Include="Include\SDL\SDL_vulkan.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\AnimationSet.h" />
+    <ClInclude Include="src\DataGroupType.h" />
     <ClInclude Include="src\DrawingFunctions.h" />
+    <ClInclude Include="src\Frame.h" />
+    <ClInclude Include="src\Globals.h" />
+    <ClInclude Include="src\Group.h" />
+    <ClInclude Include="src\GroupBox.h" />
+    <ClInclude Include="src\GroupBuilder.h" />
+    <ClInclude Include="src\GroupNumber.h" />
+    <ClInclude Include="src\GroupPosition.h" />
+    <ClInclude Include="src\GroupString.h" />
     <ClInclude Include="src\RandomNumber.h" />
     <ClInclude Include="src\ResPath.h" />
     <ClInclude Include="src\Screen.h" />
+    <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\TimeController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

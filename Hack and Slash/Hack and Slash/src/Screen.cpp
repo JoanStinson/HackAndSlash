@@ -7,7 +7,7 @@
 #include "DrawingFunctions.h"
 using namespace std;
 
-Screen::Screen() : m_window(nullptr), m_renderer(nullptr), m_texture(nullptr), m_buffer(nullptr) {
+Screen::Screen() : m_window(nullptr), /*m_renderer(nullptr),*/ m_texture(nullptr), m_buffer(nullptr) {
 
 }
 
@@ -19,7 +19,7 @@ bool Screen::Start() {
 	}
 
 	// Setup window
-	m_window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
+	m_window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH*SCREEN_SCALE, SCREEN_HEIGHT*SCREEN_SCALE,
 		SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI); // SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN
 	if (m_window == nullptr) {
 		SDL_Quit();
@@ -86,4 +86,8 @@ void Screen::Quit() {
 	SDL_DestroyTexture(m_texture);
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
+}
+
+SDL_Renderer* Screen::GetRenderer() {
+	return m_renderer;
 }
