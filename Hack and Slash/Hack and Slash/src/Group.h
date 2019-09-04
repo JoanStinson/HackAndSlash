@@ -4,7 +4,7 @@
 #include <sstream>
 #include <list>
 #include <SDL.h>
-#include "DataGroupType.h"
+#include "dataGroupType.h"
 
 using namespace std;
 #ifndef GROUP_H

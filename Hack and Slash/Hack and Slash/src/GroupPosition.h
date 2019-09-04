@@ -1,7 +1,7 @@
 #ifndef GROUPPOS_H
 #define GROUPPOS_H
 
-#include "Group.h"
+#include "group.h"
 
 class GroupPosition : public Group{
 public:

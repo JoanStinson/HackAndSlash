@@ -1,53 +1,52 @@
-#include "Entity.h"
-#include "TimeController.h"
+#include "entity.h"
 
-void Entity::Update() {
-}
+const int Entity::DIR_UP = 0, Entity::DIR_DOWN = 1, Entity::DIR_LEFT = 2, Entity::DIR_RIGHT= 3, Entity::DIR_NONE = -1;
 
-void Entity::Draw() {
-	// draws current frame
-	if (currentFrame != nullptr && active) {
+void Entity::update() { ; }//override me to do something useful
+void Entity::draw() {
+	//override me if you want something else or more specific to happen
+	//draws current frame
+	if (currentFrame != NULL && active){
 		currentFrame->Draw(animSet->spriteSheet, x, y);
 	}
-	// draw collisionBox
-	if (solid && globals::debugging) {
-		// sets the current drawing color (doesn't affect textures and what not)
-		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 0, 255);
-		SDL_RenderDrawRect(globals::renderer, &collisionBox);
+	//draw collsionBox
+	if (solid && Globals::debugging){
+		//sets the current drawing colour (Doesn't affect textures and what not)
+		SDL_SetRenderDrawColor(Globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(Globals::renderer, &collisionBox);
 	}
 }
 
-void Entity::Move(float angle) {
+void Entity::move(float angle){
 	moving = true;
 	moveSpeed = moveSpeedMax;
 	this->angle = angle;
 
 	int newDirection = angleToDirection(angle);
-	// if direction changed, update current animation
-	if (direction != newDirection) {
+	//if direction changed, update current animation
+	if (direction != newDirection){
 		direction = newDirection;
-		ChangeAnimation(state, false);
+		changeAnimation(state, false);
 	}
 }
-
-void Entity::UpdateMovement() {
-	UpdateCollisionBox();
-	// store collisionBox before we move
+void Entity::updateMovement(){
+	updateCollisionBox();
+	//store collisiobox before we move
 	lastCollisionBox = collisionBox;
 
-	// reset total moves
+	//reset total moves
 	totalXMove = 0;
 	totalYMove = 0;
 
-	//TODO movespeed and slideamount put in function
-	if (moveSpeed > 0) {
-		// works out move distance using speed, dt (time since last loop) and multiplies by lerp
-		float moveDist = moveSpeed * (globals::timeController->dt)*moveLerp;
-		if (moveDist > 0) {
-			// xmove = distance * cos(angle in radians)
-			float xMove = moveDist * (cos(angle*globals::PI / 180));
-			// ymove = distance * sin(angle in radians)
-			float yMove = moveDist * (sin(angle*globals::PI / 180));
+	if (moveSpeed > 0){
+		//works out move distance using speed, dt(time since last loop) and multiplies by lerp
+		float moveDist = moveSpeed*(TimeController::timeController.dT)*moveLerp;
+		if (moveDist > 0)
+		{
+			//xmove = distance * cos(angle in radians)
+			float xMove = moveDist*(cos(angle*Globals::PI / 180));
+			//ymove = distance * sin(angle in radians)
+			float yMove = moveDist*(sin(angle*Globals::PI / 180));
 
 			x += xMove;
 			y += yMove;
@@ -55,17 +54,16 @@ void Entity::UpdateMovement() {
 			totalXMove = xMove;
 			totalYMove = yMove;
 
-			if (!moving) {
+			if (!moving)
 				moveSpeed -= moveDist;
-			}
 		}
 	}
-
-	if (slideAmount > 0) {
-		float slideDist = slideAmount * globals::timeController->dt*moveLerp;
-		if (slideDist > 0) {
-			float xMove = slideDist * (cos(slideAngle*globals::PI / 180));
-			float yMove = slideDist * (sin(slideAngle*globals::PI / 180));
+	//sliding around!
+	if (slideAmount > 0){
+		float slideDist = slideAmount*TimeController::timeController.dT*moveLerp;
+		if (slideDist > 0){
+			float xMove = slideDist*(cos(slideAngle*Globals::PI / 180));
+			float yMove = slideDist*(sin(slideAngle*Globals::PI / 180));
 
 			x += xMove;
 			y += yMove;
@@ -74,117 +72,117 @@ void Entity::UpdateMovement() {
 			totalYMove += yMove;
 			slideAmount -= slideDist;
 		}
-		else {
+		else
+		{
 			slideAmount = 0;
 		}
 	}
-
-	// now that we've moved, move the collisionBox up to where we are now
-	UpdateCollisionBox();
-	// to help with collision checking, union collisionBox with lastCollisionBox
+	//now that we've moved, move the collisionBox up to where we are now
+	updateCollisionBox();
+	//to help with collision checking, union collisionBox with lastCollisionBox
 	SDL_UnionRect(&collisionBox, &lastCollisionBox, &collisionBox);
 }
-
-void Entity::UpdateCollisionBox() {
+void Entity::updateCollisionBox(){
 	collisionBox.x = x - collisionBox.w / 2;
-	collisionBox.y = y - collisionBox.h / 2;
+	collisionBox.y = y + collisionBoxYOffset;
 	collisionBox.w = collisionBoxW;
 	collisionBox.h = collisionBoxH;
 }
 
-void Entity::UpdateCollisions() {
-	if (active && collideWithSolids && (moveSpeed > 0 || slideAmount > 0)) { /* get rid of the movespeed and slideamount if you want to check collisions when not moving*/
-		// list of potential collisions
+void Entity::updateCollisions(){
+	if (active && collideWithSolids && (moveSpeed > 0 || slideAmount > 0)){
+		//list of potential collisions
 		list<Entity*> collisions;
 
-		for (auto *e : this->entities) {
-			if (e->active && e->type != this->type && e->solid && checkCollision(collisionBox, e->collisionBox)) {
-				// add it to the list
-				collisions.push_back(e);
+		//list<Entity*>::iterator entity = ...
+		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++){
+			//if we collide with this entity with our currently unioned collisionbox, add to the list
+			if ((*entity)->active 
+				&& (*entity)->type != this->type 
+				&& (*entity)->solid 
+				&& Entity::checkCollision(collisionBox, (*entity)->collisionBox)){
+
+				//add it to the list
+				collisions.push_back(*entity);
+
 			}
 		}
-		// if we have a list of potential entities we may hit, then lets check them properly to do collision resolution
-		if (collisions.size() > 0) {
-			UpdateCollisionBox();
+		//if we have a list of potential entities we may hit, then lets check them properly to do collision resolution
+		if (collisions.size() > 0){
+			updateCollisionBox();
 
-			// multisample check for collisions from where we started to where we are planning to go to
+			//multisample check for collisions from where we started to where we are planning to go to
 
-			// first we are going to find the sample distance we should travel between checks
+			//first we are going to find the sample distance we should travel between checks
 			float boxTravelSize = 0;
-			if (collisionBox.w < collisionBox.h) {
+			if (collisionBox.w < collisionBox.h)
 				boxTravelSize = collisionBox.w / 4;
-			}
-			else {
+			else
 				boxTravelSize = collisionBox.h / 4;
-			}
 
-			// use sampleBox to check for collisions from start point to end point, moving at boxTravelSize each sample
+			//use sampleBox to check for collisions from start point to end point, moving at boxTravelSize each sample
 			SDL_Rect sampleBox = lastCollisionBox;
-			float movementAngle = angleBetweenTwoRects(lastCollisionBox, collisionBox);
+			float movementAngle = Entity::angleBetweenTwoRects(lastCollisionBox, collisionBox);
 
-			bool collisionFound = false;
-			while (!collisionFound) {
-				// check samplebox for collisions where it is now
+			bool foundCollision = false; 
+			while (!foundCollision){
+				//check samplebox for collisions where it is now
 				SDL_Rect intersection;
-				for (auto *e : collisions) {
-					if (SDL_IntersectRect(&sampleBox, &e->collisionBox, &intersection)) {
-
-						collisionFound = true;
+				for (auto entity = collisions.begin(); entity != collisions.end(); entity++){
+					if (SDL_IntersectRect(&sampleBox, &(*entity)->collisionBox, &intersection))
+					{
+						foundCollision = true;
 						moveSpeed = 0;
 						moving = false;
-						slideAngle = angleBetweenTwoEntities(e, this);
+						slideAngle = angleBetweenTwoEntities((*entity), this);
 
-						// currently intersecting a entity, now we need to do collision resolution
-						if (intersection.w < intersection.h) {
-							if (lastCollisionBox.x + lastCollisionBox.w / 2 < e->collisionBox.x + e->collisionBox.w / 2) {
-								sampleBox.x -= intersection.w; // started on left, so move left out of our collision
-							}
-							else {
-								sampleBox.x += intersection.w; // otherwise, starated on right
-							}
+						//currently intersecting a entity, now we need to do collsion resolution
+						if (intersection.w < intersection.h){
+							if (lastCollisionBox.x + lastCollisionBox.w / 2 < (*entity)->collisionBox.x + (*entity)->collisionBox.w / 2)
+								sampleBox.x -= intersection.w; //started on left, so move left out of collision
+							else
+								sampleBox.x += intersection.w; //otherwise, started on right
 						}
-						else {
-							if (lastCollisionBox.y + lastCollisionBox.h / 2 < e->collisionBox.y + e->collisionBox.h / 2) {
-								sampleBox.y -= intersection.h; // started above, so move up out of collision
-							}
-							else {
-								sampleBox.y += intersection.h; // otherwise, started below
-							}
+						else{
+							if (lastCollisionBox.y + lastCollisionBox.h / 2 < (*entity)->collisionBox.y + (*entity)->collisionBox.h / 2)
+								sampleBox.y -= intersection.h; //started abovem so move up out of collision
+							else
+								sampleBox.y += intersection.h; //otherwise, started below
 						}
 					}
 				}
 
-				// if collisions found or sampleBox is at sample place as collisionBox, exit loop
-				if (collisionFound || (sampleBox.x == collisionBox.x && sampleBox.y == collisionBox.y)) {
+				//if collisionsfound or sampleBox is at same place as collisionBox, exit loop
+				if (foundCollision || (sampleBox.x == collisionBox.x && sampleBox.y == collisionBox.y))
 					break;
-				}
 
-				// move sample box up to check the next spot
-				if (distanceBetweenTwoRects(sampleBox, collisionBox) > boxTravelSize) {
-					float xMove = boxTravelSize * (cos(movementAngle*globals::PI / 180));
-					float yMove = boxTravelSize * (sin(movementAngle*globals::PI / 180));
+				//move sample box up to check the next spot
+				if (distanceBetweenTwoRects(sampleBox, collisionBox) > boxTravelSize){
+					float xMove = boxTravelSize * (cos(movementAngle*Globals::PI / 180));
+					float yMove = boxTravelSize * (sin(movementAngle * Globals::PI / 180));
 
 					sampleBox.x += xMove;
 					sampleBox.y += yMove;
 				}
-				else {
+				else{
 					sampleBox = collisionBox;
 				}
 			}
-
-			if (collisionFound) {
-				// move our entity to where the sampleBox ended up
+			
+			if (foundCollision){
+				//move our entity to where the sampleBox ended up
 				slideAmount = slideAmount / 2;
 				x = sampleBox.x + sampleBox.w / 2;
 				y = sampleBox.y - collisionBoxYOffset;
 			}
 
-			UpdateCollisionBox();
+			updateCollisionBox();
 		}
 	}
 }
 
-float Entity::distanceBetweenTwoRects(SDL_Rect & r1, SDL_Rect & r2) {
+//HELP FUNCTIONS
+float Entity::distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2){
 	SDL_Point e1, e2;
 	e1.x = r1.x + r1.w / 2;
 	e1.y = r1.y + r1.h / 2;
@@ -192,49 +190,51 @@ float Entity::distanceBetweenTwoRects(SDL_Rect & r1, SDL_Rect & r2) {
 	e2.x = r2.x + r2.w / 2;
 	e2.y = r2.y + r2.h / 2;
 
-	return abs(sqrt(pow(e2.x - e1.x, 2) + pow(e2.y - e1.y, 2)));;
+	float d = abs(sqrt(pow(e2.x - e1.x, 2) + pow(e2.y - e1.y, 2)));
+	return d;
 }
-
-float Entity::distanceBetweenTwoEntities(Entity * e1, Entity * e2) {
-	return abs(sqrt(pow(e2->x - e1->x, 2) + pow(e2->y - e1->y, 2)));;
+float Entity::distanceBetweenTwoEntities(Entity *e1, Entity *e2){
+	float d = abs(sqrt(pow(e2->x - e1->x, 2) + pow(e2->y - e1->y, 2)));
+	return d;
 }
+float Entity::angleBetweenTwoEntities(Entity *e1, Entity *e2){
+	float dx, dy;
+	float x1 = e1->x, y1 = e1->y, x2 = e2->x, y2 = e2->y;
+	
+	dx = x2 - x1;
+	dy = y2 - y1;
 
-float Entity::angleBetweenTwoEntities(Entity *e1, Entity *e2) {
-	return angleBetweenTwoPoints(e1->x, e1->y, e2->x, e2->y);
+	return atan2(dy, dx) * 180 / Globals::PI;
 }
-
-bool Entity::checkCollision(SDL_Rect cbox1, SDL_Rect cbox2) {
-	if (SDL_IntersectRect(&cbox1, &cbox2, nullptr)) {
+bool Entity::checkCollision(SDL_Rect cbox1, SDL_Rect cbox2){
+	SDL_Rect intersection;
+	if (SDL_IntersectRect(&cbox1, &cbox2, &intersection))
+	{
 		return true;
 	}
-	// if a rectangle is in another rectangle 
-	// do it here
+
+	//if a rectangle is in another rectangle
+		//do it here
+
 	return false;
 }
-
-int Entity::angleToDirection(float angle) {
-	if ((angle >= 0.f && angle <= 45.f) || angle >= 315 && angle <= 360) {
+int Entity::angleToDirection(float angle){
+	if ((angle >= 0 && angle <= 45) || angle >= 315 && angle <= 360)
 		return DIR_RIGHT;
-	}
-	else if (angle >= 45 && angle <= 135) {
+	else if (angle >= 45 && angle <= 135)
 		return DIR_DOWN;
-	}
-	else if (angle >= 135 && angle <= 225) {
+	else if (angle >= 135 && angle <= 225)
 		return DIR_LEFT;
-	}
-	else {
+	else
 		return DIR_UP;
-	}
 }
-
-float Entity::angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2) {
+float Entity::angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2){
 	float dx = cx2 - cx1;
 	float dy = cy2 - cy1;
 
-	return atan2(dy, dx) * 180 / globals::PI;
+	return atan2(dy, dx) * 180 / Globals::PI;
 }
-
-float Entity::angleBetweenTwoRects(SDL_Rect & r1, SDL_Rect & r2) {
+float Entity::angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2){
 	float cx1 = r1.x + (r1.w / 2);
 	float cy1 = r1.y + (r1.h / 2);
 
@@ -244,39 +244,36 @@ float Entity::angleBetweenTwoRects(SDL_Rect & r1, SDL_Rect & r2) {
 	return angleBetweenTwoPoints(cx1, cy1, cx2, cy2);
 }
 
-list<Entity*> Entity::entities; // used to initialise a static member
 
-bool Entity::EntityCompare(const Entity * const & e1, const Entity * const & e2) {
-	if (e1 != 0 && e2 != 0) {
-		return (e1->y < e1->y);
+list<Entity*> Entity::entities;
+bool Entity::EntityCompare(const Entity* const &a, const Entity * const &b){
+	if (a != 0 && b != 0)
+	{
+		return (a->y < b->y);
 	}
-	else {
+	else
+	{
 		return false;
 	}
 }
-
-void Entity::removeInactiveEntitiesFromList(list<Entity*>* entityList, bool deleteEntities) {
-	for (auto entity = entityList->begin(); entity != entityList->end();) {
-		if (!(*entity)->active) {
-			if (deleteEntities) {
+void Entity::removeInactiveEntitiesFromList(list<Entity*> *entityList, bool deleteEntities){
+	for (auto entity = entityList->begin(); entity != entityList->end();){
+		//if entity is not active
+		if (!(*entity)->active){
+			if (deleteEntities)
 				delete (*entity);
-			}
 			entity = entityList->erase(entity);
 		}
-		else {
+		else
+		{
 			entity++;
 		}
 	}
 }
-
-void Entity::removeAllFromList(list<Entity*>* entityList, bool deleteEntities) {
-	for (auto entity = entityList->begin(); entity != entityList->end();) {
-		if (deleteEntities) {
+void Entity::removeAllFromList(list<Entity*> *entityList, bool deleteEntities){
+	for (auto entity = entityList->begin(); entity != entityList->end();){
+		if (deleteEntities)
 			delete (*entity);
-		}
 		entity = entityList->erase(entity);
 	}
-}
-
-Entity::~Entity() {
 }

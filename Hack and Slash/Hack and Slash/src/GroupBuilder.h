@@ -1,12 +1,12 @@
 #ifndef GROUPBUILDER
 #define GROUPBUILDER
 
-#include "Globals.h"
-#include "Group.h"
-#include "GroupBox.h"
-#include "GroupPosition.h"
+#include "globals.h"
+#include "group.h"
+#include "groupBox.h"
+#include "groupPosition.h"
 #include "GroupNumber.h"
-#include "GroupString.h"
+#include "groupString.h"
 
 class GroupBuilder
 {

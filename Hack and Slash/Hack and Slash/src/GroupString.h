@@ -1,7 +1,7 @@
 #ifndef GROUPSTRING_H
 #define GROUPSTRING_H
 
-#include "Group.h"
+#include "group.h"
 
 class GroupString : public Group{
 public:

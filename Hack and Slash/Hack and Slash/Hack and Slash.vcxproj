@@ -200,20 +200,6 @@
     <Library Include="Lib\x86\SDL2_ttf.lib" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\AnimationSet.cpp" />
-    <ClCompile Include="src\DrawingFunctions.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Frame.cpp" />
-    <ClCompile Include="src\Globals.cpp" />
-    <ClCompile Include="src\GroupBuilder.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\RandomNumber.cpp" />
-    <ClCompile Include="src\ResPath.cpp" />
-    <ClCompile Include="src\Screen.cpp" />
-    <ClCompile Include="src\TimeController.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Include\SDL.h" />
     <ClInclude Include="Include\SDL\begin_code.h" />
     <ClInclude Include="Include\SDL\close_code.h" />
@@ -300,24 +286,47 @@
     <ClInclude Include="Include\SDL\SDL_version.h" />
     <ClInclude Include="Include\SDL\SDL_video.h" />
     <ClInclude Include="Include\SDL\SDL_vulkan.h" />
-    <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\AnimationSet.h" />
-    <ClInclude Include="src\DataGroupType.h" />
-    <ClInclude Include="src\DrawingFunctions.h" />
-    <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\Frame.h" />
-    <ClInclude Include="src\Globals.h" />
-    <ClInclude Include="src\Group.h" />
-    <ClInclude Include="src\GroupBox.h" />
-    <ClInclude Include="src\GroupBuilder.h" />
-    <ClInclude Include="src\GroupNumber.h" />
-    <ClInclude Include="src\GroupPosition.h" />
-    <ClInclude Include="src\GroupString.h" />
-    <ClInclude Include="src\RandomNumber.h" />
-    <ClInclude Include="src\ResPath.h" />
-    <ClInclude Include="src\Screen.h" />
-    <ClInclude Include="src\Singleton.h" />
-    <ClInclude Include="src\TimeController.h" />
+    <ClInclude Include="src\animation.h" />
+    <ClInclude Include="src\animationSet.h" />
+    <ClInclude Include="src\cleanup.h" />
+    <ClInclude Include="src\dataGroupType.h" />
+    <ClInclude Include="src\drawing_functions.h" />
+    <ClInclude Include="src\entity.h" />
+    <ClInclude Include="src\frame.h" />
+    <ClInclude Include="src\game.h" />
+    <ClInclude Include="src\globals.h" />
+    <ClInclude Include="src\group.h" />
+    <ClInclude Include="src\groupBox.h" />
+    <ClInclude Include="src\groupBuilder.h" />
+    <ClInclude Include="src\groupNumber.h" />
+    <ClInclude Include="src\groupPosition.h" />
+    <ClInclude Include="src\groupString.h" />
+    <ClInclude Include="src\hero.h" />
+    <ClInclude Include="src\keyboardInput.h" />
+    <ClInclude Include="src\livingEntity.h" />
+    <ClInclude Include="src\randomNumber.h" />
+    <ClInclude Include="src\res_path.h" />
+    <ClInclude Include="src\timeController.h" />
+    <ClInclude Include="src\wall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\animation.cpp" />
+    <ClCompile Include="src\animationSet.cpp" />
+    <ClCompile Include="src\cleanup.cpp" />
+    <ClCompile Include="src\drawing_functions.cpp" />
+    <ClCompile Include="src\entity.cpp" />
+    <ClCompile Include="src\frame.cpp" />
+    <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\globals.cpp" />
+    <ClCompile Include="src\groupBuilder.cpp" />
+    <ClCompile Include="src\hero.cpp" />
+    <ClCompile Include="src\keyboardInput.cpp" />
+    <ClCompile Include="src\livingEntity.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\randomNumber.cpp" />
+    <ClCompile Include="src\res_path.cpp" />
+    <ClCompile Include="src\timeController.cpp" />
+    <ClCompile Include="src\wall.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

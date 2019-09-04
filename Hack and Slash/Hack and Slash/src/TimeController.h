@@ -1,22 +1,26 @@
-#pragma once
+#ifndef TIMECONTROLLER
+#define TIMECONTROLLER
+
+#include <iostream>
 #include "SDL.h"
 
-class TimeController {
+class TimeController{
 public:
-	TimeController();
-	~TimeController();
+	//reference values
+	static const int PLAY_STATE = 0, PAUSE_STATE = 1;
 
-	void Play(); // update m_lastUpdate and m_dt
-	void Pause();
-	void UnPause();
-	void Reset();
-
-	// builds a global TimeController object for use anywhere
-	
-	static const int PLAY_STATE = 0;
-	static const int PAUSE_STATE = 1;
 	int timeState;
-	Uint32 lastUpdate; // last time we checked how many ticks we were up to
-	 float dt; // delta time, in seconds (1=1 second, 0.5 is half a second). Time since the last frame was rendered onto screen
+	Uint32 lastUpdate; //last time we checked how many ticks we were up to
+	float dT; //delta time, in seconds (1= 1 second, 0.5 is half a second). Time since the last frame was rendered onto screen
+
+	TimeController();
+	void updateTime();//update lastUpdate and dT
+	void pause();
+	void resume();
+	void reset();
+
+	static TimeController timeController;
 };
 
+
+#endif

@@ -28,9 +28,6 @@
     <Filter Include="Header Files\Include\SDL">
       <UniqueIdentifier>{6dd9656d-25ff-4945-9b32-6a0e962cc0f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Groups">
-      <UniqueIdentifier>{ded74c9d-ba91-4438-9e4c-de72f1c37222}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Lib\x86\SDL2test.lib">
@@ -188,44 +185,6 @@
     <None Include="Lib\x86\SDL2_mixer.dll">
       <Filter>Resource Files\Lib\x86</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\DrawingFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RandomNumber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ResPath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TimeController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GroupBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AnimationSet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\SDL.h">
@@ -486,59 +445,124 @@
     <ClInclude Include="Include\SDL\SDL_mixer.h">
       <Filter>Header Files\Include\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="src\DrawingFunctions.h">
+    <ClInclude Include="src\animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\RandomNumber.h">
+    <ClInclude Include="src\animationSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResPath.h">
+    <ClInclude Include="src\cleanup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Screen.h">
+    <ClInclude Include="src\drawing_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Globals.h">
+    <ClInclude Include="src\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\TimeController.h">
+    <ClInclude Include="src\frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Singleton.h">
+    <ClInclude Include="src\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frame.h">
+    <ClInclude Include="src\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Animation.h">
+    <ClInclude Include="src\group.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AnimationSet.h">
+    <ClInclude Include="src\groupBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity.h">
+    <ClInclude Include="src\groupBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DataGroupType.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\groupNumber.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Group.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\groupPosition.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroupBox.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\groupString.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroupBuilder.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\hero.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroupNumber.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\keyboardInput.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroupPosition.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\livingEntity.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GroupString.h">
-      <Filter>Header Files\Groups</Filter>
+    <ClInclude Include="src\randomNumber.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\res_path.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\timeController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dataGroupType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animationSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cleanup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawing_functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\globals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\groupBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\keyboardInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\livingEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\randomNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\res_path.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\timeController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

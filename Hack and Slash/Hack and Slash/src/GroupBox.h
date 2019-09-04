@@ -1,7 +1,7 @@
 #ifndef GROUPBOX_H
 #define GROUPBOX_H
 
-#include "Group.h"
+#include "group.h"
 
 class GroupBox : public Group{
 public:

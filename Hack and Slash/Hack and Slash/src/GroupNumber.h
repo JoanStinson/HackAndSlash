@@ -1,7 +1,7 @@
 #ifndef GROUPNUMBER_H
 #define GROUPNUMBER_H
 
-#include "Group.h"
+#include "group.h"
 
 class GroupNumber : public Group{
 public:

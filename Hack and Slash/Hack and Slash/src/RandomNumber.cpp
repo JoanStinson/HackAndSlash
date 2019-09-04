@@ -1,4 +1,4 @@
-#include "RandomNumber.h"
+#include "randomNumber.h"
 
 int getRandomNumber(int mod){
 	//returns random number between 0 and mod

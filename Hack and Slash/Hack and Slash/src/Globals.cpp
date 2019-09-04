@@ -1,14 +1,7 @@
-#include "Globals.h"
+#include "globals.h"
 
-#include "Globals.h"
+namespace Globals {
 
-namespace globals {
+	SDL_Renderer* renderer = nullptr;
 
-	string clipOffDataHeader(string data) {
-		int pos = data.find(":", 0); // returns where we find the ':' in the string, otherwise, return -1
-		if (pos != -1) {
-			data = data.substr(pos + 1, data.length() - pos + 2);
-		}
-		return data;
-	}
 }
