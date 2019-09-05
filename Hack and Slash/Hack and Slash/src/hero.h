@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "livingEntity.h"
+#include "soundManager.h"
 
 class Hero : public LivingEntity{
 public:

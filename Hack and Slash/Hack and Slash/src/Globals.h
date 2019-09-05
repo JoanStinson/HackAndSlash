@@ -15,6 +15,7 @@ namespace Globals{
 
 	//useful for me as a dev
 	extern bool debugging;
+	extern bool smoothCamera;
 
 	//sdl related
 	extern int ScreenWidth, ScreenHeight, ScreenScale;
@@ -22,6 +23,9 @@ namespace Globals{
 
 	//clips off header. e.g "clip: 50 114 44 49" turns into "50 114 44 49"
 	string clipOffDataHeader(string data);
+
+	// camera
+	extern SDL_Rect camera;
 	
 };
 
