@@ -4,7 +4,7 @@ void LivingEntity::updateHitBox(){
 	//assume damage is 0 for now
 	damage = 0;
 
-	GroupBox* hitBoxes = (GroupBox*)GroupBuilder::findGroupByName("hitBox", currentFrame->frameData);
+	GroupBox* hitBoxes = dynamic_cast<GroupBox*>(GroupBuilder::findGroupByName("hitBox", currentFrame->frameData));
 	if (hitBoxes != NULL && hitBoxes->numberOfDataInGroup() > 0){
 		//update hitbox
 		SDL_Rect hb = hitBoxes->data.front();
@@ -14,7 +14,7 @@ void LivingEntity::updateHitBox(){
 		hitBox.h = hb.h;
 
 		//update damage
-		GroupNumber* damages = (GroupNumber*)GroupBuilder::findGroupByName("damage", currentFrame->frameData);
+		GroupNumber* damages = dynamic_cast<GroupNumber*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
 		if (damages != NULL && damages->numberOfDataInGroup() > 0){
 			damage = damages->data.front();
 		}

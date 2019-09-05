@@ -11,24 +11,17 @@ using namespace std;
 namespace Globals{
 
 	//math helpers
-	static const float PI = M_PI;
+	extern const float PI;
 
 	//useful for me as a dev
-	static bool debugging = true;
+	extern bool debugging;
 
 	//sdl related
-	static int ScreenWidth = 640, ScreenHeight = 352, ScreenScale = 2;
+	extern int ScreenWidth, ScreenHeight, ScreenScale;
 	extern SDL_Renderer* renderer;
 
 	//clips off header. e.g "clip: 50 114 44 49" turns into "50 114 44 49"
-	static string clipOffDataHeader(string data) {
-		int pos = data.find(":", 0);//returns where we find the : in the string, otherwise, return -1
-		if (pos != -1) {
-			data = data.substr(pos + 1, data.length() - pos + 2);
-		}
-		return data;
-	}
-
+	string clipOffDataHeader(string data);
 	
 };
 

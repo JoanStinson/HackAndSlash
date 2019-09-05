@@ -6,6 +6,7 @@ Animation::Animation(string name)
 }
 
 int Animation::getNextFrameNumber(int frameNumber){
+	//return (frameNumber + 1) % frames.size();
 	if (frameNumber + 1 < frames.size())
 		return frameNumber + 1;
 	else
@@ -25,7 +26,7 @@ Frame* Animation::getFrame(int frameNumber){
 
 	int counter = 0;
 
-	for (counter = 0; counter < frameNumber && counter < frames.size() - 1; counter++){
+	for (counter = 0; counter < frameNumber && counter < getEndFrameNumber(); counter++){
 		i++; //make iterator point to the next frame in the list
 	}
 

@@ -1,6 +1,6 @@
 #include "entity.h"
 
-const int Entity::DIR_UP = 0, Entity::DIR_DOWN = 1, Entity::DIR_LEFT = 2, Entity::DIR_RIGHT= 3, Entity::DIR_NONE = -1;
+//const int Entity::DIR_UP = 0, Entity::DIR_DOWN = 1, Entity::DIR_LEFT = 2, Entity::DIR_RIGHT= 3, Entity::DIR_NONE = -1;
 
 void Entity::update() { ; }//override me to do something useful
 void Entity::draw() {
@@ -220,13 +220,13 @@ bool Entity::checkCollision(SDL_Rect cbox1, SDL_Rect cbox2){
 }
 int Entity::angleToDirection(float angle){
 	if ((angle >= 0 && angle <= 45) || angle >= 315 && angle <= 360)
-		return DIR_RIGHT;
+		return RIGHT;
 	else if (angle >= 45 && angle <= 135)
-		return DIR_DOWN;
+		return DOWN;
 	else if (angle >= 135 && angle <= 225)
-		return DIR_LEFT;
+		return LEFT;
 	else
-		return DIR_UP;
+		return UP;
 }
 float Entity::angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2){
 	float dx = cx2 - cx1;
@@ -257,23 +257,17 @@ bool Entity::EntityCompare(const Entity* const &a, const Entity * const &b){
 	}
 }
 void Entity::removeInactiveEntitiesFromList(list<Entity*> *entityList, bool deleteEntities){
-	for (auto entity = entityList->begin(); entity != entityList->end();){
-		//if entity is not active
-		if (!(*entity)->active){
-			if (deleteEntities)
-				delete (*entity);
-			entity = entityList->erase(entity);
-		}
-		else
-		{
-			entity++;
+	for each(Entity* entity in *entityList) {
+		//active?
+		if (!entity->active) {
+			entityList->remove(entity);
+			if (deleteEntities) delete entity;
 		}
 	}
 }
 void Entity::removeAllFromList(list<Entity*> *entityList, bool deleteEntities){
-	for (auto entity = entityList->begin(); entity != entityList->end();){
-		if (deleteEntities)
-			delete (*entity);
-		entity = entityList->erase(entity);
+	for each (auto entity in *entityList) {
+		entityList->remove(entity);
+		if (deleteEntities) delete entity;
 	}
 }

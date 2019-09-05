@@ -4,8 +4,12 @@
 #include "SDL/SDL_mixer.h"
 #include "globals.h"
 #include "game.h"
+#include <cstdlib> //srand, rand
+#include <ctime> //time
 
 int main(int argc, char *agv[]){
+	//set the random seed for the random number sequence
+	srand(static_cast<unsigned>(time(NULL)));
 
 	//setup SDL
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0){

@@ -9,7 +9,8 @@
 class Entity{
 public:
 	//reference constants
-	static const int DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_NONE;
+	//static const int DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_NONE;
+	enum Directions { UP, DOWN, LEFT, RIGHT, NONE};
 
 	//quick label to see what the entity is up to
 	int state;

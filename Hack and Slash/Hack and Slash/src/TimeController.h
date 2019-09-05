@@ -7,7 +7,8 @@
 class TimeController{
 public:
 	//reference values
-	static const int PLAY_STATE = 0, PAUSE_STATE = 1;
+	//static const int PLAY_STATE = 0, PAUSE_STATE = 1;
+	enum State { PLAY, PAUSE };
 
 	int timeState;
 	Uint32 lastUpdate; //last time we checked how many ticks we were up to

@@ -21,10 +21,10 @@ const string Hero::HERO_ANIM_DIE = "die";
 const int Hero::HERO_STATE_IDLE = 0;
 const int Hero::HERO_STATE_MOVE = 1;
 const int Hero::HERO_STATE_SLASH = 2;
-const int Hero::HERO_STATE_DASH = 3 ;
+const int Hero::HERO_STATE_DASH = 3;
 const int Hero::HERO_STATE_DEAD = 4;
 
-Hero::Hero(AnimationSet *animSet){
+Hero::Hero(AnimationSet *animSet) {
 	this->animSet = animSet;
 	type = "hero";
 
@@ -39,21 +39,21 @@ Hero::Hero(AnimationSet *animSet){
 	collisionBoxH = 24;
 	collisionBoxYOffset = -20;
 
-	direction = DIR_DOWN;
+	direction = DOWN;
 
 	changeAnimation(HERO_STATE_IDLE, true);
 
 	updateCollisionBox();
 }
-void Hero::update(){
+void Hero::update() {
 	//check if dead
-	if (hp < 1 && state != HERO_STATE_DEAD){
+	if (hp < 1 && state != HERO_STATE_DEAD) {
 		changeAnimation(HERO_STATE_DEAD, true);
 		moving = false;
 		die();
 	}
-	
-	updateCollisionBox(); 
+
+	updateCollisionBox();
 	updateMovement();
 	updateCollisions();
 
@@ -63,18 +63,16 @@ void Hero::update(){
 	updateAnimation();
 	updateInvincibleTimer();
 }
-void Hero::slash(){
-	if (hp > 0 && (state == HERO_STATE_MOVE || state == HERO_STATE_IDLE))
-	{
+void Hero::slash() {
+	if (hp > 0 && (state == HERO_STATE_MOVE || state == HERO_STATE_IDLE)) {
 		moving = false;
 		frameTimer = 0;
 		changeAnimation(HERO_STATE_SLASH, true);
 		//TODO add attack sound!
 	}
 }
-void Hero::dash(){
-	if (hp > 0 && (state == HERO_STATE_MOVE || state == HERO_STATE_IDLE))
-	{
+void Hero::dash() {
+	if (hp > 0 && (state == HERO_STATE_MOVE || state == HERO_STATE_IDLE)) {
 		moving = false;
 		frameTimer = 0;
 
@@ -87,11 +85,11 @@ void Hero::dash(){
 		//TODO add dash sound!
 	}
 }
-void Hero::die(){
+void Hero::die() {
 	moving = false;
 	changeAnimation(HERO_STATE_DEAD, true);
 }
-void Hero::revive(){
+void Hero::revive() {
 	hp = hpMax;
 	changeAnimation(HERO_STATE_IDLE, true);
 	moving = false;
@@ -99,111 +97,94 @@ void Hero::revive(){
 	y = Globals::ScreenHeight / 2;
 	slideAmount = 0;
 }
-void Hero::changeAnimation(int newState, bool resetFrameToBeginning){
+void Hero::changeAnimation(int newState, bool resetFrameToBeginning) {
+	//if (state == newState) return;
 	state = newState;
-
-	if (state == HERO_STATE_IDLE){
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_DOWN);
-		else if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_UP);
-		else if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_LEFT);
-		else if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_RIGHT);
+	switch (state) {
+	default: case HERO_STATE_IDLE: switch (direction) {
+	case UP: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_UP); break;
+	case DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_DOWN); break;
+	case LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_RIGHT); break;
+	}; break;
+	case HERO_STATE_SLASH: switch (direction) {
+	case UP: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_UP); break;
+	case DOWN: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_DOWN); break;
+	case LEFT: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_RIGHT); break;
+	}; break;
+	case HERO_STATE_DASH: switch (direction) {
+	case UP: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_UP); break;
+	case DOWN: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_DOWN); break;
+	case LEFT: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_RIGHT); break;
+	}; break;
+	case HERO_STATE_MOVE: switch (direction) {
+	case UP: currentAnim = animSet->getAnimation(HERO_ANIM_UP); break;
+	case DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_DOWN); break;
+	case LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_RIGHT); break;
+	}; break;
+	case HERO_STATE_DEAD: currentAnim = animSet->getAnimation(HERO_ANIM_DIE); break;
 	}
-	else if (state == HERO_STATE_MOVE){
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(HERO_ANIM_DOWN);
-		else if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(HERO_ANIM_UP);
-		else if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(HERO_ANIM_LEFT);
-		else if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(HERO_ANIM_RIGHT);
-	}
-	else if (state == HERO_STATE_SLASH){
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_DOWN);
-		else if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_UP);
-		else if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_LEFT);
-		else if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_RIGHT);
-	}
-	else if (state == HERO_STATE_DASH){
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(HERO_DASH_ANIM_DOWN);
-		else if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(HERO_DASH_ANIM_UP);
-		else if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(HERO_DASH_ANIM_LEFT);
-		else if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(HERO_DASH_ANIM_RIGHT);
-	}
-	else if (state == HERO_STATE_DEAD){
-		currentAnim = animSet->getAnimation(HERO_ANIM_DIE);
-	}
-
-	if (resetFrameToBeginning)
+	if (resetFrameToBeginning) {
 		currentFrame = currentAnim->getFrame(0);
-	else
+	}
+	else {
 		currentFrame = currentAnim->getFrame(currentFrame->frameNumber);
+	}
 }
-void Hero::updateAnimation(){
+void Hero::updateAnimation() {
 	if (currentFrame == NULL || currentAnim == NULL)
 		return; //cant do much with animations without pointers pointing to them :S
 
 	//if state says moving, but we're not, then change state/anim to idle
-	if (state == HERO_STATE_MOVE && !moving){
+	if (state == HERO_STATE_MOVE && !moving) {
 		changeAnimation(HERO_STATE_IDLE, true);
 	}
 	//if should be showing running animation, lets change state properly
-	if (state != HERO_STATE_MOVE && moving){
+	if (state != HERO_STATE_MOVE && moving) {
 		changeAnimation(HERO_STATE_MOVE, true);
 	}
-	
+
 
 	frameTimer += TimeController::timeController.dT;
 	//time to change frames :D
-	if (frameTimer >= currentFrame->duration)
-	{
+	if (frameTimer >= currentFrame->duration) {
 		//if we're at the end of an animation?
-		if (currentFrame->frameNumber == currentAnim->getEndFrameNumber()){
-			if (state == HERO_STATE_SLASH || state == HERO_STATE_DASH){
+		if (currentFrame->frameNumber == currentAnim->getEndFrameNumber()) {
+			if (state == HERO_STATE_SLASH || state == HERO_STATE_DASH) {
 				//change back to moving state/anim
 				changeAnimation(HERO_STATE_MOVE, true);
 			}
-			else if (state == HERO_STATE_DEAD && hp > 0){
+			else if (state == HERO_STATE_DEAD && hp > 0) {
 				//was dead, but now have more hp, get back up (move state)
 				changeAnimation(HERO_STATE_MOVE, true);
 			}
-			else{
+			else {
 				//just reset animation (loops it back round)
 				currentFrame = currentAnim->getFrame(0);
 			}
 		}
-		else
-		{
+		else {
 			//just move onto the next frame in this animation
 			currentFrame = currentAnim->getNextFrame(currentFrame);
 		}
 		frameTimer = 0;
 	}
 }
-void Hero::updateDamages(){
-	if (active && hp > 0 && invincibleTimer <= 0){
-		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++){
-			if ((*entity)->active && (*entity)->type == "enemy"){
+void Hero::updateDamages() {
+	if (active && hp > 0 && invincibleTimer <= 0) {
+		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
+			if ((*entity)->active && (*entity)->type == "enemy") {
 				//we know enemies are living entities, so cast it to that
 				LivingEntity* enemy = (LivingEntity*)(*entity);
 
-				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)){
+				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
 					hp -= enemy->damage;
 
 					//still alive!!
-					if (hp > 0){
+					if (hp > 0) {
 						invincibleTimer = 0.3;
 						//TODO play getting hit sound
 					}

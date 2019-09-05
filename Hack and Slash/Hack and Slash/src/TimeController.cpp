@@ -5,11 +5,11 @@ TimeController TimeController::timeController;
 TimeController::TimeController(){
 	dT = 0;
 	lastUpdate = 0;
-	timeState = PLAY_STATE;
+	timeState = PLAY;
 }
 
 void TimeController::updateTime(){
-	if (timeState == PAUSE_STATE){
+	if (timeState == PAUSE){
 		dT = 0;
 	}
 	else{
@@ -19,10 +19,10 @@ void TimeController::updateTime(){
 	lastUpdate = SDL_GetTicks();
 }
 void TimeController::pause(){
-	timeState = PAUSE_STATE;
+	timeState = PAUSE;
 }
 void TimeController::resume(){
-	timeState = PLAY_STATE;
+	timeState = PLAY;
 }
 void TimeController::reset(){
 	dT = 0;

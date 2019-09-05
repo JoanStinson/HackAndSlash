@@ -17,7 +17,11 @@ public:
 	virtual void die() = 0; //abstract. up to other classes to decide how they die
 	virtual void updateInvincibleTimer();
 
-	void draw(); //overriding entities draw
+	//TODO put override to all overrided methods
+	//TODO put const references and pointers in all functions
+	//TODO refactor names uppercamelcase
+	//TODO NULLS to nullptr and C++ 11, auto for based loops, namespaces, etc.
+	void draw() override; //overriding entities draw
 };
 
 #endif
