@@ -15,12 +15,19 @@ public:
 	AnimationSet* wallAnimSet;
 
 	SDL_Texture* backgroundImage;
+	SDL_Texture* splashImage;
+	SDL_Texture* overlayImage;
+
+	SDL_Texture *scoreTexture = NULL; // for drawing strings to the screen
 
 	Hero *hero;
 	KeyboardInput heroInput;
 
 	list<Entity*> enemies;
 	list<Entity*> walls;
+
+	bool splashShowing;
+	float overlayTimer;
 
 	Game();
 	~Game();

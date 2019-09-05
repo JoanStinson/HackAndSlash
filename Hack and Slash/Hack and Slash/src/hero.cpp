@@ -8,14 +8,14 @@ const string Hero::HERO_ANIM_IDLE_UP = "idleUp";
 const string Hero::HERO_ANIM_IDLE_DOWN = "idleDown";
 const string Hero::HERO_ANIM_IDLE_LEFT = "idleLeft";
 const string Hero::HERO_ANIM_IDLE_RIGHT = "idleRight";
-const string Hero::HERO_SLASH_ANIM_UP = "slashUp";
-const string Hero::HERO_SLASH_ANIM_DOWN = "slashDown";
-const string Hero::HERO_SLASH_ANIM_LEFT = "slashLeft";
-const string Hero::HERO_SLASH_ANIM_RIGHT = "slashRight";
-const string Hero::HERO_DASH_ANIM_UP = "dashUp";
-const string Hero::HERO_DASH_ANIM_DOWN = "dashDown";
-const string Hero::HERO_DASH_ANIM_LEFT = "dashLeft";
-const string Hero::HERO_DASH_ANIM_RIGHT = "dashRight";
+const string Hero::HERO_ANIM_SLASH_UP = "slashUp";
+const string Hero::HERO_ANIM_SLASH_DOWN = "slashDown";
+const string Hero::HERO_ANIM_SLASH_LEFT = "slashLeft";
+const string Hero::HERO_ANIM_SLASH_RIGHT = "slashRight";
+const string Hero::HERO_ANIM_DASH_UP = "dashUp";
+const string Hero::HERO_ANIM_DASH_DOWN = "dashDown";
+const string Hero::HERO_ANIM_DASH_LEFT = "dashLeft";
+const string Hero::HERO_ANIM_DASH_RIGHT = "dashRight";
 const string Hero::HERO_ANIM_DIE = "die";
 
 const int Hero::HERO_STATE_IDLE = 0;
@@ -39,7 +39,7 @@ Hero::Hero(AnimationSet *animSet) {
 	collisionBoxH = 24;
 	collisionBoxYOffset = -20;
 
-	direction = DOWN;
+	direction = DIR_DOWN;
 
 	changeAnimation(HERO_STATE_IDLE, true);
 
@@ -102,28 +102,28 @@ void Hero::changeAnimation(int newState, bool resetFrameToBeginning) {
 	state = newState;
 	switch (state) {
 	default: case HERO_STATE_IDLE: switch (direction) {
-	case UP: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_UP); break;
-	case DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_DOWN); break;
-	case LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_LEFT); break;
-	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_RIGHT); break;
+	case DIR_UP: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_UP); break;
+	case DIR_DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_DOWN); break;
+	case DIR_LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_LEFT); break;
+	case DIR_RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_IDLE_RIGHT); break;
 	}; break;
 	case HERO_STATE_SLASH: switch (direction) {
-	case UP: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_UP); break;
-	case DOWN: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_DOWN); break;
-	case LEFT: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_LEFT); break;
-	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_SLASH_ANIM_RIGHT); break;
+	case DIR_UP: currentAnim = animSet->getAnimation(HERO_ANIM_SLASH_UP); break;
+	case DIR_DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_SLASH_DOWN); break;
+	case DIR_LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_SLASH_LEFT); break;
+	case DIR_RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_SLASH_RIGHT); break;
 	}; break;
 	case HERO_STATE_DASH: switch (direction) {
-	case UP: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_UP); break;
-	case DOWN: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_DOWN); break;
-	case LEFT: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_LEFT); break;
-	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_DASH_ANIM_RIGHT); break;
+	case DIR_UP: currentAnim = animSet->getAnimation(HERO_ANIM_DASH_UP); break;
+	case DIR_DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_DASH_DOWN); break;
+	case DIR_LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_DASH_LEFT); break;
+	case DIR_RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_DASH_RIGHT); break;
 	}; break;
 	case HERO_STATE_MOVE: switch (direction) {
-	case UP: currentAnim = animSet->getAnimation(HERO_ANIM_UP); break;
-	case DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_DOWN); break;
-	case LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_LEFT); break;
-	case RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_RIGHT); break;
+	case DIR_UP: currentAnim = animSet->getAnimation(HERO_ANIM_UP); break;
+	case DIR_DOWN: currentAnim = animSet->getAnimation(HERO_ANIM_DOWN); break;
+	case DIR_LEFT: currentAnim = animSet->getAnimation(HERO_ANIM_LEFT); break;
+	case DIR_RIGHT: default: currentAnim = animSet->getAnimation(HERO_ANIM_RIGHT); break;
 	}; break;
 	case HERO_STATE_DEAD: currentAnim = animSet->getAnimation(HERO_ANIM_DIE); break;
 	}

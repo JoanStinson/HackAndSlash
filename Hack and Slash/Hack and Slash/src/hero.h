@@ -15,14 +15,14 @@ public:
 	static const string HERO_ANIM_IDLE_DOWN;
 	static const string HERO_ANIM_IDLE_LEFT;
 	static const string HERO_ANIM_IDLE_RIGHT;
-	static const string HERO_SLASH_ANIM_UP;
-	static const string HERO_SLASH_ANIM_DOWN;
-	static const string HERO_SLASH_ANIM_LEFT;
-	static const string HERO_SLASH_ANIM_RIGHT;
-	static const string HERO_DASH_ANIM_UP;
-	static const string HERO_DASH_ANIM_DOWN;
-	static const string HERO_DASH_ANIM_LEFT;
-	static const string HERO_DASH_ANIM_RIGHT;
+	static const string HERO_ANIM_SLASH_UP;
+	static const string HERO_ANIM_SLASH_DOWN;
+	static const string HERO_ANIM_SLASH_LEFT;
+	static const string HERO_ANIM_SLASH_RIGHT;
+	static const string HERO_ANIM_DASH_UP;
+	static const string HERO_ANIM_DASH_DOWN;
+	static const string HERO_ANIM_DASH_LEFT;
+	static const string HERO_ANIM_DASH_RIGHT;
 	static const string HERO_ANIM_DIE;
 
 	static const int HERO_STATE_IDLE;

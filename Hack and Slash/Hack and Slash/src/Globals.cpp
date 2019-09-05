@@ -4,7 +4,7 @@ namespace Globals {
 
 	const float PI = M_PI;
 
-	bool debugging = true;
+	bool debugging = false;
 	
 	int ScreenWidth = 640, ScreenHeight = 352, ScreenScale = 2;
 	SDL_Renderer* renderer = NULL;

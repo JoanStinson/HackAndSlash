@@ -6,17 +6,16 @@
 #include "animationSet.h"
 
 //Abstract Class. cannot instantiate an object of type Entity e.g cannot do Entity e;
-class Entity{
+class Entity {
 public:
 	//reference constants
-	//static const int DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_NONE;
-	enum Directions { UP, DOWN, LEFT, RIGHT, NONE};
+	enum Direction { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_NONE };
 
 	//quick label to see what the entity is up to
 	int state;
 
 	float x, y;
-	int direction; 
+	int direction;
 	bool solid = true; //is this thing solid, can things pass through me
 	bool collideWithSolids = true; //sometimes we are solid, but I pass through other solids
 	bool active = true; //entity turned on or off
