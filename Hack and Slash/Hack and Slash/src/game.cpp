@@ -31,6 +31,9 @@ Game::Game(){
 	heroAnimSet = new AnimationSet();
 	heroAnimSet->loadAnimationSet("gameData.fdset", dataGroupTypes, true, 0, true);
 
+	globAnimSet = new AnimationSet();
+	globAnimSet->loadAnimationSet("glob.fdset", dataGroupTypes, true, 0, true);
+
 	wallAnimSet = new AnimationSet();
 	wallAnimSet->loadAnimationSet("wall.fdset", dataGroupTypes);
 
@@ -85,17 +88,23 @@ Game::~Game(){
 	cleanup(backgroundImage);
 
 	Entity::removeAllFromList(&Entity::entities, false);
+	//delete all of the wall entities
+	Entity::removeAllFromList(&walls, true);
+	Entity::removeAllFromList(&enemies, true);
 
 	delete heroAnimSet;
+	delete globAnimSet;
 	delete wallAnimSet;
 
 	delete hero;
-
-	//delete all of the wall entities
-	Entity::removeAllFromList(&walls, true);
 }
 
 void Game::update(){
+	// enemy related
+	int enemiesToBuild = 2;
+	int enemiesBuilt = 0;
+	float enemyBuildTimer = 1;
+
 	bool quit = false;
 
 	SDL_Event e;
@@ -106,6 +115,8 @@ void Game::update(){
 		TimeController::timeController.updateTime();
 
 		Entity::removeInactiveEntitiesFromList(&Entity::entities, false);
+		// remove/delete enemies in the enemy list who are dead/inactive
+		Entity::removeInactiveEntitiesFromList(&enemies, true);
 
 		//check for any events that might have happened
 		while (SDL_PollEvent(&e)){
@@ -133,6 +144,26 @@ void Game::update(){
 			//remember how awesome polymorphism is?
 			//update all entities in game world at once
 			(*entity)->update();
+		}
+
+		// generate enemies
+		if (hero->hp > 0) {
+			if (enemiesToBuild == enemiesBuilt) {
+				enemiesToBuild *= 2;
+				enemiesBuilt = 0;
+				enemyBuildTimer = 4;
+			}
+			enemyBuildTimer -= TimeController::timeController.dT;
+			if (enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {
+				Glob *enemy = new Glob(globAnimSet);
+				// set enemies position to somewhere random within the arena's open space
+				enemy->x = getRandomNumber(Globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
+				enemy->y = getRandomNumber(Globals::ScreenHeight - (2 * 32) - 32) + 32 + 16;
+				enemy->invincibleTimer = 0.1;
+
+				enemies.push_back(enemy);
+				Entity::entities.push_back(enemy);
+			}
 		}
 
 		//draw all entities

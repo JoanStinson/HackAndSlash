@@ -294,6 +294,7 @@
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\frame.h" />
     <ClInclude Include="src\game.h" />
+    <ClInclude Include="src\glob.h" />
     <ClInclude Include="src\globals.h" />
     <ClInclude Include="src\group.h" />
     <ClInclude Include="src\groupBox.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\frame.cpp" />
     <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\glob.cpp" />
     <ClCompile Include="src\globals.cpp" />
     <ClCompile Include="src\groupBuilder.cpp" />
     <ClCompile Include="src\hero.cpp" />
