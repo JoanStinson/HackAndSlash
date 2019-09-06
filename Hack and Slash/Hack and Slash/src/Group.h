@@ -23,12 +23,12 @@ public:
 		this->type = type;
 	}
 	//how many bits of data in here
-	virtual int numberOfDataInGroup() = 0;
+	virtual int GetGroupSize() = 0;
 	/*add to group using string. Converts string into correct data for each group type*/
-	virtual void addToGroup(string str) = 0;
+	virtual void AddToGroup(string str) = 0;
 
 
-	virtual void draw() = 0;
+	//virtual void draw() = 0;
 };
 
 #endif

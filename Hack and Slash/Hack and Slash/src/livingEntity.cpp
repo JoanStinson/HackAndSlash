@@ -4,19 +4,19 @@ void LivingEntity::updateHitBox(){
 	//assume damage is 0 for now
 	damage = 0;
 
-	GroupBox* hitBoxes = dynamic_cast<GroupBox*>(GroupBuilder::findGroupByName("hitBox", currentFrame->frameData));
-	if (hitBoxes != NULL && hitBoxes->numberOfDataInGroup() > 0){
+	Type<SDL_Rect>* hitBoxes = dynamic_cast<Type<SDL_Rect>*>(GroupBuilder::findGroupByName("hitBox", currentFrame->frameData));
+	if (hitBoxes != NULL && hitBoxes->GetGroupSize() > 0){
 		//update hitbox
-		SDL_Rect hb = hitBoxes->data.front();
+		SDL_Rect hb = hitBoxes->GetBoxFront();
 		hitBox.x = x - currentFrame->offSet.x + hb.x;
 		hitBox.y = y - currentFrame->offSet.y + hb.y;
 		hitBox.w = hb.w;
 		hitBox.h = hb.h;
 
 		//update damage
-		GroupNumber* damages = dynamic_cast<GroupNumber*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
-		if (damages != NULL && damages->numberOfDataInGroup() > 0){
-			damage = damages->data.front();
+		Type<float>* damages = dynamic_cast<Type<float>*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
+		if (damages != NULL && damages->GetGroupSize() > 0){
+			damage = damages->GetNumberFront();
 		}
 	}
 }

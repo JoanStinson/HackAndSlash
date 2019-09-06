@@ -28,6 +28,9 @@
     <Filter Include="Header Files\Include\SDL">
       <UniqueIdentifier>{6dd9656d-25ff-4945-9b32-6a0e962cc0f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Groups">
+      <UniqueIdentifier>{608a3e75-2791-48d8-99ad-968fe3d8381c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Lib\x86\SDL2test.lib">
@@ -466,24 +469,6 @@
     <ClInclude Include="src\globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\group.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\groupBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\groupBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\groupNumber.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\groupPosition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\groupString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\hero.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -497,9 +482,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\wall.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\dataGroupType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\glob.h">
@@ -525,6 +507,27 @@
     </ClInclude>
     <ClInclude Include="src\Math.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\dataGroupType.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\group.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\groupBox.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\groupBuilder.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\groupNumber.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\groupPosition.h">
+      <Filter>Header Files\Groups</Filter>
+    </ClInclude>
+    <ClInclude Include="src\groupString.h">
+      <Filter>Header Files\Groups</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

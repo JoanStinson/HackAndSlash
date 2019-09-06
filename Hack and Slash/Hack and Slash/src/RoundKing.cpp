@@ -296,9 +296,9 @@ void RoundKing::updateAnimation() {
 		else { //not end of animation, so move to next frame normally
 			currentFrame = currentAnim->getNextFrame(currentFrame);
 			//IF THE NEW FRAME IS DEALING DAMAGE, we might want to make sounds
-			GroupNumber *damages = dynamic_cast<GroupNumber*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
+			Type<float> *damages = dynamic_cast<Type<float>*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
 			//if does damage
-			if (damages != NULL && damages->numberOfDataInGroup() > 0) {
+			if (damages != NULL && damages->GetGroupSize() > 0) {
 				// and if its Slam state
 				if (state == ROUND_KING_STATE_SLAM) {
 					SoundManager::soundManager.playSound("smash");

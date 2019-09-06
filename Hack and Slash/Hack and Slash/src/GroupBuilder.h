@@ -27,6 +27,7 @@ public:
 	/**
 	builds a Group based on dataType. default is STRING (because we may want to ignore some data in a set, but still load it)
 	*/
+	template <class T>
 	static Group* buildGroup(DataGroupType dataType);
 	/**
 	Builds a set of Groups based on dataGroupTypes list
