@@ -5,8 +5,8 @@
 #include <SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include "res_path.h"
-#include "cleanup.h"
+//#include "globals.h"
+//#include "cleanup.h"
 
 using namespace std;
 /**

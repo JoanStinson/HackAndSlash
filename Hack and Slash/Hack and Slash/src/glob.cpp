@@ -1,4 +1,6 @@
 #include "glob.h"
+#include "Math.h"
+using namespace math;
 
 const string Glob::GLOB_ANIM_UP = "up";
 const string Glob::GLOB_ANIM_DOWN = "down";
@@ -35,8 +37,8 @@ Glob::Glob(AnimationSet *animSet) {
 	type = "enemy";
 
 	//defaults
-	x = Globals::ScreenWidth / 2;
-	y = Globals::ScreenHeight / 2;
+	x = globals::ScreenWidth / 2;
+	y = globals::ScreenHeight / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 10 + (rand() % 20); //10-29
@@ -268,7 +270,7 @@ void Glob::updateDamages() {
 				//reference as LivingEntity, so we can access hitBox/damage
 				LivingEntity* enemy = (LivingEntity*)(*entity);
 				//if enemy hits me, thennnnnnnnn
-				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
+				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
 					enemy->hitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 

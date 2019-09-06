@@ -1,19 +1,22 @@
 #include "game.h"
+#include "Math.h"
+#include "globals.h"
+using namespace math;
 
 Game::Game() {
-	string resPath = getResourcePath();
-	backgroundImage = loadTexture(resPath + "map.png", Globals::renderer);
-	splashImage = loadTexture(resPath + "cyborgtitle.png", Globals::renderer);
-	overlayImage = loadTexture(resPath + "overlay.png", Globals::renderer);
+	string resPath = globals::getResourcePath();
+	backgroundImage = loadTexture(resPath + "map.png", globals::renderer);
+	splashImage = loadTexture(resPath + "cyborgtitle.png", globals::renderer);
+	overlayImage = loadTexture(resPath + "overlay.png", globals::renderer);
 
 	splashShowing = true;
 	overlayTimer = 2;
 
 	// setup camera
-	Globals::camera.x = 0;
-	Globals::camera.y = 0;
-	Globals::camera.w = Globals::ScreenWidth;
-	Globals::camera.h = Globals::ScreenHeight;
+	globals::camera.x = 0;
+	globals::camera.y = 0;
+	globals::camera.w = globals::ScreenWidth;
+	globals::camera.h = globals::ScreenHeight;
 
 	//load up sounds
 	SoundManager::soundManager.loadSound("hit", resPath + "Randomize2.wav");
@@ -77,8 +80,8 @@ Game::Game() {
 	//build hero entity
 	hero = new Hero(heroAnimSet);
 	hero->invincibleTimer = 0;
-	hero->x = Globals::ScreenWidth / 2;
-	hero->y = Globals::ScreenHeight / 2;
+	hero->x = globals::ScreenWidth / 2;
+	hero->y = globals::ScreenHeight / 2;
 	//tells keyboard input to manage hero
 	heroInput.hero = hero;
 	//add hero to the entity list
@@ -90,7 +93,7 @@ Game::Game() {
 	int tileSize = 32;
 	//build all the walls for this game
 	//first. build walls on top and bottom of screen
-	for (int i = 0; i < Globals::ScreenWidth / tileSize; i++) {
+	for (int i = 0; i < globals::ScreenWidth / tileSize; i++) {
 		//fills in top row
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
@@ -101,12 +104,12 @@ Game::Game() {
 		//re-using pointer to create bottom row
 		newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
-		newWall->y = Globals::ScreenHeight - tileSize / 2;
+		newWall->y = globals::ScreenHeight - tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
 	}
 	//now the sides
-	for (int i = 1; i < Globals::ScreenHeight / tileSize - 1; i++) {
+	for (int i = 1; i < globals::ScreenHeight / tileSize - 1; i++) {
 		//fills in left column
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = tileSize / 2;
@@ -116,7 +119,7 @@ Game::Game() {
 
 		//re-using pointer to create right column
 		newWall = new Wall(wallAnimSet);
-		newWall->x = Globals::ScreenWidth - tileSize / 2;
+		newWall->x = globals::ScreenWidth - tileSize / 2;
 		newWall->y = i * tileSize + tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
@@ -126,20 +129,20 @@ Game::Game() {
 	bossActive = false;
 
 	//setup hpBar's x and y to be centered
-	hpBar.x = Globals::ScreenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
-	hpBar.y = Globals::ScreenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
+	hpBar.x = globals::ScreenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
+	hpBar.y = globals::ScreenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
 }
 
 Game::~Game() {
-	cleanup(backgroundImage);
-	cleanup(splashImage);
-	cleanup(overlayImage);
+	SDL_DestroyTexture(backgroundImage);
+	SDL_DestroyTexture(splashImage);
+	SDL_DestroyTexture(overlayImage);
 
 	Mix_PausedMusic();
 	Mix_FreeMusic(song);
 
-	if (scoreTexture != NULL) //if used then cleanup
-		cleanup(scoreTexture);
+	if (scoreTexture != NULL) 
+		SDL_DestroyTexture(scoreTexture);
 
 	Entity::removeAllFromList(&Entity::entities, false);
 
@@ -207,7 +210,7 @@ void Game::update() {
 						Glob::globsKilled = 0;
 						Grob::grobsKilled = 0;
 						if (scoreTexture != NULL) {
-							cleanup(scoreTexture);
+							SDL_DestroyTexture(scoreTexture);
 							scoreTexture = NULL;
 						}
 
@@ -219,7 +222,7 @@ void Game::update() {
 					}
 					break;
 				case SDL_SCANCODE_C:
-					Globals::smoothCamera = !Globals::smoothCamera;
+					globals::smoothCamera = !globals::smoothCamera;
 					break;
 
 				}
@@ -255,8 +258,8 @@ void Game::update() {
 			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {//TODO 10 - MAX_ENEMIES
 				Glob *enemy = new Glob(globAnimSet);
 				//set enemies position to somewhere random within the arena's open space
-				enemy->x = getRandomNumber(Globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
-				enemy->y = getRandomNumber(Globals::ScreenHeight - (2 * 32) - 32) + 32 + 16;
+				enemy->x = randomNumber(globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
+				enemy->y = randomNumber(globals::ScreenHeight - (2 * 32) - 32) + 32 + 16;
 				enemy->invincibleTimer = 0.1;
 
 				//PUSHBACK
@@ -265,8 +268,8 @@ void Game::update() {
 
 				if (enemiesBuilt % 5 == 0) {
 					Grob *grob = new Grob(grobAnimSet);
-					grob->x = getRandomNumber(Globals::ScreenWidth - (2 * 32) - 32) + 32 + 16; //random x value between our walls
-					grob->y = getRandomNumber(Globals::ScreenHeight - (2 * 32) - 32) + 32 + 16; //random x value between our walls
+					grob->x = randomNumber(globals::ScreenWidth - (2 * 32) - 32) + 32 + 16; //random x value between our walls
+					grob->y = randomNumber(globals::ScreenHeight - (2 * 32) - 32) + 32 + 16; //random x value between our walls
 					grob->invincibleTimer = 0.01;
 
 					// PUSHBACK
@@ -317,15 +320,15 @@ void Game::update() {
 }
 void Game::draw() {
 	//clear the screen
-	SDL_SetRenderDrawColor(Globals::renderer, 145, 133, 129, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(Globals::renderer);
+	SDL_SetRenderDrawColor(globals::renderer, 145, 133, 129, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(globals::renderer);
 
 	if (splashShowing) {
-		renderTexture(splashImage, Globals::renderer, 0, 0);
+		renderTexture(splashImage, globals::renderer, 0, 0);
 	}
 	else {
 		//draw the background
-		renderTexture(backgroundImage, Globals::renderer, 0 - Globals::camera.x, 0 - Globals::camera.y);
+		renderTexture(backgroundImage, globals::renderer, 0 - globals::camera.x, 0 - globals::camera.y);
 
 		//sort all entities based on y(depth)
 		Entity::entities.sort(Entity::EntityCompare);
@@ -338,7 +341,7 @@ void Game::draw() {
 		hpBar.draw();
 
 		if (overlayTimer <= 0 && hero->hp < 1) {
-			renderTexture(overlayImage, Globals::renderer, 0, 0);
+			renderTexture(overlayImage, globals::renderer, 0, 0);
 			if (scoreTexture == NULL) {
 				//generate score text
 				SDL_Color color = { 255, 255, 255, 255 };//white
@@ -346,12 +349,12 @@ void Game::draw() {
 				stringstream ss;
 				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + RoundKing::roundKingsKilled;
 
-				string resPath = getResourcePath();
-				scoreTexture = renderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, Globals::renderer);
+				string resPath = globals::getResourcePath();
+				scoreTexture = renderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, globals::renderer);
 			}
-			renderTexture(scoreTexture, Globals::renderer, 20, 50);
+			renderTexture(scoreTexture, globals::renderer, 20, 50);
 		}
 	}
 	//after we're done drawing/rendering, show it to the screen
-	SDL_RenderPresent(Globals::renderer);
+	SDL_RenderPresent(globals::renderer);
 }

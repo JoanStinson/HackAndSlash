@@ -42,7 +42,7 @@ void Animation::loadAnimation(ifstream &file, list<DataGroupType> &groupTypes){
 	string buffer;
 	getline(file, buffer);
 	stringstream ss;
-	buffer = Globals::clipOffDataHeader(buffer);
+	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
 	int numberOfFrames;
 	ss >> numberOfFrames;

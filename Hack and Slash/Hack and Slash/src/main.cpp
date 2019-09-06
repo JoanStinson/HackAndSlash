@@ -1,5 +1,5 @@
-#include "cleanup.h"
-#include "res_path.h"
+//#include "cleanup.h"
+//#include "res_path.h"
 #include "drawing_functions.h"
 #include "SDL/SDL_mixer.h"
 #include "globals.h"
@@ -18,7 +18,7 @@ int main(int argc, char *agv[]){
 	}
 	//setup window
 	SDL_Window *window = SDL_CreateWindow("Hack and Slash", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
-		Globals::ScreenWidth*Globals::ScreenScale, Globals::ScreenHeight*Globals::ScreenScale
+		globals::ScreenWidth*globals::ScreenScale, globals::ScreenHeight*globals::ScreenScale
 		, SDL_WINDOW_SHOWN); //SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN
 	if (window == nullptr){
 		SDL_Quit(); 
@@ -27,15 +27,15 @@ int main(int argc, char *agv[]){
 	}
 
 	//setup renderer
-	Globals::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (Globals::renderer == nullptr){
-		cleanup(window);
+	globals::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (globals::renderer == nullptr){
+		SDL_DestroyWindow(window);
 		SDL_Quit();
 		cout << "renderer error" << endl;
 		return 1;
 	}
 	//this is the size to draw things at, before we scale it to the screen size dimensions mentioned in createWindow
-	SDL_RenderSetLogicalSize(Globals::renderer, Globals::ScreenWidth, Globals::ScreenHeight);
+	SDL_RenderSetLogicalSize(globals::renderer, globals::ScreenWidth, globals::ScreenHeight);
 
 	//initialise sdl_image
 	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG){
@@ -74,8 +74,8 @@ int main(int argc, char *agv[]){
 	Game game;
 	game.update();
 
-	cleanup(Globals::renderer);
-	cleanup(window);
+	SDL_DestroyRenderer(globals::renderer);
+	SDL_DestroyWindow(window);
 	//cleanup(texture);
 
 	SDL_Quit();

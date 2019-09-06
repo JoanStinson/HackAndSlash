@@ -41,7 +41,7 @@ SDL_Texture *convertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bo
 {
 	SDL_Texture*texture = SDL_CreateTextureFromSurface(ren, surface);
 	if (cleanSurface)
-		cleanup(surface);
+		SDL_FreeSurface(surface);
 
 	return texture;
 }

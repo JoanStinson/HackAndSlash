@@ -290,7 +290,6 @@
     <ClInclude Include="src\animationSet.h" />
     <ClInclude Include="src\bullet.h" />
     <ClInclude Include="src\CameraController.h" />
-    <ClInclude Include="src\cleanup.h" />
     <ClInclude Include="src\dataGroupType.h" />
     <ClInclude Include="src\drawing_functions.h" />
     <ClInclude Include="src\entity.h" />
@@ -309,8 +308,7 @@
     <ClInclude Include="src\hpBar.h" />
     <ClInclude Include="src\keyboardInput.h" />
     <ClInclude Include="src\livingEntity.h" />
-    <ClInclude Include="src\randomNumber.h" />
-    <ClInclude Include="src\res_path.h" />
+    <ClInclude Include="src\Math.h" />
     <ClInclude Include="src\RoundKing.h" />
     <ClInclude Include="src\soundManager.h" />
     <ClInclude Include="src\timeController.h" />
@@ -321,7 +319,6 @@
     <ClCompile Include="src\animationSet.cpp" />
     <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\CameraController.cpp" />
-    <ClCompile Include="src\cleanup.cpp" />
     <ClCompile Include="src\drawing_functions.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\frame.cpp" />
@@ -335,8 +332,7 @@
     <ClCompile Include="src\keyboardInput.cpp" />
     <ClCompile Include="src\livingEntity.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\randomNumber.cpp" />
-    <ClCompile Include="src\res_path.cpp" />
+    <ClCompile Include="src\Math.cpp" />
     <ClCompile Include="src\RoundKing.cpp" />
     <ClCompile Include="src\soundManager.cpp" />
     <ClCompile Include="src\timeController.cpp" />

@@ -28,23 +28,23 @@ void LivingEntity::updateInvincibleTimer(){
 void LivingEntity::draw(){
 	if (currentFrame != NULL && active){
 		if (invincibleTimer > 0 && animSet->whiteSpriteSheet != NULL) {
-			currentFrame->Draw(animSet->whiteSpriteSheet, x - Globals::camera.x, y - Globals::camera.y);
+			currentFrame->Draw(animSet->whiteSpriteSheet, x - globals::camera.x, y - globals::camera.y);
 		}
 		else {
-			currentFrame->Draw(animSet->spriteSheet, x - Globals::camera.x, y - Globals::camera.y);
+			currentFrame->Draw(animSet->spriteSheet, x - globals::camera.x, y - globals::camera.y);
 		}
 		
 	}
 	//draw collsionBox
-	if (solid && Globals::debugging){
+	if (solid && globals::debugging){
 		//sets the current drawing colour (Doesn't affect textures and what not)
-		SDL_SetRenderDrawColor(Globals::renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(Globals::renderer, &lastCollisionBox);
+		SDL_SetRenderDrawColor(globals::renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(globals::renderer, &lastCollisionBox);
 
-		SDL_SetRenderDrawColor(Globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(Globals::renderer, &collisionBox);
+		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(globals::renderer, &collisionBox);
 
-		SDL_SetRenderDrawColor(Globals::renderer, 255, 0, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(Globals::renderer, &hitBox);
+		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 255, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(globals::renderer, &hitBox);
 	}
 }

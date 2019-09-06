@@ -1,4 +1,6 @@
 #include "grob.h"
+#include "Math.h"
+using namespace math;
 
 const string Grob::GROB_ANIM_UP = "up";
 const string Grob::GROB_ANIM_DOWN = "down";
@@ -24,8 +26,8 @@ Grob::Grob(AnimationSet *animSet) {
 	type = "enemy";
 
 	//setup defaults
-	x = Globals::ScreenWidth / 2;
-	y = Globals::ScreenHeight / 2;
+	x = globals::ScreenWidth / 2;
+	y = globals::ScreenHeight / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 1;
@@ -205,7 +207,7 @@ void Grob::updateDamages() {
 				//reference as livingEntity, so we can access enemies hit box
 				LivingEntity* enemy = (LivingEntity*)(*entity);
 
-				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
+				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
 					enemy->hitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 

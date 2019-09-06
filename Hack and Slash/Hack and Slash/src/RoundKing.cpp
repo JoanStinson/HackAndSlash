@@ -1,4 +1,6 @@
 #include "RoundKing.h"
+#include "Math.h"
+using namespace math;
 
 int RoundKing::roundKingsKilled = 0;
 
@@ -30,8 +32,8 @@ RoundKing::RoundKing(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 	this->bulletAnimSet = bulletAnimSet;
 
 	type = "enemy";
-	x = Globals::ScreenWidth / 2;
-	y = Globals::ScreenHeight / 2;
+	x = globals::ScreenWidth / 2;
+	y = globals::ScreenHeight / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 100;//default = 500
@@ -130,7 +132,7 @@ void RoundKing::think() {
 
 				//randomly select iehter slam or charge
 				//peniseeeeeeeeeeeeeeeeeeeeees
-				int action = getRandomNumber(4);
+				int action = randomNumber(4);
 				if (action % 2 == 0) {
 					//eat it bitch!
 					slam();
@@ -144,7 +146,7 @@ void RoundKing::think() {
 
 				//randomly select iehter slam or charge
 				//peniseeeeeeeeeeeeeeeeeeeeees
-				int action = getRandomNumber(6);
+				int action = randomNumber(6);
 				if (action < 2) {
 					//eat it bitch!
 					slam();
@@ -157,7 +159,7 @@ void RoundKing::think() {
 			else { //assuming we are in frantic phase
 				//reset timer
 				thinkTimer = 1;
-				int action = getRandomNumber(4);
+				int action = randomNumber(4);
 				if (action % 2 == 0)
 					jumpTelegraph();
 				else
@@ -319,7 +321,7 @@ void RoundKing::updateDamages() {
 				LivingEntity *enemy = dynamic_cast<LivingEntity*>((*entity));
 
 				//if enemy is hitting me
-				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
+				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
 					enemy->hitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 

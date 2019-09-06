@@ -1,4 +1,6 @@
 #include "hero.h"
+#include "Math.h"
+using namespace math;
 
 const string Hero::HERO_ANIM_UP = "up";
 const string Hero::HERO_ANIM_DOWN = "down";
@@ -29,8 +31,8 @@ Hero::Hero(AnimationSet *animSet) {
 	type = "hero";
 
 	//setup default hero values
-	x = Globals::ScreenWidth / 2;
-	y = Globals::ScreenHeight / 2;
+	x = globals::ScreenWidth / 2;
+	y = globals::ScreenHeight / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 80;
 	hp = hpMax = 20;
@@ -93,8 +95,8 @@ void Hero::revive() {
 	hp = hpMax;
 	changeAnimation(HERO_STATE_IDLE, true);
 	moving = false;
-	x = Globals::ScreenWidth / 2;
-	y = Globals::ScreenHeight / 2;
+	x = globals::ScreenWidth / 2;
+	y = globals::ScreenHeight / 2;
 	slideAmount = 0;
 }
 void Hero::changeAnimation(int newState, bool resetFrameToBeginning) {
@@ -180,7 +182,7 @@ void Hero::updateDamages() {
 				//we know enemies are living entities, so cast it to that
 				LivingEntity* enemy = (LivingEntity*)(*entity);
 
-				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
+				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
 					enemy->hitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 

@@ -1,5 +1,6 @@
 #include "entity.h"
-
+#include "Math.h"
+using namespace math;
 //const int Entity::DIR_UP = 0, Entity::DIR_DOWN = 1, Entity::DIR_LEFT = 2, Entity::DIR_RIGHT = 3, Entity::DIR_NONE = -1;
 
 void Entity::update() { ; }//override me to do something useful
@@ -7,13 +8,13 @@ void Entity::draw() {
 	//override me if you want something else or more specific to happen
 	//draws current frame
 	if (currentFrame != NULL && active) {
-		currentFrame->Draw(animSet->spriteSheet, x-Globals::camera.x, y-Globals::camera.y);
+		currentFrame->Draw(animSet->spriteSheet, x-globals::camera.x, y-globals::camera.y);
 	}
 	//draw collsionBox
-	if (solid && Globals::debugging) {
+	if (solid && globals::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
-		SDL_SetRenderDrawColor(Globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(Globals::renderer, &collisionBox);
+		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(globals::renderer, &collisionBox);
 	}
 }
 
@@ -22,7 +23,7 @@ void Entity::move(float angle) {
 	moveSpeed = moveSpeedMax;
 	this->angle = angle;
 
-	int newDirection = angleToDirection(angle);
+	int newDirection = angleToDir(angle);
 	//if direction changed, update current animation
 	if (direction != newDirection) {
 		direction = newDirection;
@@ -43,9 +44,9 @@ void Entity::updateMovement() {
 		float moveDist = moveSpeed * (TimeController::timeController.dT)*moveLerp;
 		if (moveDist > 0) {
 			//xmove = distance * cos(angle in radians)
-			float xMove = moveDist * (cos(angle*Globals::PI / 180));
+			float xMove = moveDist * (cos(angle*M_PI / 180));
 			//ymove = distance * sin(angle in radians)
-			float yMove = moveDist * (sin(angle*Globals::PI / 180));
+			float yMove = moveDist * (sin(angle*M_PI / 180));
 
 			x += xMove;
 			y += yMove;
@@ -61,8 +62,8 @@ void Entity::updateMovement() {
 	if (slideAmount > 0) {
 		float slideDist = slideAmount * TimeController::timeController.dT*moveLerp;
 		if (slideDist > 0) {
-			float xMove = slideDist * (cos(slideAngle*Globals::PI / 180));
-			float yMove = slideDist * (sin(slideAngle*Globals::PI / 180));
+			float xMove = slideDist * (cos(slideAngle*M_PI / 180));
+			float yMove = slideDist * (sin(slideAngle*M_PI / 180));
 
 			x += xMove;
 			y += yMove;
@@ -99,7 +100,7 @@ void Entity::updateCollisions() {
 			if ((*entity)->active
 				//&& (*entity)->type != this->type
 				&& (*entity)->solid
-				&& Entity::checkCollision(collisionBox, (*entity)->collisionBox)) {
+				&& collBetweenTwoRects(collisionBox, (*entity)->collisionBox)) {
 
 				//add it to the list
 				collisions.push_back(*entity);
@@ -120,7 +121,7 @@ void Entity::updateCollisions() {
 			for (auto entity = collisions.begin(); entity != collisions.end(); entity++) {
 				//temporary variables for normal x and y and also temp collisionTime
 				float tmpNormalX, tmpNormalY;
-				float tmpCollisionTime = SweptAABB(startingCollisionBox, totalXMove, totalYMove, (*entity)->collisionBox, tmpNormalX, tmpNormalY);
+				float tmpCollisionTime = sweptAABB(startingCollisionBox, totalXMove, totalYMove, (*entity)->collisionBox, tmpNormalX, tmpNormalY);
 
 				//if this tmpcolltime is less than last colltime, use it instead
 				if (tmpCollisionTime < collisionTime) {
@@ -167,7 +168,7 @@ void Entity::updateCollisions() {
 // xv and vy are the velocities our moving box is moving at
 // otherbox is some other entities collision box we may collide with
 // normalx and normaly let us know which side of otherBox we collided with. these are pass by reference
-float Entity::SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBox, float & normalX, float & normalY) {
+/*float Entity::SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBox, float & normalX, float & normalY) {
 	float xInvEntry, yInvEntry;
 	float xInvExit, yInvExit;
 
@@ -249,10 +250,10 @@ float Entity::SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBo
 		//return the time of collision
 		return entryTime;
 	}
-}
+}*/
 
 //HELP FUNCTIONS
-float Entity::distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2) {
+/*float Entity::distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2) {
 	SDL_Point e1, e2;
 	e1.x = r1.x + r1.w / 2;
 	e1.y = r1.y + r1.h / 2;
@@ -262,13 +263,13 @@ float Entity::distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2) {
 
 	float d = abs(sqrt(pow(e2.x - e1.x, 2) + pow(e2.y - e1.y, 2)));
 	return d;
-}
+}*/
 float Entity::distanceBetweenTwoEntities(Entity *e1, Entity *e2) {
 	return abs(sqrt(pow(e2->x - e1->x, 2) + pow(e2->y - e1->y, 2)));
 }
-float Entity::distanceBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2) {
-	return abs(sqrt(pow(cx2 - cx1, 2) + pow(cy2 - cy1, 2)));
-}
+//float Entity::distanceBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2) {
+//	return abs(sqrt(pow(cx2 - cx1, 2) + pow(cy2 - cy1, 2)));
+//}
 float Entity::angleBetweenTwoEntities(Entity *e1, Entity *e2) {
 	float dx, dy;
 	float x1 = e1->x, y1 = e1->y, x2 = e2->x, y2 = e2->y;
@@ -276,20 +277,20 @@ float Entity::angleBetweenTwoEntities(Entity *e1, Entity *e2) {
 	dx = x2 - x1;
 	dy = y2 - y1;
 
-	return atan2(dy, dx) * 180 / Globals::PI;
+	return atan2(dy, dx) * 180 / M_PI;
 }
-bool Entity::checkCollision(SDL_Rect cbox1, SDL_Rect cbox2) {
-	SDL_Rect intersection;
-	if (SDL_IntersectRect(&cbox1, &cbox2, &intersection)) {
-		return true;
-	}
-
-	//if a rectangle is in another rectangle
-		//do it here
-
-	return false;
-}
-int Entity::angleToDirection(float angle) {
+//bool Entity::checkCollision(SDL_Rect cbox1, SDL_Rect cbox2) {
+//	SDL_Rect intersection;
+//	if (SDL_IntersectRect(&cbox1, &cbox2, &intersection)) {
+//		return true;
+//	}
+//
+//	//if a rectangle is in another rectangle
+//		//do it here
+//
+//	return false;
+//}
+int Entity::angleToDir(float angle) {
 	if ((angle >= 0 && angle <= 45) || angle >= 315 && angle <= 360)
 		return DIR_RIGHT;
 	else if (angle >= 45 && angle <= 135)
@@ -299,21 +300,21 @@ int Entity::angleToDirection(float angle) {
 	else
 		return DIR_UP;
 }
-float Entity::angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2) {
-	float dx = cx2 - cx1;
-	float dy = cy2 - cy1;
-
-	return atan2(dy, dx) * 180 / Globals::PI;
-}
-float Entity::angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2) {
-	float cx1 = r1.x + (r1.w / 2);
-	float cy1 = r1.y + (r1.h / 2);
-
-	float cx2 = r2.x + (r2.w / 2);
-	float cy2 = r2.y + (r2.h / 2);
-
-	return angleBetweenTwoPoints(cx1, cy1, cx2, cy2);
-}
+//float Entity::angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2) {
+//	float dx = cx2 - cx1;
+//	float dy = cy2 - cy1;
+//
+//	return atan2(dy, dx) * 180 / Globals::PI;
+//}
+//float Entity::angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2) {
+//	float cx1 = r1.x + (r1.w / 2);
+//	float cy1 = r1.y + (r1.h / 2);
+//
+//	float cx2 = r2.x + (r2.w / 2);
+//	float cy2 = r2.y + (r2.h / 2);
+//
+//	return angleBetweenTwoPoints(cx1, cy1, cx2, cy2);
+//}
 
 
 list<Entity*> Entity::entities;

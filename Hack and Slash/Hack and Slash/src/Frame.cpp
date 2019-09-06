@@ -7,7 +7,7 @@ void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	dest.w = clip.w;
 	dest.h = clip.h;
 
-	renderTexture(spriteSheet, Globals::renderer, dest, &clip);
+	renderTexture(spriteSheet, globals::renderer, dest, &clip);
 }
 
 
@@ -22,25 +22,25 @@ void Frame::loadFrame(ifstream &file, list<DataGroupType> &groupTypes){
 	//clip
 	getline(file, buffer);
 	stringstream ss; //good for building strings and reading from strings
-	buffer = Globals::clipOffDataHeader(buffer);
+	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
 	ss >> clip.x >> clip.y >> clip.w >> clip.h; 
 	//offset/pivot
 	getline(file, buffer);
 	ss.clear();
-	buffer = Globals::clipOffDataHeader(buffer);
+	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
 	ss >> offSet.x >> offSet.y;
 	//duration
 	getline(file, buffer);
 	ss.clear();
-	buffer = Globals::clipOffDataHeader(buffer);
+	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
 	ss >> duration;
 	//index
 	getline(file, buffer);
 	ss.clear();
-	buffer = Globals::clipOffDataHeader(buffer);
+	buffer = globals::clipOffDataHeader(buffer);
 	ss << buffer;
 	ss >> frameNumber;
 

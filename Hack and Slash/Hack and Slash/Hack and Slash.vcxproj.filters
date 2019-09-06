@@ -451,9 +451,6 @@
     <ClInclude Include="src\animationSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cleanup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\drawing_functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -496,12 +493,6 @@
     <ClInclude Include="src\livingEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\randomNumber.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\res_path.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\timeController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -532,15 +523,15 @@
     <ClInclude Include="src\hpBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\animationSet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cleanup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\drawing_functions.cpp">
@@ -573,12 +564,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\randomNumber.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\res_path.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\timeController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -604,6 +589,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\hpBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -99,14 +99,14 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 				//TODO
 				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
 			}
-			cout << "sub: " << line.substr(0, pos) << endl;
+			//cout << "sub: " << line.substr(0, pos) << endl;
 			Group *group = findGroupByName(line.substr(0, pos), groups);
 			if (group == NULL){
 				//can't find the group, but lets not lose the data
 				group = addGroupStringToGroup(line.substr(0, pos), groups);
 			}
 			//clean up string so we can add data to the group
-			line = Globals::clipOffDataHeader(line);//get rid of the 'groupName: '
+			line = globals::clipOffDataHeader(line);//get rid of the 'groupName: '
 			group->addToGroup(line);
 			//done, keep going
 			

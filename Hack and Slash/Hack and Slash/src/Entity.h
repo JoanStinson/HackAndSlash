@@ -1,8 +1,8 @@
 #ifndef ENTITY
 #define ENTITY
 
-#include <limits>
-#include <algorithm>
+//#include <limits>
+//#include <algorithm>
 #include "globals.h"
 #include "timeController.h"
 #include "animationSet.h"
@@ -55,15 +55,15 @@ public:
 	virtual void crashOntoSolid() { ; }
 
 	//HELP FUNCTIONS
-	static float SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBox, float &normalX, float &normalY);
-	static float distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
+	//static float SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBox, float &normalX, float &normalY);
+	//static float distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
 	static float distanceBetweenTwoEntities(Entity *e1, Entity *e2);
-	static float distanceBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
+	//static float distanceBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
 	static float angleBetweenTwoEntities(Entity *e1, Entity *e2);
-	static bool checkCollision(SDL_Rect cbox1, SDL_Rect cbox2);
-	static int angleToDirection(float angle);
-	static float angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
-	static float angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
+	//static bool checkCollision(SDL_Rect cbox1, SDL_Rect cbox2);
+	static int angleToDir(float angle);
+	//static float angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
+	//static float angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
 
 	//global entities list I can refer to at anytime
 	static list<Entity*> entities;
