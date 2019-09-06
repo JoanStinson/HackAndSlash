@@ -1,0 +1,20 @@
+bullet.png
+animations: 1
+bullet
+frames: 2
+frame
+clip: 0 0 16 16
+offset: 7 8
+duration: 0.5
+index: 0
+collisionBox: 0 0 0 0
+hitBox: 0 0 16 16
+damage: 5
+frame
+clip: 16 0 16 16
+offset: 8 8
+duration: 0.5
+index: 1
+collisionBox: 0 0 0 0
+hitBox: 0 0 16 16
+damage: 5

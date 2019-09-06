@@ -288,6 +288,7 @@
     <ClInclude Include="Include\SDL\SDL_vulkan.h" />
     <ClInclude Include="src\animation.h" />
     <ClInclude Include="src\animationSet.h" />
+    <ClInclude Include="src\bullet.h" />
     <ClInclude Include="src\CameraController.h" />
     <ClInclude Include="src\cleanup.h" />
     <ClInclude Include="src\dataGroupType.h" />
@@ -305,10 +306,12 @@
     <ClInclude Include="src\groupPosition.h" />
     <ClInclude Include="src\groupString.h" />
     <ClInclude Include="src\hero.h" />
+    <ClInclude Include="src\hpBar.h" />
     <ClInclude Include="src\keyboardInput.h" />
     <ClInclude Include="src\livingEntity.h" />
     <ClInclude Include="src\randomNumber.h" />
     <ClInclude Include="src\res_path.h" />
+    <ClInclude Include="src\RoundKing.h" />
     <ClInclude Include="src\soundManager.h" />
     <ClInclude Include="src\timeController.h" />
     <ClInclude Include="src\wall.h" />
@@ -316,6 +319,7 @@
   <ItemGroup>
     <ClCompile Include="src\animation.cpp" />
     <ClCompile Include="src\animationSet.cpp" />
+    <ClCompile Include="src\bullet.cpp" />
     <ClCompile Include="src\CameraController.cpp" />
     <ClCompile Include="src\cleanup.cpp" />
     <ClCompile Include="src\drawing_functions.cpp" />
@@ -327,11 +331,13 @@
     <ClCompile Include="src\grob.cpp" />
     <ClCompile Include="src\groupBuilder.cpp" />
     <ClCompile Include="src\hero.cpp" />
+    <ClCompile Include="src\hpBar.cpp" />
     <ClCompile Include="src\keyboardInput.cpp" />
     <ClCompile Include="src\livingEntity.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\randomNumber.cpp" />
     <ClCompile Include="src\res_path.cpp" />
+    <ClCompile Include="src\RoundKing.cpp" />
     <ClCompile Include="src\soundManager.cpp" />
     <ClCompile Include="src\timeController.cpp" />
     <ClCompile Include="src\wall.cpp" />

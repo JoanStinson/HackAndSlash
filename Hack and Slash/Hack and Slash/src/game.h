@@ -10,6 +10,8 @@
 #include "drawing_functions.h"
 #include "soundManager.h"
 #include "CameraController.h"
+#include "RoundKing.h"
+#include "hpBar.h"
 
 class Game {
 public:
@@ -19,6 +21,8 @@ public:
 	AnimationSet* globAnimSet;
 	AnimationSet* grobAnimSet;
 	AnimationSet* wallAnimSet;
+	AnimationSet* roundKingAnimSet;
+	AnimationSet* bulletAnimSet;
 
 	SDL_Texture* backgroundImage;
 	SDL_Texture* splashImage;
@@ -31,6 +35,12 @@ public:
 
 	list<Entity*> enemies;
 	list<Entity*> walls;
+
+	int enemyWavesTillBoss = 1;
+	bool buildBossNext = false;
+	bool bossActive = false;
+
+	HPBar hpBar;
 
 	bool splashShowing;
 	float overlayTimer;

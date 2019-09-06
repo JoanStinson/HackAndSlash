@@ -262,12 +262,14 @@ void Glob::updateAnimation() {
 }
 void Glob::updateDamages() {
 	if (active && hp > 0 && invincibleTimer <= 0) {
+		//TODO do a function
 		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
 			if ((*entity)->active && (*entity)->type == "hero") {
 				//reference as LivingEntity, so we can access hitBox/damage
 				LivingEntity* enemy = (LivingEntity*)(*entity);
 				//if enemy hits me, thennnnnnnnn
 				if (enemy->damage > 0 && Entity::checkCollision(collisionBox, enemy->hitBox)) {
+					enemy->hitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 
 					if (hp > 0) {

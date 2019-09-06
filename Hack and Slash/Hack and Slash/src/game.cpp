@@ -22,6 +22,11 @@ Game::Game() {
 	SoundManager::soundManager.loadSound("dash", resPath + "dash.wav");
 	SoundManager::soundManager.loadSound("growl", resPath + "Randomize34.wav");
 	SoundManager::soundManager.loadSound("enemyDie", resPath + "Randomize41.wav");
+	//new sounds for boss
+	SoundManager::soundManager.loadSound("crash", resPath + "crash.wav");
+	SoundManager::soundManager.loadSound("smash", resPath + "smash.wav");
+	SoundManager::soundManager.loadSound("shoot", resPath + "shoot2.wav");
+	SoundManager::soundManager.loadSound("laugh", resPath + "laugh2.wav");
 
 	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str());//Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
 	if (song != NULL)
@@ -59,6 +64,12 @@ Game::Game() {
 
 	grobAnimSet = new AnimationSet();
 	grobAnimSet->loadAnimationSet("grob.fdset", dataGroupTypes, true, 0, true);
+
+	roundKingAnimSet = new AnimationSet();
+	roundKingAnimSet->loadAnimationSet("roundKing.fdset", dataGroupTypes, true, 0, true);
+
+	bulletAnimSet = new AnimationSet();
+	bulletAnimSet->loadAnimationSet("bullet.fdset", dataGroupTypes, true, 0, true);
 
 	wallAnimSet = new AnimationSet();
 	wallAnimSet->loadAnimationSet("wall.fdset", dataGroupTypes);
@@ -111,6 +122,12 @@ Game::Game() {
 		Entity::entities.push_back(newWall);
 	}
 
+	buildBossNext = false;
+	bossActive = false;
+
+	//setup hpBar's x and y to be centered
+	hpBar.x = Globals::ScreenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
+	hpBar.y = Globals::ScreenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
 }
 
 Game::~Game() {
@@ -130,6 +147,8 @@ Game::~Game() {
 	delete globAnimSet;
 	delete grobAnimSet;
 	delete wallAnimSet;
+	delete roundKingAnimSet;
+	delete bulletAnimSet;
 
 	delete hero;
 
@@ -178,7 +197,13 @@ void Game::update() {
 						enemiesBuilt = 0;
 						enemyBuildTimer = 3;
 						overlayTimer = 2;
+						enemyWavesTillBoss = 3;
+						bossActive = false;
+						buildBossNext = false;
+						//make hpBar point to no entities health
+						hpBar.entity = NULL;
 
+						RoundKing::roundKingsKilled = 0;
 						Glob::globsKilled = 0;
 						Grob::grobsKilled = 0;
 						if (scoreTexture != NULL) {
@@ -215,13 +240,19 @@ void Game::update() {
 
 		//SPAWN ENEMIES
 		if (hero->hp > 0 && !splashShowing) {
-			if (enemiesToBuild == enemiesBuilt) {
-				enemiesToBuild = enemiesToBuild * 2;
+			if (enemiesToBuild == enemiesBuilt && enemies.size() <= 0) {
+				enemiesToBuild = enemiesToBuild + 2;
 				enemiesBuilt = 0;
 				enemyBuildTimer = 4;
+				enemyWavesTillBoss--;
+
+				if (enemyWavesTillBoss <= 0) {
+					buildBossNext = true;
+				}
 			}
 			enemyBuildTimer -= TimeController::timeController.dT;
-			if (enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {
+			//if no bosses on the prowl, check to see if we should build some jerks
+			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {//TODO 10 - MAX_ENEMIES
 				Glob *enemy = new Glob(globAnimSet);
 				//set enemies position to somewhere random within the arena's open space
 				enemy->x = getRandomNumber(Globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
@@ -242,7 +273,38 @@ void Game::update() {
 					enemies.push_back(grob);
 					Entity::entities.push_back(grob);
 				}
+
+				enemiesBuilt++;
+				enemyBuildTimer = 1;
 			}
+
+			//FOR THE BOSS
+			if (buildBossNext && enemyBuildTimer <= 0 && enemies.size() == 0) {
+				RoundKing *round = new RoundKing(roundKingAnimSet, bulletAnimSet);
+				round->invincibleTimer = 0.1;
+				enemies.push_back(round);
+				Entity::entities.push_back(round);
+
+				//make hpBar point to Boss
+				hpBar.entity = round;
+
+
+				bossActive = true;
+				buildBossNext = false;
+				enemyWavesTillBoss = 3;
+			}
+
+			//if there was a boss, but hes dead now, then go back to spawning normal enemies till the next boss
+			if (bossActive && enemies.size() == 0) {
+				bossActive = false;
+				buildBossNext = false;
+				enemiesBuilt = 0;
+				enemiesToBuild = 2;
+
+				//when boss dead, make sure hpBar doesn't reference him anymore
+				hpBar.entity = NULL;
+			}
+
 		}
 
 		//update camera positions
@@ -272,6 +334,9 @@ void Game::draw() {
 			(*entity)->draw();
 		}
 
+		//draw UI stuff
+		hpBar.draw();
+
 		if (overlayTimer <= 0 && hero->hp < 1) {
 			renderTexture(overlayImage, Globals::renderer, 0, 0);
 			if (scoreTexture == NULL) {
@@ -279,7 +344,7 @@ void Game::draw() {
 				SDL_Color color = { 255, 255, 255, 255 };//white
 
 				stringstream ss;
-				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled;
+				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + RoundKing::roundKingsKilled;
 
 				string resPath = getResourcePath();
 				scoreTexture = renderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, Globals::renderer);

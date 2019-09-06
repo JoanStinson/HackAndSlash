@@ -16,6 +16,7 @@ public:
 	virtual void updateDamages() = 0; //how we get damaged by other things (up to each class to define)
 	virtual void die() = 0; //abstract. up to other classes to decide how they die
 	virtual void updateInvincibleTimer();
+	virtual void hitLanded(LivingEntity *entity) { ; }
 
 	//TODO put override to all overrided methods
 	//TODO put const references and pointers in all functions
