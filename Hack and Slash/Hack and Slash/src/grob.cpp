@@ -1,4 +1,4 @@
-#include "grob.h"
+#include "Grob.h"
 #include "Math.h"
 using namespace math;
 
@@ -41,41 +41,42 @@ Grob::Grob(AnimationSet *animSet) {
 
 	direction = DIR_DOWN;
 
-	changeAnimation(GROB_STATE_IDLE, true);
+	ChangeAnimation(GROB_STATE_IDLE, true);
 
-	updateCollisionBox();
+	UpdateCollisionBox();
 }
-void Grob::update() {
+
+void Grob::Update() {
 	//check if died
 	if (hp < 1 && state != GROB_STATE_DEAD) {
-		changeAnimation(GROB_STATE_DEAD, true);
+		ChangeAnimation(GROB_STATE_DEAD, true);
 		moving = false;
-		die();
+		Die();
 	}
 
-	think();
+	Think();
 
 	//update collision boxes
-	updateCollisionBox();
+	UpdateCollisionBox();
 	//update movement/input
-	updateMovement();
+	UpdateMovement();
 
 	//bump into stuff
-	updateCollisions();
+	UpdateCollisions();
 
 	//only care about damage hitboxes after we're landed on a final spot in our code
-	updateHitBox();
-	updateDamages();
+	UpdateHitBox();
+	UpdateDamages();
 
 	//update animations
-	updateAnimation();
+	UpdateAnimation();
 	//update timers and things
-	updateInvincibleTimer();
+	UpdateInvincibleTimer();
 }
 
-void Grob::think() {
+void Grob::Think() {
 	if (state == GROB_STATE_IDLE || state == GROB_STATE_MOVE) {
-		thinkTimer -= TimeController::timeController.dT;
+		thinkTimer -= TimeManager::timeController.dT;
 
 		if (thinkTimer <= 0) {
 			//reset timer
@@ -87,108 +88,108 @@ void Grob::think() {
 				//otherwise move towards player to get into range
 				angle = rand() % 360; //random angle to move in
 				moving = true;
-				changeAnimation(GROB_STATE_MOVE, state != GROB_STATE_MOVE);
+				ChangeAnimation(GROB_STATE_MOVE, state != GROB_STATE_MOVE);
 
 			}
 			else {
 				//otherwise just be happy and idle :/
 				moving = false;
-				changeAnimation(GROB_STATE_IDLE, true);
+				ChangeAnimation(GROB_STATE_IDLE, true);
 			}
 
 		}
 	}
 
 	if (state == GROB_STATE_MOVE)
-		move(angle);
+		Move(angle);
 }
 
-void Grob::die() {
+void Grob::Die() {
 	moving = false;
 	state = GROB_STATE_DEAD;
-	changeAnimation(state, true);
-	SoundManager::soundManager.playSound("enemyDie");
+	ChangeAnimation(state, true);
+	SoundManager::soundManager.PlaySound("enemyDie");
 
 	//add to our score count
 	Grob::grobsKilled++;
 }
 
-void Grob::changeAnimation(int newState, bool resetFrameToBegging) {
+void Grob::ChangeAnimation(int newState, bool resetFrameToBegging) {
 	state = newState;
 	if (state == GROB_STATE_IDLE) {
 		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(GROB_ANIM_IDLE_DOWN);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_IDLE_DOWN);
 		if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(GROB_ANIM_IDLE_UP);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_IDLE_UP);
 		if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(GROB_ANIM_IDLE_LEFT);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_IDLE_LEFT);
 		if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(GROB_ANIM_IDLE_RIGHT);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_IDLE_RIGHT);
 	}
 	else if (state == GROB_STATE_MOVE) {
 		if (direction == DIR_DOWN)
-			currentAnim = animSet->getAnimation(GROB_ANIM_DOWN);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_DOWN);
 		if (direction == DIR_UP)
-			currentAnim = animSet->getAnimation(GROB_ANIM_UP);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_UP);
 		if (direction == DIR_LEFT)
-			currentAnim = animSet->getAnimation(GROB_ANIM_LEFT);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_LEFT);
 		if (direction == DIR_RIGHT)
-			currentAnim = animSet->getAnimation(GROB_ANIM_RIGHT);
+			currentAnim = animSet->GetAnimation(GROB_ANIM_RIGHT);
 	}
 	else if (state == GROB_STATE_DEAD) {
 		//always faces the person watching. If directional death, do the same as above
-		currentAnim = animSet->getAnimation(GROB_ANIM_DIE);
+		currentAnim = animSet->GetAnimation(GROB_ANIM_DIE);
 	}
 
 	if (resetFrameToBegging)
-		currentFrame = currentAnim->getFrame(0);
+		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->getFrame(currentFrame->frameNumber); //change direction for example, wanna change animation, but not what frame we were on
+		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber); //change direction for example, wanna change animation, but not what frame we were on
 
 }
 
-void Grob::updateAnimation() {
+void Grob::UpdateAnimation() {
 	if (currentFrame == NULL || currentAnim == NULL)
 		return; //cant do much with no frame or no animation
 
 	//if in a moving state, but not actually moving, return to idle 
 	if (state == GROB_STATE_MOVE && !moving) {
-		changeAnimation(GROB_STATE_IDLE, true);
+		ChangeAnimation(GROB_STATE_IDLE, true);
 	}
 	//if should show running animation, lets change the state properly
 	if (state != GROB_STATE_MOVE && moving) {
-		changeAnimation(GROB_STATE_MOVE, true);
+		ChangeAnimation(GROB_STATE_MOVE, true);
 	}
 
-	frameTimer += TimeController::timeController.dT;
+	frameTimer += TimeManager::timeController.dT;
 	//time to change frames
 	if (frameTimer >= currentFrame->duration) {
 		//if at the end of the animation
-		if (currentFrame->frameNumber == currentAnim->getEndFrameNumber()) {
+		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
 			//depends on current animation and whats going on a bit
 			if (state == GROB_STATE_DEAD) {
 				frameTimer = 0;
 				//if some how alive again, then change state back to moving
 				if (hp > 0)
-					changeAnimation(GROB_STATE_MOVE, true);
+					ChangeAnimation(GROB_STATE_MOVE, true);
 				else
 					active = false;
 			}
 			else {
 				//just reset the animation
-				currentFrame = currentAnim->getFrame(0);
+				currentFrame = currentAnim->GetFrame(0);
 			}
 
 		}
 		else {
 			//just move to the next frame in the animation
-			currentFrame = currentAnim->getNextFrame(currentFrame);
+			currentFrame = currentAnim->GetNextFrame(currentFrame);
 		}
 		frameTimer = 0; //crucial step. If we miss this, the next frame skips real quick
 	}
 }
 
-void Grob::updateHitBox() {
+void Grob::UpdateHitBox() {
 	//grobs are a constantly walking pain box
 	hitBox.w = collisionBox.w + 2;
 	hitBox.h = collisionBox.h + 2;
@@ -200,23 +201,23 @@ void Grob::updateHitBox() {
 		damage = 0;
 }
 
-void Grob::updateDamages() {
+void Grob::UpdateDamages() {
 	if (active && hp > 0 && invincibleTimer <= 0) {
 		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
 			if ((*entity)->active && (*entity)->type == "hero") {
 				//reference as livingEntity, so we can access enemies hit box
-				LivingEntity* enemy = (LivingEntity*)(*entity);
+				Creature* enemy = (Creature*)(*entity);
 
 				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
-					enemy->hitLanded(this); //let attacker know they hit
+					enemy->HitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 
 					if (hp > 0) {
-						SoundManager::soundManager.playSound("enemyHit");
+						SoundManager::soundManager.PlaySound("enemyHit");
 						invincibleTimer = 0.1;
 					}
 					//angle from other entity, to towards this entity
-					slideAngle = Entity::angleBetweenTwoEntities((*entity), this);
+					slideAngle = Entity::AngleBetweenTwoEntities((*entity), this);
 					slideAmount = 300;
 				}
 			}

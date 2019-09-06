@@ -1,35 +1,31 @@
-#ifndef DRAWINGFUNCS_H
-#define DRAWINGFUNCS_H
-
+#pragma once
 #include <iostream>
 #include <SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-//#include "globals.h"
-//#include "cleanup.h"
-
 using namespace std;
+
 /**
 * Loads an image into a texture on the rendering device
 * @param file The image file to load
 * @param ren The renderer to load the texture onto
 * @return the loaded texture, or nullptr if something went wrong.
 */
-SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren);
+SDL_Texture* LoadTexture(const std::string &file, SDL_Renderer *ren);
 
 /**
 *Loads an image up as a surface. Generally we want to do this if we want to palette swap
 */
-SDL_Surface* loadSurface(const std::string &file, SDL_Renderer *ren);
+SDL_Surface* LoadSurface(const std::string &file, SDL_Renderer *ren);
 /**
 *Copies the palette of 1 surface to another
 */
-void surfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette);
+void SurfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette);
 
 /**
 *Converts a surface to a texture and optionally deletes the surface
 */
-SDL_Texture *convertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bool cleanSurface = false);
+SDL_Texture *ConvertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bool cleanSurface = false);
 
 /**
 * Draw an SDL_Texture to an SDL_Renderer at some destination rect
@@ -40,8 +36,7 @@ SDL_Texture *convertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bo
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
-	SDL_Rect *clip = nullptr);
+void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst, SDL_Rect *clip = nullptr);
 /**
 * Draw an SDL_Texture to an SDL_Renderer at position x, y, preserving
 * the texture's width and height and taking a clip of the texture if desired
@@ -54,9 +49,7 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
-	SDL_Rect *clip = nullptr)
-	;
+void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *clip = nullptr);
 
 
 /**
@@ -68,7 +61,7 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* renderText(const std::string &message, const std::string &fontFile,
+SDL_Texture* RenderText(const std::string &message, const std::string &fontFile,
 	SDL_Color color, int fontSize, SDL_Renderer *renderer);
 
 /**
@@ -80,10 +73,7 @@ SDL_Texture* renderText(const std::string &message, const std::string &fontFile,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* renderText(const std::string &message, TTF_Font*font,
+SDL_Texture* RenderText(const std::string &message, TTF_Font*font,
 	SDL_Color color, SDL_Renderer *renderer);
 
-
-bool saveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer);
-
-#endif
+bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer);

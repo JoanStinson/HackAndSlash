@@ -1,6 +1,6 @@
-#include "hpBar.h"
+#include "HpBar.h"
 
-void HPBar::draw() {
+void HpBar::Draw() {
 	if (entity != NULL) {
 		// draw outside of hp bar
 		SDL_SetRenderDrawColor(globals::renderer, 240, 51, 159, SDL_ALPHA_OPAQUE);

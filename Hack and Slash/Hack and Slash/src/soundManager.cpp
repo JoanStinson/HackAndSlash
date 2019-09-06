@@ -1,4 +1,4 @@
-#include "soundManager.h"
+#include "SoundManager.h"
 
 SoundManager SoundManager::soundManager;
 
@@ -11,10 +11,10 @@ SoundManager::~SoundManager() {
 	}
 }
 
-void SoundManager::loadSound(string name, string file) {
+void SoundManager::LoadSound(string name, string file) {
 	sounds[name] = Mix_LoadWAV(file.c_str());
 }
 
-void SoundManager::playSound(string name) {
+void SoundManager::PlaySound(string name) {
 	Mix_PlayChannel(-1, sounds[name], false);
 }

@@ -1,11 +1,27 @@
 #pragma once
 #include <cstdlib>
-#include "livingEntity.h"
-#include "soundManager.h"
-#include "bullet.h"
+#include "Creature.h"
+#include "Bullet.h"
+#include "SoundManager.h"
 
-class RoundKing : public LivingEntity {
+class Boss : public Creature {
 public:
+
+	Boss(AnimationSet *animSet, AnimationSet *bulletAnimSet);
+	void Update();
+	void UpdateShoot();
+	void Think();
+	void Charge();
+	void Shoot();
+	void Slam();
+	void JumpTelegraph();
+	void Jump();
+	void Die();
+	void FindNearestTarget();//TODO move find nearest target to somewhere better, maybe static
+	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void UpdateAnimation();
+	void UpdateDamages();
+
 	// animations
 	static const string ROUND_KING_ANIM_IDLE;
 	static const string ROUND_KING_ANIM_CHARGE;
@@ -36,7 +52,7 @@ public:
 	//how long between bullets
 	float shotTimer = 0;
 	//who should I case
-	LivingEntity *target = NULL;
+	Creature *target = NULL;
 
 	//current phase for boss
 	int aiState = ROUND_KING_PHASE_NORMAL;
@@ -45,18 +61,5 @@ public:
 
 	static int roundKingsKilled;
 
-	RoundKing(AnimationSet *animSet, AnimationSet *bulletAnimSet);
-	void update();
-	void updateShoot();
-	void think();
-	void charge();
-	void shoot();
-	void slam();
-	void jumpTelegraph();
-	void jump();
-	void die();
-	void findNearestTarget();//TODO move find nearest target to somewhere better, maybe static
-	void changeAnimation(int newState, bool resetFrameToBeginning);
-	void updateAnimation();
-	void updateDamages();
+
 };

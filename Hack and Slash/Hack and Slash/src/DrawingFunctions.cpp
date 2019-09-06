@@ -1,5 +1,4 @@
-#include "drawing_functions.h"
-
+#include "DrawingFunctions.h"
 
 /**
 * Loads an image into a texture on the rendering device
@@ -7,10 +6,10 @@
 * @param ren The renderer to load the texture onto
 * @return the loaded texture, or nullptr if something went wrong.
 */
-SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren){
+SDL_Texture* LoadTexture(const std::string &file, SDL_Renderer *ren) {
 	SDL_Texture *texture = IMG_LoadTexture(ren, file.c_str());
-	if (texture == nullptr){
-		cout<< "LoadTexture error"<<endl;
+	if (texture == nullptr) {
+		cout << "LoadTexture error" << endl;
 	}
 	return texture;
 }
@@ -18,10 +17,9 @@ SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *ren){
 /**
 *Loads an image up as a surface. Generally we want to do this if we want to palette swap
 */
-SDL_Surface* loadSurface(const std::string &file, SDL_Renderer *ren){
+SDL_Surface* LoadSurface(const std::string &file, SDL_Renderer *ren) {
 	SDL_Surface *surface = IMG_Load(file.c_str());
-	if (surface == nullptr)
-	{
+	if (surface == nullptr) {
 		cout << "LoadSurface error" << endl;
 	}
 	return surface;
@@ -29,16 +27,14 @@ SDL_Surface* loadSurface(const std::string &file, SDL_Renderer *ren){
 /**
 *Copies the palette of 1 surface to another
 */
-void surfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette)
-{
+void SurfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette) {
 	SDL_SetPaletteColors(surface->format->palette, palette->format->palette->colors, 0, palette->format->palette->ncolors);
 }
 
 /**
 *Converts a surface to a texture and optionally deletes the surface
 */
-SDL_Texture *convertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bool cleanSurface)
-{
+SDL_Texture *ConvertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bool cleanSurface) {
 	SDL_Texture*texture = SDL_CreateTextureFromSurface(ren, surface);
 	if (cleanSurface)
 		SDL_FreeSurface(surface);
@@ -54,9 +50,8 @@ SDL_Texture *convertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bo
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
-	SDL_Rect *clip)
-{
+void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
+	SDL_Rect *clip) {
 	SDL_RenderCopy(ren, tex, clip, &dst);
 }
 /**
@@ -71,20 +66,19 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
-	SDL_Rect *clip)
-{
+void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
+	SDL_Rect *clip) {
 	SDL_Rect dst;
 	dst.x = x;
 	dst.y = y;
-	if (clip != nullptr){
+	if (clip != nullptr) {
 		dst.w = clip->w;
 		dst.h = clip->h;
 	}
 	else {
 		SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
 	}
-	renderTexture(tex, ren, dst, clip);
+	RenderTexture(tex, ren, dst, clip);
 }
 
 
@@ -97,27 +91,26 @@ void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* renderText(const std::string &message, const std::string &fontFile,
-	SDL_Color color, int fontSize, SDL_Renderer *renderer)
-{
+SDL_Texture* RenderText(const std::string &message, const std::string &fontFile,
+	SDL_Color color, int fontSize, SDL_Renderer *renderer) {
 	//Open the font
 	//TODO: store fonts externally from this function call. Bad performance warning!!!
 	TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
-	if (font == nullptr){
-		cout<<"TTF_OpenFont error"<<endl;
+	if (font == nullptr) {
+		cout << "TTF_OpenFont error" << endl;
 		return nullptr;
 	}
 	//We need to first render to a surface as that's what TTF_RenderText
 	//returns, then load that surface into a texture
 	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
-	if (surf == nullptr){
+	if (surf == nullptr) {
 		TTF_CloseFont(font);
 		cout << "TTF_RenderText error" << endl;
 		return nullptr;
 	}
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-	if (texture == nullptr){
-		cout<< "CreateTexture"<<endl;
+	if (texture == nullptr) {
+		cout << "CreateTexture" << endl;
 	}
 	//Clean up the surface and font
 	SDL_FreeSurface(surf);
@@ -134,23 +127,22 @@ SDL_Texture* renderText(const std::string &message, const std::string &fontFile,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* renderText(const std::string &message, TTF_Font *font,
-	SDL_Color color, SDL_Renderer *renderer)
-{
-	if (font == nullptr){
+SDL_Texture* RenderText(const std::string &message, TTF_Font *font,
+	SDL_Color color, SDL_Renderer *renderer) {
+	if (font == nullptr) {
 		cout << "TTF_OpenFont" << endl;
 		return nullptr;
 	}
 	//We need to first render to a surface as that's what TTF_RenderText
 	//returns, then load that surface into a texture
 	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
-	if (surf == nullptr){
-		cout<<"TTF_RenderText"<<endl;
+	if (surf == nullptr) {
+		cout << "TTF_RenderText" << endl;
 		return nullptr;
 	}
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
-	if (texture == nullptr){
-		cout<<"CreateTexture"<<endl;
+	if (texture == nullptr) {
+		cout << "CreateTexture" << endl;
 	}
 	//Clean up the surface and font
 	SDL_FreeSurface(surf);
@@ -158,7 +150,7 @@ SDL_Texture* renderText(const std::string &message, TTF_Font *font,
 	return texture;
 }
 
-bool saveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer) {
+bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer) {
 	SDL_Surface* saveSurface = NULL;
 	SDL_Surface* infoSurface = NULL;
 	infoSurface = SDL_GetWindowSurface(SDLWindow);

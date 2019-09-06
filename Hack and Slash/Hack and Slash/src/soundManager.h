@@ -6,11 +6,11 @@ using namespace std;
 
 class SoundManager {
 public:
-	map<string, Mix_Chunk*> sounds;
 	SoundManager();
 	~SoundManager();
-	void loadSound(string name, string file);
-	void playSound(string name);
+	void LoadSound(string name, string file);
+	void PlaySound(string name);
 
+	map<string, Mix_Chunk*> sounds;
 	static SoundManager soundManager;
 };

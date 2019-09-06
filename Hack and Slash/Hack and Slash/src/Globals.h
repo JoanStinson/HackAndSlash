@@ -1,13 +1,10 @@
-#ifndef GLOBALS
-#define GLOBALS
-
+#pragma once
 #include <string>
 #include <iostream>
 #include <SDL.h>
-
 using namespace std;
 
-namespace globals{
+namespace globals {
 
 	//useful for me as a dev
 	extern bool debugging;
@@ -19,11 +16,8 @@ namespace globals{
 	// camera
 	extern SDL_Rect camera;
 
-
 	//clips off header. e.g "clip: 50 114 44 49" turns into "50 114 44 49"
 	string clipOffDataHeader(string data);
 	string getResourcePath(const string &subDir = "");
-	
-};
 
-#endif
+};

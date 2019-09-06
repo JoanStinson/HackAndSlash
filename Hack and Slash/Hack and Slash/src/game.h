@@ -1,20 +1,26 @@
-#ifndef GAME
-#define GAME
-
-#include "globals.h"
-#include "hero.h"
-#include "wall.h"
-#include "glob.h"
-#include "grob.h"
-#include "keyboardInput.h"
-#include "drawing_functions.h"
-#include "soundManager.h"
-#include "CameraController.h"
-#include "RoundKing.h"
-#include "hpBar.h"
+#pragma once
+#include "Globals.h"
+#include "Player.h"
+#include "Wall.h"
+#include "Glob.h"
+#include "Grob.h"
+#include "InputManager.h"
+#include "DrawingFunctions.h"
+#include "SoundManager.h"
+#include "Camera.h"
+#include "Boss.h"
+#include "HpBar.h"
 
 class Game {
 public:
+	Game();
+	~Game();
+
+	void Update();
+	void Draw();
+
+
+
 	Mix_Music* song;
 
 	AnimationSet* heroAnimSet;
@@ -30,8 +36,8 @@ public:
 
 	SDL_Texture* scoreTexture = NULL; //for drawing strings to the screen
 
-	Hero *hero;
-	KeyboardInput heroInput;
+	Player *player;
+	InputManager heroInput;
 
 	list<Entity*> enemies;
 	list<Entity*> walls;
@@ -40,20 +46,11 @@ public:
 	bool buildBossNext = false;
 	bool bossActive = false;
 
-	HPBar hpBar;
+	HpBar hpBar;
 
 	bool splashShowing;
 	float overlayTimer;
 
-	CameraController camController;
-
-	Game();
-	~Game();
-
-	void update();
-	void draw();
+	Camera camController;
 
 };
-
-
-#endif

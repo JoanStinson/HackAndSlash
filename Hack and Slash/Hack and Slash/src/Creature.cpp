@@ -1,42 +1,44 @@
-#include "livingEntity.h"
+#include "Creature.h"
 
-void LivingEntity::updateHitBox(){
+void Creature::UpdateHitBox() {
 	//assume damage is 0 for now
 	damage = 0;
 
-	Type<SDL_Rect>* hitBoxes = dynamic_cast<Type<SDL_Rect>*>(GroupBuilder::findGroupByName("hitBox", currentFrame->frameData));
-	if (hitBoxes != NULL && hitBoxes->GetGroupSize() > 0){
+	GroupType<SDL_Rect>* hitBoxes = dynamic_cast<GroupType<SDL_Rect>*>(GroupBuilder::FindGroupByName("hitBox", currentFrame->frameData));
+	if (hitBoxes != NULL && hitBoxes->GetGroupSize() > 0) {
 		//update hitbox
-		SDL_Rect hb = hitBoxes->GetBoxFront();
+		SDL_Rect hb = hitBoxes->GetBoxData().front();
 		hitBox.x = x - currentFrame->offSet.x + hb.x;
 		hitBox.y = y - currentFrame->offSet.y + hb.y;
 		hitBox.w = hb.w;
 		hitBox.h = hb.h;
 
 		//update damage
-		Type<float>* damages = dynamic_cast<Type<float>*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
-		if (damages != NULL && damages->GetGroupSize() > 0){
-			damage = damages->GetNumberFront();
+		GroupType<float>* damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->frameData));
+		if (damages != NULL && damages->GetGroupSize() > 0) {
+			damage = damages->GetNumData().front();
 		}
 	}
 }
-void LivingEntity::updateInvincibleTimer(){
-	if (invincibleTimer > 0){
-		invincibleTimer -= TimeController::timeController.dT;
+
+void Creature::UpdateInvincibleTimer() {
+	if (invincibleTimer > 0) {
+		invincibleTimer -= TimeManager::timeController.dT;
 	}
 }
-void LivingEntity::draw(){
-	if (currentFrame != NULL && active){
+
+void Creature::Draw() {
+	if (currentFrame != NULL && active) {
 		if (invincibleTimer > 0 && animSet->whiteSpriteSheet != NULL) {
 			currentFrame->Draw(animSet->whiteSpriteSheet, x - globals::camera.x, y - globals::camera.y);
 		}
 		else {
 			currentFrame->Draw(animSet->spriteSheet, x - globals::camera.x, y - globals::camera.y);
 		}
-		
+
 	}
 	//draw collsionBox
-	if (solid && globals::debugging){
+	if (solid && globals::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
 		SDL_SetRenderDrawColor(globals::renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawRect(globals::renderer, &lastCollisionBox);

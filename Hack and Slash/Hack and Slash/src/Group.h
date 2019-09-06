@@ -1,18 +1,15 @@
+#pragma once
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <list>
 #include <SDL.h>
-#include "dataGroupType.h"
-
+#include "DataGroupType.h"
 using namespace std;
-#ifndef GROUP_H
-#define GROUP_H
 
 //ABSTRACT CLASS
 //groups manage a frames data
-
 class Group{
 public:
 	DataGroupType type; //describes its name, type and other rules
@@ -30,5 +27,3 @@ public:
 
 	//virtual void draw() = 0;
 };
-
-#endif

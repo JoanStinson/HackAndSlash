@@ -1,33 +1,33 @@
-#include "RoundKing.h"
+#include "Boss.h"
 #include "Math.h"
 using namespace math;
 
-int RoundKing::roundKingsKilled = 0;
+int Boss::roundKingsKilled = 0;
 
 // animations
-const string RoundKing::ROUND_KING_ANIM_IDLE = "idle";
-const string RoundKing::ROUND_KING_ANIM_CHARGE = "charge";
-const string RoundKing::ROUND_KING_ANIM_SHOOT = "shoot";
-const string RoundKing::ROUND_KING_ANIM_SLAM = "slam";
-const string RoundKing::ROUND_KING_ANIM_JUMP_TELEGRAPH = "jumpTelegraph";
-const string RoundKing::ROUND_KING_ANIM_JUMP = "jump";
-const string RoundKing::ROUND_KING_ANIM_DIE = "die";
+const string Boss::ROUND_KING_ANIM_IDLE = "idle";
+const string Boss::ROUND_KING_ANIM_CHARGE = "charge";
+const string Boss::ROUND_KING_ANIM_SHOOT = "shoot";
+const string Boss::ROUND_KING_ANIM_SLAM = "slam";
+const string Boss::ROUND_KING_ANIM_JUMP_TELEGRAPH = "jumpTelegraph";
+const string Boss::ROUND_KING_ANIM_JUMP = "jump";
+const string Boss::ROUND_KING_ANIM_DIE = "die";
 
 // states 
-const int RoundKing::ROUND_KING_STATE_IDLE = 1;
-const int RoundKing::ROUND_KING_STATE_CHARGE = 2;
-const int RoundKing::ROUND_KING_STATE_SHOOT = 3;
-const int RoundKing::ROUND_KING_STATE_SLAM = 4;
-const int RoundKing::ROUND_KING_STATE_JUMP_TELEGRAPH = 5;
-const int RoundKing::ROUND_KING_STATE_JUMP = 6;
-const int RoundKing::ROUND_KING_STATE_DEAD = 7;
+const int Boss::ROUND_KING_STATE_IDLE = 1;
+const int Boss::ROUND_KING_STATE_CHARGE = 2;
+const int Boss::ROUND_KING_STATE_SHOOT = 3;
+const int Boss::ROUND_KING_STATE_SLAM = 4;
+const int Boss::ROUND_KING_STATE_JUMP_TELEGRAPH = 5;
+const int Boss::ROUND_KING_STATE_JUMP = 6;
+const int Boss::ROUND_KING_STATE_DEAD = 7;
 
 //phases
-const int RoundKing::ROUND_KING_PHASE_NORMAL = 1;
-const int RoundKing::ROUND_KING_PHASE_DAMAGED = 2;
-const int RoundKing::ROUND_KING_PHASE_FRENETIC = 3;
+const int Boss::ROUND_KING_PHASE_NORMAL = 1;
+const int Boss::ROUND_KING_PHASE_DAMAGED = 2;
+const int Boss::ROUND_KING_PHASE_FRENETIC = 3;
 
-RoundKing::RoundKing(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
+Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 	this->animSet = animSet;
 	this->bulletAnimSet = bulletAnimSet;
 
@@ -45,69 +45,69 @@ RoundKing::RoundKing(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 
 	collisionBoxYOffset = -14;
 
-	changeAnimation(ROUND_KING_STATE_IDLE, true);
+	ChangeAnimation(ROUND_KING_STATE_IDLE, true);
 
-	updateCollisionBox();
+	UpdateCollisionBox();
 }
 
-void RoundKing::update() {
+void Boss::Update() {
 	//check if dead
 	if (hp < 1 && state != ROUND_KING_STATE_DEAD) {
-		changeAnimation(ROUND_KING_STATE_DEAD, true);
+		ChangeAnimation(ROUND_KING_STATE_DEAD, true);
 		moving = false;
-		die();
+		Die();
 	}
 
 	//ai thinks what to do
-	think();
+	Think();
 
-	updateShoot();
+	UpdateShoot();
 
-	updateCollisionBox();
+	UpdateCollisionBox();
 
-	updateMovement();
+	UpdateMovement();
 
-	updateCollisions();
+	UpdateCollisions();
 
-	updateHitBox();
-	updateDamages();
-	updateAnimation();
-	updateInvincibleTimer();
+	UpdateHitBox();
+	UpdateDamages();
+	UpdateAnimation();
+	UpdateInvincibleTimer();
 }
 
-void RoundKing::updateShoot() {
+void Boss::UpdateShoot() {
 	//update all our shooting stuff
 	if (state == ROUND_KING_STATE_SHOOT) {
-		shootTimer -= TimeController::timeController.dT;
-		shotTimer -= TimeController::timeController.dT;
+		shootTimer -= TimeManager::timeController.dT;
+		shotTimer -= TimeManager::timeController.dT;
 
 		//if shooting time is over, stop shooting
 		if (shootTimer <= 0) {
-			changeAnimation(ROUND_KING_STATE_IDLE, true);
+			ChangeAnimation(ROUND_KING_STATE_IDLE, true);
 		}
 		else if (shotTimer <= 0) { //otherwise if still shooting and its time to take a shot
 			shotTimer = 0.5;
 			Bullet *bullet = new Bullet(bulletAnimSet, x, y);
-			SoundManager::soundManager.playSound("shoot");
+			SoundManager::soundManager.PlaySound("shoot");
 			bullet->angle = angle;
 			Entity::entities.push_back(bullet);
 		}
 	}
 }
 
-void RoundKing::think() {
+void Boss::Think() {
 	//finds closest hero
-	findNearestTarget();
+	FindNearestTarget();
 
 	//if there is a hero we can target, do the thinking
 	if (target != NULL) {
 		//only tick down think timer if in IDLE state
 		if (state == ROUND_KING_STATE_IDLE) {
-			thinkTimer -= TimeController::timeController.dT;
+			thinkTimer -= TimeManager::timeController.dT;
 		}
 
 		// keep setting angle to point towards target
-		angle = Entity::angleBetweenTwoEntities(this, target);
+		angle = Entity::AngleBetweenTwoEntities(this, target);
 
 		//CHECK  WHICH PHASE WE ARE IN MY FRIEND
 		if (hp > 250) {
@@ -135,10 +135,10 @@ void RoundKing::think() {
 				int action = randomNumber(4);
 				if (action % 2 == 0) {
 					//eat it bitch!
-					slam();
+					Slam();
 				}
 				else
-					charge();
+					Charge();
 			}
 			else if (aiState == ROUND_KING_PHASE_DAMAGED) {
 				//reset timer
@@ -149,21 +149,21 @@ void RoundKing::think() {
 				int action = randomNumber(6);
 				if (action < 2) {
 					//eat it bitch!
-					slam();
+					Slam();
 				}
 				else if (action < 4)
-					charge();
+					Charge();
 				else
-					jumpTelegraph();
+					JumpTelegraph();
 			}
 			else { //assuming we are in frantic phase
 				//reset timer
 				thinkTimer = 1;
 				int action = randomNumber(4);
 				if (action % 2 == 0)
-					jumpTelegraph();
+					JumpTelegraph();
 				else
-					charge();
+					Charge();
 
 			}
 		}
@@ -171,17 +171,17 @@ void RoundKing::think() {
 	else {
 		//targeting no one
 		moving = 0;
-		changeAnimation(ROUND_KING_STATE_IDLE, (state != ROUND_KING_STATE_IDLE));
+		ChangeAnimation(ROUND_KING_STATE_IDLE, (state != ROUND_KING_STATE_IDLE));
 	}
 }
 
-void RoundKing::charge() {
+void Boss::Charge() {
 	moving = false;
-	SoundManager::soundManager.playSound("laugh");
-	changeAnimation(ROUND_KING_STATE_CHARGE, true);
+	SoundManager::soundManager.PlaySound("laugh");
+	ChangeAnimation(ROUND_KING_STATE_CHARGE, true);
 }
 
-void RoundKing::shoot() {
+void Boss::Shoot() {
 	moving = false;
 	//5s of shooting at the player
 	shootTimer = 5;
@@ -192,38 +192,38 @@ void RoundKing::shoot() {
 		shootTimer = 3;
 	}
 
-	changeAnimation(ROUND_KING_STATE_SHOOT, true);
+	ChangeAnimation(ROUND_KING_STATE_SHOOT, true);
 
 }
 
-void RoundKing::slam() {
+void Boss::Slam() {
 	moving = false;
-	changeAnimation(ROUND_KING_STATE_SLAM, true);
+	ChangeAnimation(ROUND_KING_STATE_SLAM, true);
 }
 
-void RoundKing::jumpTelegraph() {
+void Boss::JumpTelegraph() {
 	moving = false;
 	frameTimer = 0;
-	changeAnimation(ROUND_KING_STATE_JUMP_TELEGRAPH, true);
+	ChangeAnimation(ROUND_KING_STATE_JUMP_TELEGRAPH, true);
 }
 
-void RoundKing::jump() {
+void Boss::Jump() {
 	moving = false;
 	frameTimer = 0;
 	slideAmount = 100;
 	slideAngle = angle;
-	changeAnimation(ROUND_KING_STATE_JUMP, true);
+	ChangeAnimation(ROUND_KING_STATE_JUMP, true);
 }
 
-void RoundKing::die() {
+void Boss::Die() {
 	moving = false;
-	changeAnimation(ROUND_KING_STATE_DEAD, true);
-	SoundManager::soundManager.playSound("enemyDie");
+	ChangeAnimation(ROUND_KING_STATE_DEAD, true);
+	SoundManager::soundManager.PlaySound("enemyDie");
 
 	roundKingsKilled++;
 }
 
-void RoundKing::findNearestTarget() {
+void Boss::FindNearestTarget() {
 	//TODO cleaner solution, same function is used in glob
 	//Make an enemy class! and make grob, glob and king inherit from it
 	target = NULL;
@@ -232,79 +232,79 @@ void RoundKing::findNearestTarget() {
 		if ((*entity)->type == "hero" && (*entity)->active) {
 			//if found first hero in list, just set them as the target for now
 			if (target == NULL) {
-				target = (LivingEntity*)(*entity); //if cant cast to LivingEntity, throw casting exception
+				target = (Creature*)(*entity); //if cant cast to LivingEntity, throw casting exception
 			}
 			else {
 				//otherwise, is this other hero closer then the previous target
-				if (Entity::distanceBetweenTwoEntities(this, (*entity)) < Entity::distanceBetweenTwoEntities(this, target)) {
-					target = (LivingEntity*)(*entity);
+				if (Entity::DistBetweenTwoEntities(this, (*entity)) < Entity::DistBetweenTwoEntities(this, target)) {
+					target = (Creature*)(*entity);
 				}
 			}
 		}
 	}
 }
 
-void RoundKing::changeAnimation(int newState, bool resetFrameToBeginning) {
+void Boss::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	state = newState;
 
 	if (state == ROUND_KING_STATE_IDLE)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_IDLE);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_IDLE);
 	if (state == ROUND_KING_STATE_CHARGE)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_CHARGE);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_CHARGE);
 	if (state == ROUND_KING_STATE_SHOOT)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_SHOOT);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_SHOOT);
 	if (state == ROUND_KING_STATE_SLAM)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_SLAM);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_SLAM);
 	if (state == ROUND_KING_STATE_JUMP_TELEGRAPH)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_JUMP_TELEGRAPH);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_JUMP_TELEGRAPH);
 	if (state == ROUND_KING_STATE_JUMP)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_JUMP);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_JUMP);
 	if (state == ROUND_KING_STATE_DEAD)
-		currentAnim = animSet->getAnimation(ROUND_KING_ANIM_DIE);
+		currentAnim = animSet->GetAnimation(ROUND_KING_ANIM_DIE);
 
 	if (resetFrameToBeginning)
-		currentFrame = currentAnim->getFrame(0);
+		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->getFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
 }
 
-void RoundKing::updateAnimation() {
+void Boss::UpdateAnimation() {
 	if (currentFrame == NULL || currentAnim == NULL) {
 		return;
 	}
 
-	frameTimer += TimeController::timeController.dT;
+	frameTimer += TimeManager::timeController.dT;
 	//if frameTimer greater then frame duration:
 	if (frameTimer >= currentFrame->duration) {
 		// if at the end of animation
-		if (currentFrame->frameNumber == currentAnim->getEndFrameNumber()) {
+		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
 			if (state == ROUND_KING_STATE_CHARGE)
-				shoot();
+				Shoot();
 			else if (state == ROUND_KING_STATE_JUMP_TELEGRAPH)
-				jump();
+				Jump();
 			else if (state == ROUND_KING_STATE_SLAM || state == ROUND_KING_STATE_JUMP)
-				changeAnimation(ROUND_KING_STATE_IDLE, true);
+				ChangeAnimation(ROUND_KING_STATE_IDLE, true);
 			else if (state == ROUND_KING_STATE_DEAD) {
 				frameTimer = 0;
 				//if somehow alive again
 				if (hp > 0)
-					changeAnimation(ROUND_KING_STATE_IDLE, true);
+					ChangeAnimation(ROUND_KING_STATE_IDLE, true);
 				else
 					active = false;
 			}
 		}
 		else { //not end of animation, so move to next frame normally
-			currentFrame = currentAnim->getNextFrame(currentFrame);
+			currentFrame = currentAnim->GetNextFrame(currentFrame);
 			//IF THE NEW FRAME IS DEALING DAMAGE, we might want to make sounds
-			Type<float> *damages = dynamic_cast<Type<float>*>(GroupBuilder::findGroupByName("damage", currentFrame->frameData));
+			GroupType<float> *damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->frameData));
 			//if does damage
 			if (damages != NULL && damages->GetGroupSize() > 0) {
 				// and if its Slam state
 				if (state == ROUND_KING_STATE_SLAM) {
-					SoundManager::soundManager.playSound("smash");
+					SoundManager::soundManager.PlaySound("smash");
 				}
 				else if (state == ROUND_KING_STATE_JUMP) {
-					SoundManager::soundManager.playSound("crash");
+					SoundManager::soundManager.PlaySound("crash");
 				}
 			}
 		}
@@ -312,21 +312,21 @@ void RoundKing::updateAnimation() {
 	}
 }
 
-void RoundKing::updateDamages() {
+void Boss::UpdateDamages() {
 	//am I hitable
 	if (active && hp > 0 && invincibleTimer <= 0) {
 		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
 			if ((*entity)->active && (*entity)->type == "hero") {
 				//cast entity to livingentity
-				LivingEntity *enemy = dynamic_cast<LivingEntity*>((*entity));
+				Creature *enemy = dynamic_cast<Creature*>((*entity));
 
 				//if enemy is hitting me
 				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
-					enemy->hitLanded(this); //let attacker know they hit
+					enemy->HitLanded(this); //let attacker know they hit
 					hp -= enemy->damage;
 
 					if (hp > 0) {
-						SoundManager::soundManager.playSound("enemyHit");
+						SoundManager::soundManager.PlaySound("enemyHit");
 						invincibleTimer = 0.1;
 					}
 				}

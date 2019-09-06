@@ -1,13 +1,21 @@
 #pragma once
-#ifndef GROB
-#define GROB
-
 #include <cstdlib> //need it for random numbers
-#include "livingEntity.h"
-#include "soundManager.h"
+#include "Creature.h"
+#include "SoundManager.h"
 
-class Grob : public LivingEntity {
+class Grob : public Creature {
 public:
+	//main functions
+	Grob(AnimationSet *animSet);
+	void Update();
+	void Think();
+	void Die();
+	void ChangeAnimation(int newState, bool resetFrameToBegging);
+
+	void UpdateAnimation();
+	void UpdateHitBox();
+	void UpdateDamages();
+
 	static const string GROB_ANIM_UP;
 	static const string GROB_ANIM_DOWN;
 	static const string GROB_ANIM_LEFT;
@@ -27,17 +35,4 @@ public:
 
 	//when this is 0, think of something new to do (used for AI)
 	float thinkTimer = 0;
-
-	//main functions
-	Grob(AnimationSet *animSet);
-	void update();
-	void think();
-	void die();
-	void changeAnimation(int newState, bool resetFrameToBegging);
-
-	void updateAnimation();
-	void updateHitBox();
-	void updateDamages();
 };
-
-#endif

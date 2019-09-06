@@ -1,11 +1,7 @@
-#ifndef ENTITY
-#define ENTITY
-
-//#include <limits>
-//#include <algorithm>
-#include "globals.h"
-#include "timeController.h"
-#include "animationSet.h"
+#pragma once
+#include "Globals.h"
+#include "TimeManager.h"
+#include "AnimationSet.h"
 
 //Abstract Class. cannot instantiate an object of type Entity e.g cannot do Entity e;
 class Entity {
@@ -43,33 +39,25 @@ public:
 	float frameTimer; //helps animate frame to frame
 
 	//VIRTUAL FUNCTIONS
-	virtual void update();
-	virtual void draw();
+	virtual void Update();
+	virtual void Draw();
 
-	virtual void move(float angle);
-	virtual void updateMovement();
-	virtual void updateCollisionBox();
+	virtual void Move(float angle);
+	virtual void UpdateMovement();
+	virtual void UpdateCollisionBox();
 
-	virtual void changeAnimation(int newState, bool resetFrameToBeginning) = 0;//abstract function
-	virtual void updateCollisions(); //how we bump into stuff in the world
-	virtual void crashOntoSolid() { ; }
+	virtual void ChangeAnimation(int newState, bool resetFrameToBeginning) = 0;//abstract function
+	virtual void UpdateCollisions(); //how we bump into stuff in the world
+	virtual void CrashOntoSolid() { ; }
 
 	//HELP FUNCTIONS
-	//static float SweptAABB(SDL_Rect movingBox, float vx, float vy, SDL_Rect otherBox, float &normalX, float &normalY);
-	//static float distanceBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
-	static float distanceBetweenTwoEntities(Entity *e1, Entity *e2);
-	//static float distanceBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
-	static float angleBetweenTwoEntities(Entity *e1, Entity *e2);
-	//static bool checkCollision(SDL_Rect cbox1, SDL_Rect cbox2);
-	static int angleToDir(float angle);
-	//static float angleBetweenTwoPoints(float cx1, float cy1, float cx2, float cy2);
-	//static float angleBetweenTwoRects(SDL_Rect &r1, SDL_Rect &r2);
+	static float DistBetweenTwoEntities(Entity *e1, Entity *e2);
+	static float AngleBetweenTwoEntities(Entity *e1, Entity *e2);
+	static int AngleToDir(float angle);
 
 	//global entities list I can refer to at anytime
 	static list<Entity*> entities;
-	static bool EntityCompare(const Entity* const &a, const Entity * const &b); //compare 2 entities in a list to help sorting (sorts based on y value)
-	static void removeInactiveEntitiesFromList(list<Entity*> *entityList, bool deleteEntities);
-	static void removeAllFromList(list<Entity*> *entityList, bool deleteEntities);
+	static bool CompareEntity(const Entity* const &a, const Entity * const &b); //compare 2 entities in a list to help sorting (sorts based on y value)
+	static void RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities);
+	static void DeleteAllEntities(list<Entity*> *entityList, bool deleteEntities);
 };
-
-#endif

@@ -1,24 +1,26 @@
-#include "animation.h"
+#include "Animation.h"
 
-Animation::Animation(string name)
-{
-	this->name = name;
+Animation::Animation(string name) : name(name) {
+
 }
 
-int Animation::getNextFrameNumber(int frameNumber){
+int Animation::GetNextFrameNumber(int frameNumber) {
 	//return (frameNumber + 1) % frames.size();
 	if (frameNumber + 1 < frames.size())
 		return frameNumber + 1;
 	else
 		return 0;
 }
-Frame* Animation::getNextFrame(Frame* frame){
-	return getFrame(getNextFrameNumber(frame->frameNumber));
+
+Frame* Animation::GetNextFrame(Frame* frame) {
+	return GetFrame(GetNextFrameNumber(frame->frameNumber));
 }
-int Animation::getEndFrameNumber(){
+
+int Animation::GetEndFrameNumber() {
 	return frames.size() - 1;
 }
-Frame* Animation::getFrame(int frameNumber){
+
+Frame* Animation::GetFrame(int frameNumber) {
 	if (frames.size() == 0)
 		return NULL;
 
@@ -26,7 +28,7 @@ Frame* Animation::getFrame(int frameNumber){
 
 	int counter = 0;
 
-	for (counter = 0; counter < frameNumber && counter < getEndFrameNumber(); counter++){
+	for (counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
 		i++; //make iterator point to the next frame in the list
 	}
 
@@ -37,7 +39,7 @@ Frame* Animation::getFrame(int frameNumber){
 	return frame;
 }
 
-void Animation::loadAnimation(ifstream &file, list<DataGroupType> &groupTypes){
+void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
 	getline(file, name);
 	string buffer;
 	getline(file, buffer);
@@ -46,11 +48,10 @@ void Animation::loadAnimation(ifstream &file, list<DataGroupType> &groupTypes){
 	ss << buffer;
 	int numberOfFrames;
 	ss >> numberOfFrames;
-	for (int i = 0; i < numberOfFrames; i++){
+
+	for (int i = 0; i < numberOfFrames; i++) {
 		Frame newFrame;
-		newFrame.loadFrame(file, groupTypes);
+		newFrame.LoadFrame(file, groupTypes);
 		frames.push_back(newFrame);
 	}
-
-
 }

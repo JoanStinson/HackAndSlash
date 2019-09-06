@@ -1,12 +1,20 @@
-#ifndef HERO
-#define HERO
+#pragma once
+#include "Globals.h"
+#include "Creature.h"
+#include "SoundManager.h"
 
-#include "globals.h"
-#include "livingEntity.h"
-#include "soundManager.h"
-
-class Hero : public LivingEntity{
+class Player : public Creature {
 public:
+	Player(AnimationSet *animSet);
+	void Update();
+	void Slash();
+	void Dash();
+	void Die();
+	void Revive();
+	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void UpdateAnimation();
+	void UpdateDamages();
+
 	//refernce variables
 	static const string HERO_ANIM_UP;
 	static const string HERO_ANIM_DOWN;
@@ -31,16 +39,4 @@ public:
 	static const int HERO_STATE_SLASH;
 	static const int HERO_STATE_DASH;
 	static const int HERO_STATE_DEAD;
-
-	Hero(AnimationSet *animSet);
-	void update();
-	void slash();
-	void dash();
-	void die();
-	void revive();
-	void changeAnimation(int newState, bool resetFrameToBeginning);
-	void updateAnimation();
-	void updateDamages();
 };
-
-#endif

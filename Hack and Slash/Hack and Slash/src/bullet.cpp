@@ -1,4 +1,4 @@
-#include "bullet.h"
+#include "Bullet.h"
 
 const string Bullet::BULLET_ANIM_BULLET = "bullet";
 
@@ -22,50 +22,50 @@ Bullet::Bullet(AnimationSet * animSet, int x, int y) {
 	collisionBoxYOffset = 0;
 
 	direction = DIR_DOWN;
-	changeAnimation(0, true);
-	updateCollisionBox();
+	ChangeAnimation(0, true);
+	UpdateCollisionBox();
 	invincibleTimer = 0;
 }
 
-void Bullet::update() {
-	updateCollisionBox();
-	move(angle);
-	updateMovement();
-	updateCollisions();
-	updateHitBox();
-	updateDamages();
-	updateAnimation();
+void Bullet::Update() {
+	UpdateCollisionBox();
+	Move(angle);
+	UpdateMovement();
+	UpdateCollisions();
+	UpdateHitBox();
+	UpdateDamages();
+	UpdateAnimation();
 
 }
 
-void Bullet::changeAnimation(int newState, bool resetFrameToBeginning) {
+void Bullet::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	state = newState;
-	currentAnim = animSet->getAnimation(BULLET_ANIM_BULLET);
+	currentAnim = animSet->GetAnimation(BULLET_ANIM_BULLET);
 
 	if (resetFrameToBeginning)
-		currentFrame = currentAnim->getFrame(0);
+		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->getFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
 }
 
-void Bullet::updateAnimation() {
+void Bullet::UpdateAnimation() {
 	if (currentFrame == NULL || currentAnim == NULL) return;
 
 	// if got frames, update frameTimer and animation
-	frameTimer += TimeController::timeController.dT;
+	frameTimer += TimeManager::timeController.dT;
 
 	if (frameTimer >= currentFrame->duration) {
 		// if its the end of the animation, restart it
-		if (currentFrame->frameNumber == currentAnim->getEndFrameNumber())
-			currentFrame = currentAnim->getFrame(0);
+		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber())
+			currentFrame = currentAnim->GetFrame(0);
 		else
-			currentFrame = currentAnim->getNextFrame(currentFrame);
+			currentFrame = currentAnim->GetNextFrame(currentFrame);
 
 		frameTimer = 0;
 	}
 }
 
-void Bullet::hitLanded(LivingEntity * entity) {
+void Bullet::HitLanded(Creature *entity) {
 	//we crashed into an entity and damaged them, time to destroy bullet
 	//TODO USE OBJECT POOLING
 	active = false;
@@ -73,7 +73,7 @@ void Bullet::hitLanded(LivingEntity * entity) {
 	//TODO create hit effect
 }
 
-void Bullet::crashOntoSolid() {
+void Bullet::CrashOntoSolid() {
 	//for bullets, when they hit walls, destroy them
 	//TODO object pooling
 	active = false;

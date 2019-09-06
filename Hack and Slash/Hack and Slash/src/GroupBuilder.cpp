@@ -1,44 +1,45 @@
-#include "groupBuilder.h"
+#include "GroupBuilder.h"
 
-const bool GroupBuilder::savedInGroups = false;//TODO change this if fdset has saveInGroups selected
+const bool GroupBuilder::SavedInGroups = false;//TODO change this if fdset has saveInGroups selected
 
 template <class T>
-Group* GroupBuilder::buildGroup(DataGroupType dataType) {
-	Group* group = new Type<T>(dataType);
+Group* GroupBuilder::BuildGroup(DataGroupType dataType) {
+	Group *group = new GroupType<T>(dataType);
 	return group;
 }
 
-void GroupBuilder::buildGroups(list<DataGroupType> groupTypes, list<Group*> &groups) {
+void GroupBuilder::BuildGroups(list<DataGroupType> groupTypes, list<Group*> &groups) {
 	for (list<DataGroupType>::iterator dgt = groupTypes.begin(); dgt != groupTypes.end(); dgt++) {
 		if ((*dgt).dataType == (*dgt).DATATYPE_BOX) {
-			Group *group = buildGroup<SDL_Rect>((*dgt));
+			Group *group = BuildGroup<SDL_Rect>((*dgt));
 			groups.push_back(group);
 		}
 		else if ((*dgt).dataType == (*dgt).DATATYPE_NUMBER) {
-			Group *group = buildGroup<float>((*dgt));
+			Group *group = BuildGroup<float>((*dgt));
 			groups.push_back(group);
 		}
 		else if ((*dgt).dataType == (*dgt).DATATYPE_POSITION) {
-			Group *group = buildGroup<SDL_Point>((*dgt));
+			Group *group = BuildGroup<SDL_Point>((*dgt));
 			groups.push_back(group);
 		}
 		else if ((*dgt).dataType == (*dgt).DATATYPE_STRING) {
-			Group *group = buildGroup<string>((*dgt));
+			Group *group = BuildGroup<string>((*dgt));
 			groups.push_back(group);
 		}
 	}
 }
 
-Group* GroupBuilder::addGroupStringToGroup(string name, list<Group*> &groups) {
+Group* GroupBuilder::AddGroupStringToGroup(string name, list<Group*> &groups) {
 	DataGroupType dgt;
 	dgt.dataType = DataGroupType::DATATYPE_STRING;
 	dgt.groupName = name;
 	dgt.singleItem = false;
-	Group *group = new Type<string>(dgt);
+	Group *group = new GroupType<string>(dgt);
 	groups.push_back(group); //ok, we just added some random group on the fly for this frame only. cool, I hope
 	return group;
 }
-void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
+
+void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
 	//read each group in:
 	while (!file.eof()) {
 
@@ -48,7 +49,7 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 		getline(file, line);
 		if (line.empty() || line == "")
 			break; //must actually be at the end of the file
-		if (savedInGroups) {
+		if (SavedInGroups) {
 			//find the semi colon
 			int pos = line.find(":", 0);
 			if (pos == -1) {
@@ -57,10 +58,10 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 				//TODO
 				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
 			}
-			Group *group = findGroupByName(line.substr(0, pos), groups);
+			Group *group = FindGroupByName(line.substr(0, pos), groups);
 			if (group == NULL) {
 				//can't find the group, but lets not lose the data
-				group = addGroupStringToGroup(line.substr(0, pos), groups);
+				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
 			//ok, get the rest of the string and work out how many of these we have to build
 			string numStr = line.substr(pos + 1, line.length() - pos + 2);
@@ -91,10 +92,10 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
 			}
 			//cout << "sub: " << line.substr(0, pos) << endl;
-			Group *group = findGroupByName(line.substr(0, pos), groups);
+			Group *group = FindGroupByName(line.substr(0, pos), groups);
 			if (group == NULL) {
 				//can't find the group, but lets not lose the data
-				group = addGroupStringToGroup(line.substr(0, pos), groups);
+				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
 			//clean up string so we can add data to the group
 			line = globals::clipOffDataHeader(line);//get rid of the 'groupName: '
@@ -106,7 +107,7 @@ void GroupBuilder::loadGroups(ifstream &file, list<Group*> &groups) {
 
 }
 
-Group* GroupBuilder::findGroupByName(string str, list<Group*> &groups) {
+Group* GroupBuilder::FindGroupByName(string str, list<Group*> &groups) {
 	for (list<Group*>::iterator group = groups.begin(); group != groups.end(); group++) {
 		if (str == (*group)->type.groupName)
 			return (*group);

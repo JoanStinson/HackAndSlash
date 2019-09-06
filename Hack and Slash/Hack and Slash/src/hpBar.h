@@ -1,11 +1,11 @@
 #pragma once
-#include "livingEntity.h"
+#include "Creature.h"
 
-class HPBar {
+class HpBar {
 public:
 	int x, y;
 	int barWidth = 200, barHeight = 30;
-	LivingEntity *entity = NULL;
+	Creature *entity = NULL;
 
-	void draw();
+	void Draw();
 };

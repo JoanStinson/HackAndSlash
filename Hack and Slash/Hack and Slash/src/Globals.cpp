@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "Globals.h"
 
 namespace globals {
 
@@ -21,11 +21,11 @@ namespace globals {
 		//We need to choose the path separator properly based on which
 		//platform we're running on, since Windows uses a different
 		//separator than most systems
-		#ifdef _WIN32
+#ifdef _WIN32
 		const char PATH_SEP = '\\';
-		#else
+#else
 		const char PATH_SEP = '/';
-		#endif
+#endif
 		//This will hold the base resource path: Lessons/res/
 		//We give it static lifetime so that we'll only need to call
 		//SDL_GetBasePath once to get the executable path

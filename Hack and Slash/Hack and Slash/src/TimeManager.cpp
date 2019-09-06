@@ -1,14 +1,15 @@
-#include "timeController.h"
-//builds a global timeController object for use anywhere
-TimeController TimeController::timeController;
+#include "TimeManager.h"
 
-TimeController::TimeController(){
+//builds a global timeController object for use anywhere
+TimeManager TimeManager::timeController;
+
+TimeManager::TimeManager(){
 	dT = 0;
 	lastUpdate = 0;
 	timeState = PLAY;
 }
 
-void TimeController::updateTime(){
+void TimeManager::UpdateTime(){
 	if (timeState == PAUSE){
 		dT = 0;
 	}
@@ -18,13 +19,16 @@ void TimeController::updateTime(){
 	}
 	lastUpdate = SDL_GetTicks();
 }
-void TimeController::pause(){
+
+void TimeManager::Pause(){
 	timeState = PAUSE;
 }
-void TimeController::resume(){
+
+void TimeManager::UnPause(){
 	timeState = PLAY;
 }
-void TimeController::reset(){
+
+void TimeManager::Reset(){
 	dT = 0;
 	lastUpdate = SDL_GetTicks();
 }

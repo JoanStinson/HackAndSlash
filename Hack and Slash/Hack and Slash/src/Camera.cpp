@@ -1,6 +1,6 @@
-#include "CameraController.h"
+#include "Camera.h"
 
-void CameraController::update() {
+void Camera::Update() {
 	if (target != NULL) {
 		// great, we're following someone
 		float targetX = target->x - globals::camera.w / 2;
@@ -8,8 +8,8 @@ void CameraController::update() {
 
 		if (globals::smoothCamera) {
 			// MOVE to target position
-			globals::camera.x += ((targetX)-globals::camera.x)*lerp*TimeController::timeController.dT;
-			globals::camera.y += ((targetY)-globals::camera.y)*lerp*TimeController::timeController.dT;
+			globals::camera.x += ((targetX)-globals::camera.x)*lerp*TimeManager::timeController.dT;
+			globals::camera.y += ((targetY)-globals::camera.y)*lerp*TimeManager::timeController.dT;
 		}
 		else {
 			//if just lock on hero, no movement

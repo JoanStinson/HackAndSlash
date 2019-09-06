@@ -1,4 +1,4 @@
-#include "frame.h"
+#include "Frame.h"
 
 void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	SDL_Rect dest; //destination of where we want to draw this frame
@@ -6,14 +6,12 @@ void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	dest.y = y - offSet.y;
 	dest.w = clip.w;
 	dest.h = clip.h;
-
-	renderTexture(spriteSheet, globals::renderer, dest, &clip);
+	RenderTexture(spriteSheet, globals::renderer, dest, &clip);
 }
 
-
-void Frame::loadFrame(ifstream &file, list<DataGroupType> &groupTypes){
+void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes){
 	//Ok, we dragged these groupTypes allllll the way here, so we could construct groups on our frame to hold the data in
-	GroupBuilder::buildGroups(groupTypes, frameData);
+	GroupBuilder::BuildGroups(groupTypes, frameData);
 
 
 	string buffer;
@@ -44,5 +42,5 @@ void Frame::loadFrame(ifstream &file, list<DataGroupType> &groupTypes){
 	ss << buffer;
 	ss >> frameNumber;
 
-	GroupBuilder::loadGroups(file, frameData);
+	GroupBuilder::LoadGroups(file, frameData);
 }

@@ -1,12 +1,21 @@
-#ifndef GLOB
-#define GLOB
-
+#pragma once
 #include <cstdlib>
-#include "livingEntity.h"
-#include "soundManager.h"
+#include "Creature.h"
+#include "SoundManager.h"
 
-class Glob : public LivingEntity {
+class Glob : public Creature {
 public:
+	Glob(AnimationSet *animSet);
+	void Update();
+	void Think();
+	void Telegraph();
+	void Attack();
+	void Die();
+	void FindNearestTarget();
+	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void UpdateAnimation();
+	void UpdateDamages();
+
 	static const string GLOB_ANIM_UP;
 	static const string GLOB_ANIM_DOWN;
 	static const string GLOB_ANIM_LEFT;
@@ -39,20 +48,7 @@ public:
 	//when this is 0, choose to do an action (AI)
 	float thinkTimer = 0;
 	//who should I chase
-	LivingEntity* target = NULL;
+	Creature* target = NULL;
 
 	int aiState = GLOB_AI_NORMAL;
-
-	Glob(AnimationSet *animSet);
-	void update();
-	void think();
-	void telegraph();
-	void attack();
-	void die();
-	void findNearestTarget();
-	void changeAnimation(int newState, bool resetFrameToBeginning);
-	void updateAnimation();
-	void updateDamages();
 };
-
-#endif

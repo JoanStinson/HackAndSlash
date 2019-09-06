@@ -1,6 +1,6 @@
-#include "wall.h"
+#include "Wall.h"
 
-Wall::Wall(AnimationSet *animSet){
+Wall::Wall(AnimationSet *animSet) {
 	this->animSet = animSet;
 
 	//basic setup
@@ -10,25 +10,27 @@ Wall::Wall(AnimationSet *animSet){
 	collisionBoxH = 32;
 	collisionBoxYOffset = -16;
 
-	updateCollisionBox();
-	changeAnimation(0, false);
+	UpdateCollisionBox();
+	ChangeAnimation(0, false);
 
 }
-void Wall::update(){
-	updateCollisionBox();
+
+void Wall::Update() {
+	UpdateCollisionBox();
 
 	if (currentFrame == NULL || currentAnim == NULL)
 		return;
 
-	frameTimer += TimeController::timeController.dT;
+	frameTimer += TimeManager::timeController.dT;
 
-	if (frameTimer >= currentFrame->duration){
-		currentFrame = currentAnim->getNextFrame(currentFrame);
+	if (frameTimer >= currentFrame->duration) {
+		currentFrame = currentAnim->GetNextFrame(currentFrame);
 
 		frameTimer = 0;
 	}
 }
-void Wall::changeAnimation(int newState, bool resetFrameToBeginning){
-	currentAnim = animSet->getAnimation("wall");
-	currentFrame = currentAnim->getFrame(0);
+
+void Wall::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+	currentAnim = animSet->GetAnimation("wall");
+	currentFrame = currentAnim->GetFrame(0);
 }

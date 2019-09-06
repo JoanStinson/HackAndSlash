@@ -1,18 +1,18 @@
 #pragma once
 #include <cstdlib>
-#include "livingEntity.h"
-#include "soundManager.h"
+#include "Creature.h"
+#include "SoundManager.h"
 
-class Bullet : public LivingEntity {
+class Bullet : public Creature {
 public:
-	static const string BULLET_ANIM_BULLET;
-
 	Bullet(AnimationSet *animSet, int x, int y);
-	void update();
-	void die() {};
-	void changeAnimation(int newState, bool resetFrameToBeginning);
-	void updateAnimation();
-	void updateDamages() { ; }
-	void hitLanded(LivingEntity *entity);
-	virtual void crashOntoSolid();
+	void Update();
+	void Die() {};
+	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void UpdateAnimation();
+	void UpdateDamages() { ; }
+	void HitLanded(Creature *entity);
+	virtual void CrashOntoSolid();
+
+	static const string BULLET_ANIM_BULLET;
 };

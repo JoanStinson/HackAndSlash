@@ -1,16 +1,12 @@
-#ifndef WALL
-#define WALL
+#pragma once
+#include "Entity.h"
 
-#include "entity.h"
-
-class Wall : public Entity{
+class Wall : public Entity {
 public:
 	Wall(AnimationSet *animSet);
-	void update();
-	void changeAnimation(int newState, bool resetFrameToBeginning);
-	void updateCollisions(){
+	void Update();
+	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void UpdateCollisions() {
 		//dont do anything. Walls dont move or get pushed in this game
 	}
 };
-
-#endif

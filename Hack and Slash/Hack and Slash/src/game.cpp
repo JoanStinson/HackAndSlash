@@ -1,13 +1,13 @@
-#include "game.h"
+#include "Game.h"
 #include "Math.h"
-#include "globals.h"
+#include "Globals.h"
 using namespace math;
 
 Game::Game() {
 	string resPath = globals::getResourcePath();
-	backgroundImage = loadTexture(resPath + "map.png", globals::renderer);
-	splashImage = loadTexture(resPath + "cyborgtitle.png", globals::renderer);
-	overlayImage = loadTexture(resPath + "overlay.png", globals::renderer);
+	backgroundImage = LoadTexture(resPath + "map.png", globals::renderer);
+	splashImage = LoadTexture(resPath + "cyborgtitle.png", globals::renderer);
+	overlayImage = LoadTexture(resPath + "overlay.png", globals::renderer);
 
 	splashShowing = true;
 	overlayTimer = 2;
@@ -19,17 +19,17 @@ Game::Game() {
 	globals::camera.h = globals::ScreenHeight;
 
 	//load up sounds
-	SoundManager::soundManager.loadSound("hit", resPath + "Randomize2.wav");
-	SoundManager::soundManager.loadSound("enemyHit", resPath + "Hit_Hurt9.wav");
-	SoundManager::soundManager.loadSound("swing", resPath + "Randomize21.wav");
-	SoundManager::soundManager.loadSound("dash", resPath + "dash.wav");
-	SoundManager::soundManager.loadSound("growl", resPath + "Randomize34.wav");
-	SoundManager::soundManager.loadSound("enemyDie", resPath + "Randomize41.wav");
+	SoundManager::soundManager.LoadSound("hit", resPath + "Randomize2.wav");
+	SoundManager::soundManager.LoadSound("enemyHit", resPath + "Hit_Hurt9.wav");
+	SoundManager::soundManager.LoadSound("swing", resPath + "Randomize21.wav");
+	SoundManager::soundManager.LoadSound("dash", resPath + "dash.wav");
+	SoundManager::soundManager.LoadSound("growl", resPath + "Randomize34.wav");
+	SoundManager::soundManager.LoadSound("enemyDie", resPath + "Randomize41.wav");
 	//new sounds for boss
-	SoundManager::soundManager.loadSound("crash", resPath + "crash.wav");
-	SoundManager::soundManager.loadSound("smash", resPath + "smash.wav");
-	SoundManager::soundManager.loadSound("shoot", resPath + "shoot2.wav");
-	SoundManager::soundManager.loadSound("laugh", resPath + "laugh2.wav");
+	SoundManager::soundManager.LoadSound("crash", resPath + "crash.wav");
+	SoundManager::soundManager.LoadSound("smash", resPath + "smash.wav");
+	SoundManager::soundManager.LoadSound("shoot", resPath + "shoot2.wav");
+	SoundManager::soundManager.LoadSound("laugh", resPath + "laugh2.wav");
 
 	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str());//Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
 	if (song != NULL)
@@ -60,35 +60,35 @@ Game::Game() {
 	dataGroupTypes.push_back(dmgType);
 
 	heroAnimSet = new AnimationSet();
-	heroAnimSet->loadAnimationSet("gameData.fdset", dataGroupTypes, true, 0, true);
+	heroAnimSet->LoadAnimationSet("gameData.fdset", dataGroupTypes, true, 0, true);
 
 	globAnimSet = new AnimationSet();
-	globAnimSet->loadAnimationSet("glob.fdset", dataGroupTypes, true, 0, true);
+	globAnimSet->LoadAnimationSet("glob.fdset", dataGroupTypes, true, 0, true);
 
 	grobAnimSet = new AnimationSet();
-	grobAnimSet->loadAnimationSet("grob.fdset", dataGroupTypes, true, 0, true);
+	grobAnimSet->LoadAnimationSet("grob.fdset", dataGroupTypes, true, 0, true);
 
 	roundKingAnimSet = new AnimationSet();
-	roundKingAnimSet->loadAnimationSet("roundKing.fdset", dataGroupTypes, true, 0, true);
+	roundKingAnimSet->LoadAnimationSet("roundKing.fdset", dataGroupTypes, true, 0, true);
 
 	bulletAnimSet = new AnimationSet();
-	bulletAnimSet->loadAnimationSet("bullet.fdset", dataGroupTypes, true, 0, true);
+	bulletAnimSet->LoadAnimationSet("bullet.fdset", dataGroupTypes, true, 0, true);
 
 	wallAnimSet = new AnimationSet();
-	wallAnimSet->loadAnimationSet("wall.fdset", dataGroupTypes);
+	wallAnimSet->LoadAnimationSet("wall.fdset", dataGroupTypes);
 
 	//build hero entity
-	hero = new Hero(heroAnimSet);
-	hero->invincibleTimer = 0;
-	hero->x = globals::ScreenWidth / 2;
-	hero->y = globals::ScreenHeight / 2;
+	player = new Player(heroAnimSet);
+	player->invincibleTimer = 0;
+	player->x = globals::ScreenWidth / 2;
+	player->y = globals::ScreenHeight / 2;
 	//tells keyboard input to manage hero
-	heroInput.hero = hero;
+	heroInput.hero = player;
 	//add hero to the entity list
-	Entity::entities.push_back(hero);
+	Entity::entities.push_back(player);
 
 	//Get camera to follow hero
-	camController.target = hero;
+	camController.target = player;
 
 	int tileSize = 32;
 	//build all the walls for this game
@@ -144,7 +144,7 @@ Game::~Game() {
 	if (scoreTexture != NULL) 
 		SDL_DestroyTexture(scoreTexture);
 
-	Entity::removeAllFromList(&Entity::entities, false);
+	Entity::DeleteAllEntities(&Entity::entities, false);
 
 	delete heroAnimSet;
 	delete globAnimSet;
@@ -153,14 +153,14 @@ Game::~Game() {
 	delete roundKingAnimSet;
 	delete bulletAnimSet;
 
-	delete hero;
+	delete player;
 
 	//delete all of the wall entities
-	Entity::removeAllFromList(&walls, true);
-	Entity::removeAllFromList(&enemies, true);
+	Entity::DeleteAllEntities(&walls, true);
+	Entity::DeleteAllEntities(&enemies, true);
 }
 
-void Game::update() {
+void Game::Update() {
 	//enemy related
 	int enemiesToBuild = 2;
 	int enemiesBuilt = 0;
@@ -170,14 +170,14 @@ void Game::update() {
 
 	SDL_Event e;
 	//setup my time controller before the game starts
-	TimeController::timeController.reset();
+	TimeManager::timeController.Reset();
 	//game loop!
 	while (!quit) {
-		TimeController::timeController.updateTime();
+		TimeManager::timeController.UpdateTime();
 
-		Entity::removeInactiveEntitiesFromList(&Entity::entities, false);
+		Entity::RemoveInactiveEntities(&Entity::entities, false);
 		//remove/delete enemies in the enemy list who are dead/inactive
-		Entity::removeInactiveEntitiesFromList(&enemies, true);
+		Entity::RemoveInactiveEntities(&enemies, true);
 
 		//check for any events that might have happened
 		while (SDL_PollEvent(&e)) {
@@ -194,7 +194,7 @@ void Game::update() {
 				case SDL_SCANCODE_SPACE:
 					if (splashShowing)
 						splashShowing = false;
-					if (overlayTimer <= 0 && hero->hp < 1) {
+					if (overlayTimer <= 0 && player->hp < 1) {
 						//cleanup and restart the game
 						enemiesToBuild = 2;
 						enemiesBuilt = 0;
@@ -206,7 +206,7 @@ void Game::update() {
 						//make hpBar point to no entities health
 						hpBar.entity = NULL;
 
-						RoundKing::roundKingsKilled = 0;
+						Boss::roundKingsKilled = 0;
 						Glob::globsKilled = 0;
 						Grob::grobsKilled = 0;
 						if (scoreTexture != NULL) {
@@ -218,7 +218,7 @@ void Game::update() {
 						for (list<Entity*>::iterator enemy = enemies.begin(); enemy != enemies.end(); enemy++) {
 							(*enemy)->active = false;
 						}
-						hero->revive();
+						player->Revive();
 					}
 					break;
 				case SDL_SCANCODE_C:
@@ -227,22 +227,22 @@ void Game::update() {
 
 				}
 			}
-			heroInput.update(&e);
+			heroInput.Update(&e);
 		}
 		//make our overlay timer tick down
-		if (hero->hp < 1 && overlayTimer > 0) {
-			overlayTimer -= TimeController::timeController.dT;
+		if (player->hp < 1 && overlayTimer > 0) {
+			overlayTimer -= TimeManager::timeController.dT;
 		}
 
 		//update all entities
 		for (list<Entity*>::iterator entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
 			//remember how awesome polymorphism is?
 			//update all entities in game world at once
-			(*entity)->update();
+			(*entity)->Update();
 		}
 
 		//SPAWN ENEMIES
-		if (hero->hp > 0 && !splashShowing) {
+		if (player->hp > 0 && !splashShowing) {
 			if (enemiesToBuild == enemiesBuilt && enemies.size() <= 0) {
 				enemiesToBuild = enemiesToBuild + 2;
 				enemiesBuilt = 0;
@@ -253,7 +253,7 @@ void Game::update() {
 					buildBossNext = true;
 				}
 			}
-			enemyBuildTimer -= TimeController::timeController.dT;
+			enemyBuildTimer -= TimeManager::timeController.dT;
 			//if no bosses on the prowl, check to see if we should build some jerks
 			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {//TODO 10 - MAX_ENEMIES
 				Glob *enemy = new Glob(globAnimSet);
@@ -283,7 +283,7 @@ void Game::update() {
 
 			//FOR THE BOSS
 			if (buildBossNext && enemyBuildTimer <= 0 && enemies.size() == 0) {
-				RoundKing *round = new RoundKing(roundKingAnimSet, bulletAnimSet);
+				Boss *round = new Boss(roundKingAnimSet, bulletAnimSet);
 				round->invincibleTimer = 0.1;
 				enemies.push_back(round);
 				Entity::entities.push_back(round);
@@ -311,48 +311,49 @@ void Game::update() {
 		}
 
 		//update camera positions
-		camController.update();
+		camController.Update();
 
 		//draw all entities
-		draw();
+		Draw();
 	}
 
 }
-void Game::draw() {
+
+void Game::Draw() {
 	//clear the screen
 	SDL_SetRenderDrawColor(globals::renderer, 145, 133, 129, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(globals::renderer);
 
 	if (splashShowing) {
-		renderTexture(splashImage, globals::renderer, 0, 0);
+		RenderTexture(splashImage, globals::renderer, 0, 0);
 	}
 	else {
 		//draw the background
-		renderTexture(backgroundImage, globals::renderer, 0 - globals::camera.x, 0 - globals::camera.y);
+		RenderTexture(backgroundImage, globals::renderer, 0 - globals::camera.x, 0 - globals::camera.y);
 
 		//sort all entities based on y(depth)
-		Entity::entities.sort(Entity::EntityCompare);
+		Entity::entities.sort(Entity::CompareEntity);
 		//draw all of the entities
 		for (list<Entity*>::iterator entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-			(*entity)->draw();
+			(*entity)->Draw();
 		}
 
 		//draw UI stuff
-		hpBar.draw();
+		hpBar.Draw();
 
-		if (overlayTimer <= 0 && hero->hp < 1) {
-			renderTexture(overlayImage, globals::renderer, 0, 0);
+		if (overlayTimer <= 0 && player->hp < 1) {
+			RenderTexture(overlayImage, globals::renderer, 0, 0);
 			if (scoreTexture == NULL) {
 				//generate score text
 				SDL_Color color = { 255, 255, 255, 255 };//white
 
 				stringstream ss;
-				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + RoundKing::roundKingsKilled;
+				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + Boss::roundKingsKilled;
 
 				string resPath = globals::getResourcePath();
-				scoreTexture = renderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, globals::renderer);
+				scoreTexture = RenderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, globals::renderer);
 			}
-			renderTexture(scoreTexture, globals::renderer, 20, 50);
+			RenderTexture(scoreTexture, globals::renderer, 20, 50);
 		}
 	}
 	//after we're done drawing/rendering, show it to the screen
