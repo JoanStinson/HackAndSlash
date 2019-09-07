@@ -11,8 +11,8 @@ namespace globals {
 	extern bool smoothCamera;
 
 	//sdl related
-	extern int ScreenWidth, ScreenHeight, ScreenScale;
-	extern SDL_Renderer* renderer;
+	//extern int ScreenWidth, ScreenHeight, ScreenScale;
+	//extern SDL_Renderer* renderer;
 	// camera
 	extern SDL_Rect camera;
 

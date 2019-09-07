@@ -36,7 +36,7 @@ void Creature::UpdateDamages(const string &type, const string &hitSFX, const flo
 
 					//still alive!!
 					if (hp > 0) {
-						SoundManager::soundManager.PlaySound(hitSFX);
+						SM.PlaySound(hitSFX);
 						this->invincibleTimer = invincibleTimer;
 					}
 
@@ -52,7 +52,7 @@ void Creature::UpdateDamages(const string &type, const string &hitSFX, const flo
 
 void Creature::UpdateInvincibleTimer() {
 	if (invincibleTimer > 0) {
-		invincibleTimer -= TimeManager::timeController.dT;
+		invincibleTimer -= TM.GetDt();
 	}
 }
 
@@ -77,13 +77,13 @@ void Creature::Draw() {
 	//draw collsionBox
 	if (solid && globals::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
-		SDL_SetRenderDrawColor(globals::renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(globals::renderer, &lastCollisionBox);
+		SDL_SetRenderDrawColor(RENDERER(), 0, 0, 255, 255);
+		SDL_RenderDrawRect(RENDERER(), &lastCollisionBox);
 
-		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(globals::renderer, &collisionBox);
+		SDL_SetRenderDrawColor(RENDERER(), 255, 0, 0, 255);
+		SDL_RenderDrawRect(RENDERER(), &collisionBox);
 
-		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(globals::renderer, &hitBox);
+		SDL_SetRenderDrawColor(RENDERER(), 255, 0, 255, 255);
+		SDL_RenderDrawRect(RENDERER(), &hitBox);
 	}
 }

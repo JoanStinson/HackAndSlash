@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "Math.h"
+#include "Window.h"
 using namespace math;
 
 #define ANIM_IDLE "idle"
@@ -19,8 +20,8 @@ Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 	aiState = NORMAL;
 
 	type = ENEMY;
-	x = globals::ScreenWidth / 2;
-	y = globals::ScreenHeight / 2;
+	x = WINDOW.SCREEN_WIDTH / 2;
+	y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 100;//default = 500
@@ -59,8 +60,8 @@ void Boss::Update() {
 void Boss::UpdateShoot() {
 	//update all our shooting stuff
 	if (state == SHOOT) {
-		shootTimer -= TimeManager::timeController.dT;
-		shotTimer -= TimeManager::timeController.dT;
+		shootTimer -= TM.GetDt();
+		shotTimer -= TM.GetDt();
 
 		//if shooting time is over, stop shooting
 		if (shootTimer <= 0) {
@@ -69,7 +70,7 @@ void Boss::UpdateShoot() {
 		else if (shotTimer <= 0) { //otherwise if still shooting and its time to take a shot
 			shotTimer = 0.5;
 			Bullet *bullet = new Bullet(bulletAnimSet, x, y);
-			SoundManager::soundManager.PlaySound("shoot");
+			SM.PlaySound("shoot");
 			bullet->angle = angle;
 			Entity::entities.push_back(bullet);
 		}
@@ -84,7 +85,7 @@ void Boss::Think() {
 	if (target != nullptr) {
 		//only tick down think timer if in IDLE state
 		if (state == IDLE) {
-			thinkTimer -= TimeManager::timeController.dT;
+			thinkTimer -= TM.GetDt();
 		}
 
 		// keep setting angle to point towards target
@@ -158,7 +159,7 @@ void Boss::Think() {
 
 void Boss::Charge() {
 	moving = false;
-	SoundManager::soundManager.PlaySound("laugh");
+	SM.PlaySound("laugh");
 	ChangeAnimation(CHARGE, true);
 }
 
@@ -199,7 +200,7 @@ void Boss::Jump() {
 void Boss::Die() {
 	moving = false;
 	ChangeAnimation(DEAD, true);
-	SoundManager::soundManager.PlaySound("enemyDie");
+	SM.PlaySound("enemyDie");
 
 	roundKingsKilled++;
 }
@@ -229,7 +230,7 @@ void Boss::UpdateAnimation() {
 		return;
 	}
 
-	frameTimer += TimeManager::timeController.dT;
+	frameTimer += TM.GetDt();
 	//if frameTimer greater then frame duration:
 	if (frameTimer >= currentFrame->duration) {
 		// if at the end of animation
@@ -257,10 +258,10 @@ void Boss::UpdateAnimation() {
 			if (damages != nullptr && damages->GetGroupSize() > 0) {
 				// and if its Slam state
 				if (state == SLAM) {
-					SoundManager::soundManager.PlaySound("smash");
+					SM.PlaySound("smash");
 				}
 				else if (state == JUMP) {
-					SoundManager::soundManager.PlaySound("crash");
+					SM.PlaySound("crash");
 				}
 			}
 		}

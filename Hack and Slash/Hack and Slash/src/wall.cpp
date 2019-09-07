@@ -21,7 +21,7 @@ void Wall::Update() {
 	if (currentFrame == nullptr || currentAnim == nullptr)
 		return;
 
-	frameTimer += TimeManager::timeController.dT;
+	frameTimer += TM.GetDt();
 
 	if (frameTimer >= currentFrame->duration) {
 		currentFrame = currentAnim->GetNextFrame(currentFrame);

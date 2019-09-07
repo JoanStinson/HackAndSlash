@@ -1,8 +1,12 @@
 #include "SoundManager.h"
 
-SoundManager SoundManager::soundManager;
-
 SoundManager::SoundManager() {
+	//inialise sdl mixer
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+		SDL_Quit();
+		cout << "mixer did not initalise" << endl;
+		//return 1;
+	}
 }
 
 SoundManager::~SoundManager() {

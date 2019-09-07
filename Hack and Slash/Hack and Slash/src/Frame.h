@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "SDL.h"
-#include "DrawingFunctions.h"
+#include "Renderer.h"
 #include "Globals.h"
 #include "GroupBuilder.h"
 using namespace std;

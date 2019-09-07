@@ -15,8 +15,8 @@ void Entity::Draw() {
 	//draw collsionBox
 	if (solid && globals::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
-		SDL_SetRenderDrawColor(globals::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawRect(globals::renderer, &collisionBox);
+		SDL_SetRenderDrawColor(RENDERER(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(RENDERER(), &collisionBox);
 	}
 }
 
@@ -44,7 +44,7 @@ void Entity::UpdateMovement() {
 
 	if (moveSpeed > 0) {
 		//works out move distance using speed, dt(time since last loop) and multiplies by lerp
-		float moveDist = moveSpeed * (TimeManager::timeController.dT)*moveLerp;
+		float moveDist = moveSpeed * (TM.GetDt())*moveLerp;
 		if (moveDist > 0) {
 			//xmove = distance * cos(angle in radians)
 			float xMove = moveDist * (cos(angle*M_PI / 180));
@@ -63,7 +63,7 @@ void Entity::UpdateMovement() {
 	}
 	//sliding around!
 	if (slideAmount > 0) {
-		float slideDist = slideAmount * TimeManager::timeController.dT*moveLerp;
+		float slideDist = slideAmount * TM.GetDt()*moveLerp;
 		if (slideDist > 0) {
 			float xMove = slideDist * (cos(slideAngle*M_PI / 180));
 			float yMove = slideDist * (sin(slideAngle*M_PI / 180));

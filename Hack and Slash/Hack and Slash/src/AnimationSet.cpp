@@ -33,19 +33,19 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 	if (file.good()) {
 		getline(file, imageName);
 		if (setColourKey) {
-			SDL_Surface* spriteSurface = LoadSurface(resPath + imageName, globals::renderer);
+			SDL_Surface* spriteSurface = Renderer::Instance().LoadSurface(resPath + imageName);
 
 			//for transparency, we will grab the [transparentPixelIndex] from the surface we just made
 			SDL_Color* transparentPixel = &spriteSurface->format->palette->colors[transparentPixelIndex];
 			SDL_SetColorKey(spriteSurface, 1, SDL_MapRGB(spriteSurface->format, transparentPixel->r, transparentPixel->g, transparentPixel->b));
 
-			spriteSheet = ConvertSurfaceToTexture(spriteSurface, globals::renderer, false);
+			spriteSheet = Renderer::Instance().ConvertSurfaceToTexture(spriteSurface, false);
 
 			if (createWhiteTexture) {
-				SDL_Surface* whiteSurface = LoadSurface(resPath + "allwhite.png", globals::renderer);
-				SurfacePaletteSwap(spriteSurface, whiteSurface);
+				SDL_Surface* whiteSurface = Renderer::Instance().LoadSurface(resPath + "allwhite.png");
+				Renderer::Instance().SurfacePaletteSwap(spriteSurface, whiteSurface);
 				SDL_SetColorKey(spriteSurface, 1, SDL_MapRGB(spriteSurface->format, transparentPixel->r, transparentPixel->g, transparentPixel->b));
-				whiteSpriteSheet = ConvertSurfaceToTexture(spriteSurface, globals::renderer, false); //create the texture whilst destroying the surface
+				whiteSpriteSheet = Renderer::Instance().ConvertSurfaceToTexture(spriteSurface, false); //create the texture whilst destroying the surface
 
 				SDL_FreeSurface(whiteSurface);
 			}
@@ -56,7 +56,7 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 			SDL_FreeSurface(spriteSurface);
 		}
 		else
-			spriteSheet = LoadTexture(resPath + imageName, globals::renderer);
+			spriteSheet = Renderer::Instance().LoadTexture(resPath + imageName);
 
 		string buffer;
 		getline(file, buffer);

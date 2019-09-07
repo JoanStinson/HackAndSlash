@@ -1,12 +1,39 @@
 #pragma once
 #include "Player.h"
 
-class InputManager{
-public:
-	InputManager();
-	void Update(SDL_Event* e);
+#define IM InputManager::Instance()
 
-	Player* hero; //to which hero I look after
-	SDL_Scancode UP, DOWN, LEFT, RIGHT;
-	SDL_Scancode SLASH, DASH;
+class InputManager {
+public:
+
+	enum Key {
+		UP = SDL_SCANCODE_UP,
+		DOWN = SDL_SCANCODE_DOWN,
+		LEFT = SDL_SCANCODE_LEFT,
+		RIGHT = SDL_SCANCODE_RIGHT,
+		Z = SDL_SCANCODE_Z, 
+		X = SDL_SCANCODE_X
+	};
+
+	inline static InputManager& Instance() {
+		static InputManager instance;
+		return instance;
+	}
+
+	void Update(SDL_Event* e);
+	Player *player;
+
+private:
+	// private constructor so that no objects can be created (disallow instantiation outside of the class)
+	InputManager() = default;
+	//~InputManager();
+	// delete copy constructor 
+	InputManager(const InputManager&) = delete;
+	// delete copy assignment operator
+	InputManager& operator=(const InputManager&) = delete;
+	// delete move constructor
+	InputManager(InputManager &&) = delete;
+	// delete move assignment operator
+	InputManager& operator=(InputManager &&) = delete;
+
 };

@@ -8,8 +8,8 @@ void Camera::Update() {
 
 		if (globals::smoothCamera) {
 			// MOVE to target position
-			globals::camera.x += ((targetX)-globals::camera.x)*lerp*TimeManager::timeController.dT;
-			globals::camera.y += ((targetY)-globals::camera.y)*lerp*TimeManager::timeController.dT;
+			globals::camera.x += ((targetX)-globals::camera.x)*lerp*TM.GetDt();
+			globals::camera.y += ((targetY)-globals::camera.y)*lerp*TM.GetDt();
 		}
 		else {
 			//if just lock on hero, no movement

@@ -1,4 +1,31 @@
-#include "DrawingFunctions.h"
+#include "Renderer.h"
+#include "Window.h"
+
+Renderer::Renderer() {
+	//setup renderer
+	renderer = SDL_CreateRenderer(WINDOW(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (renderer == nullptr) {
+		SDL_DestroyWindow(WINDOW());
+		SDL_Quit();
+		cout << "renderer error" << endl;
+		//return 1;
+	}
+	//this is the size to draw things at, before we scale it to the screen size dimensions mentioned in createWindow
+	SDL_RenderSetLogicalSize(renderer, WINDOW.SCREEN_WIDTH, WINDOW.SCREEN_HEIGHT);
+
+	//initialise sdl_image
+	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
+		SDL_Quit();
+		cout << "sdl image did not initialise" << endl;
+		//return 1;
+	}
+	//initialise text to font 
+	if (TTF_Init() != 0) {
+		SDL_Quit();
+		cout << "sdl ttf did not initialise" << endl;
+		//return 1;
+	}
+}
 
 /**
 * Loads an image into a texture on the rendering device
@@ -6,8 +33,8 @@
 * @param ren The renderer to load the texture onto
 * @return the loaded texture, or nullptr if something went wrong.
 */
-SDL_Texture* LoadTexture(const std::string &file, SDL_Renderer *ren) {
-	SDL_Texture *texture = IMG_LoadTexture(ren, file.c_str());
+SDL_Texture* Renderer::LoadTexture(const string &file) {
+	SDL_Texture *texture = IMG_LoadTexture(renderer, file.c_str());
 	if (texture == nullptr) {
 		cout << "LoadTexture error" << endl;
 	}
@@ -17,7 +44,7 @@ SDL_Texture* LoadTexture(const std::string &file, SDL_Renderer *ren) {
 /**
 *Loads an image up as a surface. Generally we want to do this if we want to palette swap
 */
-SDL_Surface* LoadSurface(const std::string &file, SDL_Renderer *ren) {
+SDL_Surface* Renderer::LoadSurface(const string &file) {
 	SDL_Surface *surface = IMG_Load(file.c_str());
 	if (surface == nullptr) {
 		cout << "LoadSurface error" << endl;
@@ -27,18 +54,17 @@ SDL_Surface* LoadSurface(const std::string &file, SDL_Renderer *ren) {
 /**
 *Copies the palette of 1 surface to another
 */
-void SurfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette) {
+void Renderer::SurfacePaletteSwap(SDL_Surface *surface, SDL_Surface *palette) {
 	SDL_SetPaletteColors(surface->format->palette, palette->format->palette->colors, 0, palette->format->palette->ncolors);
 }
 
 /**
 *Converts a surface to a texture and optionally deletes the surface
 */
-SDL_Texture *ConvertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bool cleanSurface) {
-	SDL_Texture*texture = SDL_CreateTextureFromSurface(ren, surface);
+SDL_Texture* Renderer::ConvertSurfaceToTexture(SDL_Surface* surface, bool cleanSurface) {
+	SDL_Texture*texture = SDL_CreateTextureFromSurface(renderer, surface);
 	if (cleanSurface)
 		SDL_FreeSurface(surface);
-
 	return texture;
 }
 /**
@@ -50,9 +76,8 @@ SDL_Texture *ConvertSurfaceToTexture(SDL_Surface* surface, SDL_Renderer *ren, bo
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
-	SDL_Rect *clip) {
-	SDL_RenderCopy(ren, tex, clip, &dst);
+void Renderer::RenderTexture(SDL_Texture *tex, SDL_Rect dst, SDL_Rect *clip) {
+	SDL_RenderCopy(renderer, tex, clip, &dst);
 }
 /**
 * Draw an SDL_Texture to an SDL_Renderer at position x, y, preserving
@@ -66,8 +91,7 @@ void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst,
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
 */
-void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
-	SDL_Rect *clip) {
+void Renderer::RenderTexture(SDL_Texture *tex, int x, int y, SDL_Rect *clip) {
 	SDL_Rect dst;
 	dst.x = x;
 	dst.y = y;
@@ -78,9 +102,8 @@ void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 	else {
 		SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
 	}
-	RenderTexture(tex, ren, dst, clip);
+	RenderTexture(tex, dst, clip);
 }
-
 
 /**
 * Render the message we want to display to a texture for drawing
@@ -91,8 +114,7 @@ void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* RenderText(const std::string &message, const std::string &fontFile,
-	SDL_Color color, int fontSize, SDL_Renderer *renderer) {
+SDL_Texture* Renderer::RenderText(const string &message, const string &fontFile, SDL_Color color, int fontSize) {
 	//Open the font
 	TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	if (font == nullptr) {
@@ -126,8 +148,7 @@ SDL_Texture* RenderText(const std::string &message, const std::string &fontFile,
 * @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
-SDL_Texture* RenderText(const std::string &message, TTF_Font *font,
-	SDL_Color color, SDL_Renderer *renderer) {
+SDL_Texture* Renderer::RenderText(const string &message, TTF_Font *font, SDL_Color color) {
 	if (font == nullptr) {
 		cout << "TTF_OpenFont" << endl;
 		return nullptr;
@@ -149,7 +170,7 @@ SDL_Texture* RenderText(const std::string &message, TTF_Font *font,
 	return texture;
 }
 
-bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer) {
+bool Renderer::SaveScreenshotBMP(string filepath, SDL_Window* SDLWindow) {
 	SDL_Surface* saveSurface = nullptr;
 	SDL_Surface* infoSurface = nullptr;
 	infoSurface = SDL_GetWindowSurface(SDLWindow);
@@ -163,7 +184,7 @@ bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer
 			return false;
 		}
 		else {
-			if (SDL_RenderReadPixels(SDLRenderer, &infoSurface->clip_rect, infoSurface->format->format, pixels, infoSurface->w * infoSurface->format->BytesPerPixel) != 0) {
+			if (SDL_RenderReadPixels(renderer, &infoSurface->clip_rect, infoSurface->format->format, pixels, infoSurface->w * infoSurface->format->BytesPerPixel) != 0) {
 				std::cerr << "Failed to read pixel data from SDL_Renderer object. SDL_GetError() - " << SDL_GetError() << "\n";
 				pixels = nullptr;
 				return false;
@@ -184,4 +205,9 @@ bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer
 		infoSurface = nullptr;
 	}
 	return true;
+}
+
+Renderer::~Renderer() {
+	SDL_DestroyRenderer(renderer), renderer = nullptr;
+	IMG_Quit();
 }

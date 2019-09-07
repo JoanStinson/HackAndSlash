@@ -3,11 +3,13 @@
 #include "Globals.h"
 using namespace math;
 
-Game::Game() {
+Game::Game(const string &name, int screenWidth, int screenHeight, int screenScale) {
+	Window::Instance(move(name), screenWidth, screenHeight, screenScale); //Initialises Window Singleton for the first time.
+
 	string resPath = globals::getResourcePath();
-	backgroundImage = LoadTexture(resPath + "map.png", globals::renderer);
-	splashImage = LoadTexture(resPath + "cyborgtitle.png", globals::renderer);
-	overlayImage = LoadTexture(resPath + "overlay.png", globals::renderer);
+	backgroundImage = RENDERER.LoadTexture(resPath + "map.png");
+	splashImage = RENDERER.LoadTexture(resPath + "cyborgtitle.png");
+	overlayImage = RENDERER.LoadTexture(resPath + "overlay.png");
 
 	splashShowing = true;
 	overlayTimer = 2;
@@ -15,21 +17,21 @@ Game::Game() {
 	// setup camera
 	globals::camera.x = 0;
 	globals::camera.y = 0;
-	globals::camera.w = globals::ScreenWidth;
-	globals::camera.h = globals::ScreenHeight;
+	globals::camera.w = screenWidth;
+	globals::camera.h = screenHeight;
 
 	//load up sounds
-	SoundManager::soundManager.LoadSound("hit", resPath + "Randomize2.wav");
-	SoundManager::soundManager.LoadSound("enemyHit", resPath + "Hit_Hurt9.wav");
-	SoundManager::soundManager.LoadSound("swing", resPath + "Randomize21.wav");
-	SoundManager::soundManager.LoadSound("dash", resPath + "dash.wav");
-	SoundManager::soundManager.LoadSound("growl", resPath + "Randomize34.wav");
-	SoundManager::soundManager.LoadSound("enemyDie", resPath + "Randomize41.wav");
+	SM.LoadSound("hit", resPath + "Randomize2.wav");
+	SM.LoadSound("enemyHit", resPath + "Hit_Hurt9.wav");
+	SM.LoadSound("swing", resPath + "Randomize21.wav");
+	SM.LoadSound("dash", resPath + "dash.wav");
+	SM.LoadSound("growl", resPath + "Randomize34.wav");
+	SM.LoadSound("enemyDie", resPath + "Randomize41.wav");
 	//new sounds for boss
-	SoundManager::soundManager.LoadSound("crash", resPath + "crash.wav");
-	SoundManager::soundManager.LoadSound("smash", resPath + "smash.wav");
-	SoundManager::soundManager.LoadSound("shoot", resPath + "shoot2.wav");
-	SoundManager::soundManager.LoadSound("laugh", resPath + "laugh2.wav");
+	SM.LoadSound("crash", resPath + "crash.wav");
+	SM.LoadSound("smash", resPath + "smash.wav");
+	SM.LoadSound("shoot", resPath + "shoot2.wav");
+	SM.LoadSound("laugh", resPath + "laugh2.wav");
 
 	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str());//Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
 	if (song != nullptr)
@@ -80,10 +82,10 @@ Game::Game() {
 	//build hero entity
 	player = new Player(heroAnimSet);
 	player->invincibleTimer = 0;
-	player->x = globals::ScreenWidth / 2;
-	player->y = globals::ScreenHeight / 2;
+	player->x = screenWidth / 2;
+	player->y = screenHeight / 2;
 	//tells keyboard input to manage hero
-	heroInput.hero = player;
+	IM.player = player;
 	//add hero to the entity list
 	Entity::entities.push_back(player);
 
@@ -93,7 +95,7 @@ Game::Game() {
 	int tileSize = 32;
 	//build all the walls for this game
 	//first. build walls on top and bottom of screen
-	for (int i = 0; i < globals::ScreenWidth / tileSize; i++) {
+	for (int i = 0; i < screenWidth / tileSize; i++) {
 		//fills in top row
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
@@ -104,12 +106,12 @@ Game::Game() {
 		//re-using pointer to create bottom row
 		newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
-		newWall->y = globals::ScreenHeight - tileSize / 2;
+		newWall->y = screenHeight - tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
 	}
 	//now the sides
-	for (int i = 1; i < globals::ScreenHeight / tileSize - 1; i++) {
+	for (int i = 1; i < screenHeight / tileSize - 1; i++) {
 		//fills in left column
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = tileSize / 2;
@@ -119,7 +121,7 @@ Game::Game() {
 
 		//re-using pointer to create right column
 		newWall = new Wall(wallAnimSet);
-		newWall->x = globals::ScreenWidth - tileSize / 2;
+		newWall->x = screenWidth - tileSize / 2;
 		newWall->y = i * tileSize + tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
@@ -129,8 +131,8 @@ Game::Game() {
 	bossActive = false;
 
 	//setup hpBar's x and y to be centered
-	hpBar.x = globals::ScreenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
-	hpBar.y = globals::ScreenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
+	hpBar.x = screenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
+	hpBar.y = screenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
 }
 
 Game::~Game() {
@@ -170,10 +172,10 @@ void Game::Update() {
 
 	SDL_Event e;
 	//setup my time controller before the game starts
-	TimeManager::timeController.Reset();
+	TM.Reset();
 	//game loop!
 	while (!quit) {
-		TimeManager::timeController.UpdateTime();
+		TM.UpdateTime();
 
 		Entity::RemoveInactiveEntities(&Entity::entities, false);
 		//remove/delete enemies in the enemy list who are dead/inactive
@@ -227,11 +229,11 @@ void Game::Update() {
 
 				}
 			}
-			heroInput.Update(&e);
+			IM.Update(&e);
 		}
 		//make our overlay timer tick down
 		if (player->hp < 1 && overlayTimer > 0) {
-			overlayTimer -= TimeManager::timeController.dT;
+			overlayTimer -= TM.GetDt();
 		}
 
 		//update all entities
@@ -251,13 +253,13 @@ void Game::Update() {
 					buildBossNext = true;
 				}
 			}
-			enemyBuildTimer -= TimeManager::timeController.dT;
+			enemyBuildTimer -= TM.GetDt();
 			//if no bosses on the prowl, check to see if we should build some jerks
 			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < MAX_ENEMIES) {
 				Glob *enemy = new Glob(globAnimSet);
 				//set enemies position to somewhere random within the arena's open space
-				enemy->x = randomNumber(globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
-				enemy->y = randomNumber(globals::ScreenHeight - (2 * 32) - 32) + 32 + 16;
+				enemy->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16;
+				enemy->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16;
 				enemy->invincibleTimer = 0.1;
 
 				//PUSHBACK
@@ -266,8 +268,8 @@ void Game::Update() {
 
 				if (enemiesBuilt % 5 == 0) {
 					Grob *grob = new Grob(grobAnimSet);
-					grob->x = randomNumber(globals::ScreenWidth - (2 * 32) - 32) + 32 + 16; //random x value between our walls
-					grob->y = randomNumber(globals::ScreenHeight - (2 * 32) - 32) + 32 + 16; //random x value between our walls
+					grob->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16; //random x value between our walls
+					grob->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16; //random x value between our walls
 					grob->invincibleTimer = 0.01;
 
 					// PUSHBACK
@@ -319,15 +321,15 @@ void Game::Update() {
 
 void Game::Draw() {
 	//clear the screen
-	SDL_SetRenderDrawColor(globals::renderer, 145, 133, 129, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(globals::renderer);
+	SDL_SetRenderDrawColor(RENDERER(), 145, 133, 129, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(RENDERER());
 
 	if (splashShowing) {
-		RenderTexture(splashImage, globals::renderer, 0, 0);
+		RENDERER.RenderTexture(splashImage, 0, 0);
 	}
 	else {
 		//draw the background
-		RenderTexture(backgroundImage, globals::renderer, 0 - globals::camera.x, 0 - globals::camera.y);
+		RENDERER.RenderTexture(backgroundImage, 0 - globals::camera.x, 0 - globals::camera.y);
 
 		//sort all entities based on y(depth)
 		Entity::entities.sort(Entity::CompareEntity);
@@ -340,7 +342,7 @@ void Game::Draw() {
 		hpBar.Draw();
 
 		if (overlayTimer <= 0 && player->hp < 1) {
-			RenderTexture(overlayImage, globals::renderer, 0, 0);
+			RENDERER.RenderTexture(overlayImage, 0, 0);
 			if (scoreTexture == nullptr) {
 				//generate score text
 				SDL_Color color = { 255, 255, 255, 255 };//white
@@ -349,11 +351,11 @@ void Game::Draw() {
 				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + Boss::roundKingsKilled;
 
 				string resPath = globals::getResourcePath();
-				scoreTexture = RenderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30, globals::renderer);
+				scoreTexture = RENDERER.RenderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30);
 			}
-			RenderTexture(scoreTexture, globals::renderer, 20, 50);
+			RENDERER.RenderTexture(scoreTexture, 20, 50);
 		}
 	}
 	//after we're done drawing/rendering, show it to the screen
-	SDL_RenderPresent(globals::renderer);
+	SDL_RenderPresent(RENDERER());
 }

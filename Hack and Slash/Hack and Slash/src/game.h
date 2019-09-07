@@ -5,19 +5,20 @@
 #include "Glob.h"
 #include "Grob.h"
 #include "InputManager.h"
-#include "DrawingFunctions.h"
+#include "Renderer.h"
 #include "SoundManager.h"
 #include "Camera.h"
 #include "Boss.h"
 #include "HpBar.h"
+#include "Window.h"
+
 
 #define MAX_ENEMIES 10
 
 class Game {
 public:
-	Game();
+	Game(const string &name, int screenWidth, int screenHeight, int screenScale);
 	~Game();
-
 	void Update();
 	void Draw();
 
@@ -39,7 +40,7 @@ public:
 	SDL_Texture* scoreTexture = nullptr; //for drawing strings to the screen
 
 	Player *player;
-	InputManager heroInput;
+	//InputManager heroInput;
 
 	list<Entity*> enemies;
 	list<Entity*> walls;
@@ -54,5 +55,4 @@ public:
 	float overlayTimer;
 
 	Camera camController;
-
 };

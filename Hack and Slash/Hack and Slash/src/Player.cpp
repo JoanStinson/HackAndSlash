@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "Math.h"
+#include "InputManager.h"
+#include "Window.h"
 using namespace math;
 
 #define ANIM_UP "up"
@@ -25,8 +27,8 @@ Player::Player(AnimationSet *animSet) {
 	type = PLAYER;
 
 	//setup default hero values
-	x = globals::ScreenWidth / 2;
-	y = globals::ScreenHeight / 2;
+	x = WINDOW.SCREEN_WIDTH / 2;
+	y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 80;
 	hp = hpMax = 20;
@@ -62,7 +64,7 @@ void Player::Slash() {
 		moving = false;
 		frameTimer = 0;
 		ChangeAnimation(SLASH, true);
-		SoundManager::soundManager.PlaySound("swing");
+		SM.PlaySound("swing");
 	}
 }
 
@@ -77,7 +79,7 @@ void Player::Dash() {
 		invincibleTimer = 0.1;
 
 		ChangeAnimation(DASH, true);
-		SoundManager::soundManager.PlaySound("dash");
+		SM.PlaySound("dash");
 	}
 }
 
@@ -90,8 +92,8 @@ void Player::Revive() {
 	hp = hpMax;
 	ChangeAnimation(IDLE, true);
 	moving = false;
-	x = globals::ScreenWidth / 2;
-	y = globals::ScreenHeight / 2;
+	x = WINDOW.SCREEN_WIDTH / 2;
+	y = WINDOW.SCREEN_HEIGHT / 2;
 	slideAmount = 0;
 }
 
@@ -151,7 +153,7 @@ void Player::UpdateAnimation() {
 	}
 
 
-	frameTimer += TimeManager::timeController.dT;
+	frameTimer += TM.GetDt();
 	//time to change frames :D
 	if (frameTimer >= currentFrame->duration) {
 		//if we're at the end of an animation?

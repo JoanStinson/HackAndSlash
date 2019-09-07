@@ -466,9 +466,6 @@
     <ClInclude Include="src\DataGroupType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DrawingFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -520,6 +517,12 @@
     <ClInclude Include="src\Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -538,9 +541,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Creature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DrawingFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity.cpp">
@@ -589,6 +589,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "Grob.h"
 #include "Math.h"
+#include "Window.h"
 using namespace math;
 
 #define ANIM_UP "up"
@@ -21,8 +22,8 @@ Grob::Grob(AnimationSet *animSet) {
 	type = ENEMY;
 
 	//setup defaults
-	x = globals::ScreenWidth / 2;
-	y = globals::ScreenHeight / 2;
+	x = WINDOW.SCREEN_WIDTH / 2;
+	y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 1;
@@ -65,7 +66,7 @@ void Grob::Update() {
 
 void Grob::Think() {
 	if (state == IDLE || state == MOVE) {
-		thinkTimer -= TimeManager::timeController.dT;
+		thinkTimer -= TM.GetDt();
 
 		if (thinkTimer <= 0) {
 			//reset timer
@@ -97,7 +98,7 @@ void Grob::Die() {
 	moving = false;
 	state = DEAD;
 	ChangeAnimation(state, true);
-	SoundManager::soundManager.PlaySound("enemyDie");
+	SM.PlaySound("enemyDie");
 
 	//add to our score count
 	Grob::grobsKilled++;
@@ -144,7 +145,7 @@ void Grob::UpdateAnimation() {
 		ChangeAnimation(MOVE, true);
 	}
 
-	frameTimer += TimeManager::timeController.dT;
+	frameTimer += TM.GetDt();
 	//time to change frames
 	if (frameTimer >= currentFrame->duration) {
 		//if at the end of the animation

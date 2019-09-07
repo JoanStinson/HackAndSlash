@@ -14,6 +14,7 @@ public:
 	void ChangeAnimation(int newState, bool resetFrameToBeginning);
 	void UpdateAnimation();
 	void UpdateDamages();
-
 	enum State { IDLE, MOVE, SLASH, DASH, DEAD };
+
+private:
 };

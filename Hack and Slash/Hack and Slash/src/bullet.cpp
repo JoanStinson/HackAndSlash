@@ -50,7 +50,7 @@ void Bullet::UpdateAnimation() {
 	if (currentFrame == nullptr || currentAnim == nullptr) return;
 
 	// if got frames, update frameTimer and animation
-	frameTimer += TimeManager::timeController.dT;
+	frameTimer += TM.GetDt();
 
 	if (frameTimer >= currentFrame->duration) {
 		// if its the end of the animation, restart it

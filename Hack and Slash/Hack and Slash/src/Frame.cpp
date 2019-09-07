@@ -6,7 +6,7 @@ void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	dest.y = y - offSet.y;
 	dest.w = clip.w;
 	dest.h = clip.h;
-	RenderTexture(spriteSheet, globals::renderer, dest, &clip);
+	RENDERER.RenderTexture(spriteSheet, dest, &clip);
 }
 
 void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes){
