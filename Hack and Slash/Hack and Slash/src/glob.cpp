@@ -2,39 +2,33 @@
 #include "Math.h"
 using namespace math;
 
-const string Glob::GLOB_ANIM_UP = "up";
-const string Glob::GLOB_ANIM_DOWN = "down";
-const string Glob::GLOB_ANIM_LEFT = "left";
-const string Glob::GLOB_ANIM_RIGHT = "right";
-const string Glob::GLOB_ANIM_IDLE_UP = "idleUp";
-const string Glob::GLOB_ANIM_IDLE_DOWN = "idleDown";
-const string Glob::GLOB_ANIM_IDLE_LEFT = "idleLeft";
-const string Glob::GLOB_ANIM_IDLE_RIGHT = "idleRight";
-const string Glob::GLOB_ANIM_ATTACK_UP = "attackUp";
-const string Glob::GLOB_ANIM_ATTACK_DOWN = "attackDown";
-const string Glob::GLOB_ANIM_ATTACK_LEFT = "attackLeft";
-const string Glob::GLOB_ANIM_ATTACK_RIGHT = "attackRight";
-const string Glob::GLOB_ANIM_TELEGRAPH_UP = "telegraphUp";
-const string Glob::GLOB_ANIM_TELEGRAPH_DOWN = "telegraphDown";
-const string Glob::GLOB_ANIM_TELEGRAPH_LEFT = "telegraphLeft";
-const string Glob::GLOB_ANIM_TELEGRAPH_RIGHT = "telegraphRight";
-const string Glob::GLOB_ANIM_DIE = "die";
-
-const int Glob::GLOB_STATE_IDLE = 0;
-const int Glob::GLOB_STATE_MOVE = 1;
-const int Glob::GLOB_STATE_ATTACK = 2;
-const int Glob::GLOB_STATE_TELEGRAPH = 3;
-const int Glob::GLOB_STATE_DEAD = 4;
-
-const int Glob::GLOB_AI_NORMAL = 0;
-const int Glob::GLOB_AI_CHASE = 1;
+#define ANIM_UP "up"
+#define ANIM_DOWN "down"
+#define ANIM_LEFT "left"
+#define ANIM_RIGHT "right"
+#define ANIM_IDLE_UP "idleUp"
+#define ANIM_IDLE_DOWN "idleDown"
+#define ANIM_IDLE_LEFT "idleLeft"
+#define ANIM_IDLE_RIGHT "idleRight"
+#define ANIM_ATTACK_UP "attackUp"
+#define ANIM_ATTACK_DOWN "attackDown"
+#define ANIM_ATTACK_LEFT "attackLeft"
+#define ANIM_ATTACK_RIGHT "attackRight"
+#define ANIM_TELEGRAPH_UP "telegraphUp"
+#define ANIM_TELEGRAPH_DOWN "telegraphDown"
+#define ANIM_TELEGRAPH_LEFT "telegraphLeft"
+#define ANIM_TELEGRAPH_RIGHT "telegraphRight"
+#define ANIM_DIE "die"
 
 int Glob::globsKilled = 0;
 
 Glob::Glob(AnimationSet *animSet) {
 	this->animSet = animSet;
 
-	type = "enemy";
+	aiState = NORMAL;
+
+
+	type = ENEMY;
 
 	//defaults
 	x = globals::ScreenWidth / 2;
@@ -43,26 +37,20 @@ Glob::Glob(AnimationSet *animSet) {
 	moveSpeedMax = 20;
 	hp = hpMax = 10 + (rand() % 20); //10-29
 	damage = 0;
-	collisionBoxW = 18;
-	collisionBoxH = 20;
-	collisionBox.w = collisionBoxW;
-	collisionBox.h = collisionBoxH;
+	collisionBox.w = collisionBoxW = 18;
+	collisionBox.h = collisionBoxH = 20;
 
 	collisionBoxYOffset = -14;
 
-	direction = DIR_DOWN;
-	ChangeAnimation(GLOB_STATE_IDLE, true);
+	direction = DOWN;
+	ChangeAnimation(IDLE, true);
 
 	UpdateCollisionBox();
 }
 
 void Glob::Update() {
-	//check if died
-	if (hp < 1 && state != GLOB_STATE_DEAD) {
-		ChangeAnimation(GLOB_STATE_DEAD, true);
-		moving = false;
-		Die();
-	}
+	//check if dead
+	CheckIfDead(DEAD);
 
 	Think();
 
@@ -77,7 +65,7 @@ void Glob::Update() {
 }
 
 void Glob::Think() {
-	if (state == GLOB_STATE_IDLE || state == GLOB_STATE_MOVE) {
+	if (state == IDLE || state == MOVE) {
 		thinkTimer -= TimeManager::timeController.dT;
 		//time to choose an action
 		if (thinkTimer <= 0) {
@@ -87,39 +75,39 @@ void Glob::Think() {
 
 			if (action < 3) {
 				moving = false;
-				aiState = GLOB_AI_NORMAL;
-				ChangeAnimation(GLOB_STATE_IDLE, true);
+				aiState = NORMAL;
+				ChangeAnimation(IDLE, true);
 			}
 			else {
-				FindNearestTarget();
+				FindPlayer();
 				//found a target and its alive, lets get 'em
-				if (target != NULL && target->hp > 0) {
+				if (target != nullptr && target->hp > 0) {
 					float dist = Entity::DistBetweenTwoEntities(this, target);
 					//if in range, ATTACK!
 					if (dist < 100) {
 						Telegraph(); //telegraph our attack first so players have a chance to dodge
-						aiState = GLOB_AI_NORMAL;
+						aiState = NORMAL;
 
 					}
 					else {
 						//otherwise move up to the player/target
-						aiState = GLOB_AI_CHASE;
+						aiState = CHASE;
 						moving = true;
-						ChangeAnimation(GLOB_STATE_MOVE, state != GLOB_STATE_MOVE);
+						ChangeAnimation(MOVE, state != MOVE);
 					}
 				}
 				else {
 					//no targets, go idle
 					moving = false;
-					aiState = GLOB_AI_NORMAL;
-					ChangeAnimation(GLOB_STATE_IDLE, true);
+					aiState = NORMAL;
+					ChangeAnimation(IDLE, true);
 				}
 			}
 
 		}
 	}
 	//if chasing a target, then do that
-	if (aiState == GLOB_AI_CHASE && hp > 0 && active) {
+	if (aiState == CHASE && hp > 0 && active) {
 		//get the angle between me and the target
 		angle = Entity::AngleBetweenTwoEntities(this, target);
 		//move that way
@@ -130,7 +118,7 @@ void Glob::Think() {
 void Glob::Telegraph() {
 	moving = false;
 	frameTimer = 0;
-	ChangeAnimation(GLOB_STATE_TELEGRAPH, true);
+	ChangeAnimation(TELEGRAPH, true);
 }
 
 void Glob::Attack() {
@@ -138,12 +126,12 @@ void Glob::Attack() {
 	frameTimer = 0;
 	slideAmount = 100;
 	slideAngle = angle;
-	ChangeAnimation(GLOB_STATE_ATTACK, true);
+	ChangeAnimation(ATTACK, true);
 }
 
 void Glob::Die() {
 	moving = false;
-	state = GLOB_STATE_DEAD;
+	state = DEAD;
 	ChangeAnimation(state, true);
 	SoundManager::soundManager.PlaySound("enemyDie");
 
@@ -151,70 +139,38 @@ void Glob::Die() {
 	Glob::globsKilled++;
 }
 
-void Glob::FindNearestTarget() {
-	target = NULL;
-	//find closest target
-	for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-		if ((*entity)->type == "hero" && (*entity)->active) {
-			//if found first hero in list, just set them as the target for now
-			if (target == NULL) {
-				target = (Creature*)(*entity); //if cant cast to LivingEntity, throw casting exception
-			}
-			else {
-				//otherwise, is this other hero closer then the previous target
-				if (Entity::DistBetweenTwoEntities(this, (*entity)) < Entity::DistBetweenTwoEntities(this, target)) {
-					target = (Creature*)(*entity);
-				}
-			}
-		}
-	}
-}
-
 void Glob::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	state = newState;
+	switch (state) {
+	default: case IDLE: switch (direction) {
+	case UP: currentAnim = animSet->GetAnimation(ANIM_IDLE_UP); break;
+	case DOWN: currentAnim = animSet->GetAnimation(ANIM_IDLE_DOWN); break;
+	case LEFT: currentAnim = animSet->GetAnimation(ANIM_IDLE_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->GetAnimation(ANIM_IDLE_RIGHT); break;
+	}; break;
 
-	if (state == GLOB_STATE_IDLE) {
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_IDLE_DOWN);
-		if (direction == DIR_UP)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_IDLE_UP);
-		if (direction == DIR_LEFT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_IDLE_LEFT);
-		if (direction == DIR_RIGHT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_IDLE_RIGHT);
-	}
-	else if (state == GLOB_STATE_MOVE) {
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_DOWN);
-		if (direction == DIR_UP)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_UP);
-		if (direction == DIR_LEFT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_LEFT);
-		if (direction == DIR_RIGHT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_RIGHT);
-	}
-	else if (state == GLOB_STATE_ATTACK) {
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_ATTACK_DOWN);
-		if (direction == DIR_UP)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_ATTACK_UP);
-		if (direction == DIR_LEFT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_ATTACK_LEFT);
-		if (direction == DIR_RIGHT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_ATTACK_RIGHT);
-	}
-	else if (state == GLOB_STATE_TELEGRAPH) {
-		if (direction == DIR_DOWN)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_TELEGRAPH_DOWN);
-		if (direction == DIR_UP)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_TELEGRAPH_UP);
-		if (direction == DIR_LEFT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_TELEGRAPH_LEFT);
-		if (direction == DIR_RIGHT)
-			currentAnim = animSet->GetAnimation(GLOB_ANIM_TELEGRAPH_RIGHT);
-	}
-	else if (state == GLOB_STATE_DEAD) {
-		currentAnim = animSet->GetAnimation(GLOB_ANIM_DIE);
+	case MOVE: switch (direction) {
+	case UP: currentAnim = animSet->GetAnimation(ANIM_UP); break;
+	case DOWN: currentAnim = animSet->GetAnimation(ANIM_DOWN); break;
+	case LEFT: currentAnim = animSet->GetAnimation(ANIM_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->GetAnimation(ANIM_RIGHT); break;
+	}; break;
+
+	case ATTACK: switch (direction) {
+	case UP: currentAnim = animSet->GetAnimation(ANIM_ATTACK_UP); break;
+	case DOWN: currentAnim = animSet->GetAnimation(ANIM_ATTACK_DOWN); break;
+	case LEFT: currentAnim = animSet->GetAnimation(ANIM_ATTACK_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->GetAnimation(ANIM_ATTACK_RIGHT); break;
+	}; break;
+
+	case TELEGRAPH: switch (direction) {
+	case UP: currentAnim = animSet->GetAnimation(ANIM_TELEGRAPH_UP); break;
+	case DOWN: currentAnim = animSet->GetAnimation(ANIM_TELEGRAPH_DOWN); break;
+	case LEFT: currentAnim = animSet->GetAnimation(ANIM_TELEGRAPH_LEFT); break;
+	case RIGHT: default: currentAnim = animSet->GetAnimation(ANIM_TELEGRAPH_RIGHT); break;
+	}; break;
+
+	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
 	if (resetFrameToBeginning)
@@ -224,16 +180,16 @@ void Glob::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 }
 
 void Glob::UpdateAnimation() {
-	if (currentFrame == NULL || currentAnim == NULL)
+	if (currentFrame == nullptr || currentAnim == nullptr)
 		return;
 
 	//if we're in moveState but not actually going anywhere then
-	if (state == GLOB_STATE_MOVE && !moving) {
-		ChangeAnimation(GLOB_STATE_IDLE, true);
+	if (state == MOVE && !moving) {
+		ChangeAnimation(IDLE, true);
 	}
 	//if we're idle but we're actually moving, then
-	if (state != GLOB_STATE_MOVE && moving) {
-		ChangeAnimation(GLOB_STATE_MOVE, true);
+	if (state != MOVE && moving) {
+		ChangeAnimation(MOVE, true);
 	}
 
 	frameTimer += TimeManager::timeController.dT;
@@ -241,18 +197,18 @@ void Glob::UpdateAnimation() {
 	if (frameTimer >= currentFrame->duration) {
 		//if at the end of the animation
 		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
-			if (state == GLOB_STATE_TELEGRAPH) {
+			if (state == TELEGRAPH) {
 				//done telegraphing, now attack
 				Attack();
 			}
-			else if (state == GLOB_STATE_ATTACK) {
-				ChangeAnimation(GLOB_STATE_MOVE, true);
+			else if (state == ATTACK) {
+				ChangeAnimation(MOVE, true);
 			}
-			else if (state == GLOB_STATE_DEAD) {
+			else if (state == DEAD) {
 				frameTimer = 0;
 				//if some how alive again, then change state back to moving
 				if (hp > 0)
-					ChangeAnimation(GLOB_STATE_MOVE, true);
+					ChangeAnimation(MOVE, true);
 				else
 					active = false;
 			}
@@ -270,26 +226,5 @@ void Glob::UpdateAnimation() {
 }
 
 void Glob::UpdateDamages() {
-	if (active && hp > 0 && invincibleTimer <= 0) {
-		//TODO do a function
-		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-			if ((*entity)->active && (*entity)->type == "hero") {
-				//reference as LivingEntity, so we can access hitBox/damage
-				Creature* enemy = (Creature*)(*entity);
-				//if enemy hits me, thennnnnnnnn
-				if (enemy->damage > 0 && collBetweenTwoRects(collisionBox, enemy->hitBox)) {
-					enemy->HitLanded(this); //let attacker know they hit
-					hp -= enemy->damage;
-
-					if (hp > 0) {
-						SoundManager::soundManager.PlaySound("enemyHit");
-						invincibleTimer = 0.1;
-					}
-					//angle from other entity, towards this entity (get thrown backwards)
-					slideAngle = Entity::AngleBetweenTwoEntities((*entity), this);
-					slideAmount = 300;
-				}
-			}
-		}
-	}
+	Creature::UpdateDamages(PLAYER, "enemyHit", 0.1, 300);
 }

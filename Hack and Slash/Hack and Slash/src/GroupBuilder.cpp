@@ -1,6 +1,6 @@
 #include "GroupBuilder.h"
 
-const bool GroupBuilder::SavedInGroups = false;//TODO change this if fdset has saveInGroups selected
+const bool GroupBuilder::SavedInGroups = false;
 
 template <class T>
 Group* GroupBuilder::BuildGroup(DataGroupType dataType) {
@@ -10,19 +10,19 @@ Group* GroupBuilder::BuildGroup(DataGroupType dataType) {
 
 void GroupBuilder::BuildGroups(list<DataGroupType> groupTypes, list<Group*> &groups) {
 	for (list<DataGroupType>::iterator dgt = groupTypes.begin(); dgt != groupTypes.end(); dgt++) {
-		if ((*dgt).dataType == (*dgt).DATATYPE_BOX) {
+		if ((*dgt).dataType == (*dgt).BOX) {
 			Group *group = BuildGroup<SDL_Rect>((*dgt));
 			groups.push_back(group);
 		}
-		else if ((*dgt).dataType == (*dgt).DATATYPE_NUMBER) {
+		else if ((*dgt).dataType == (*dgt).NUMBER) {
 			Group *group = BuildGroup<float>((*dgt));
 			groups.push_back(group);
 		}
-		else if ((*dgt).dataType == (*dgt).DATATYPE_POSITION) {
+		else if ((*dgt).dataType == (*dgt).POSITION) {
 			Group *group = BuildGroup<SDL_Point>((*dgt));
 			groups.push_back(group);
 		}
-		else if ((*dgt).dataType == (*dgt).DATATYPE_STRING) {
+		else if ((*dgt).dataType == (*dgt).STRING) {
 			Group *group = BuildGroup<string>((*dgt));
 			groups.push_back(group);
 		}
@@ -31,7 +31,7 @@ void GroupBuilder::BuildGroups(list<DataGroupType> groupTypes, list<Group*> &gro
 
 Group* GroupBuilder::AddGroupStringToGroup(string name, list<Group*> &groups) {
 	DataGroupType dgt;
-	dgt.dataType = DataGroupType::DATATYPE_STRING;
+	dgt.dataType = DataGroupType::STRING;
 	dgt.groupName = name;
 	dgt.singleItem = false;
 	Group *group = new GroupType<string>(dgt);
@@ -55,11 +55,10 @@ void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
 			if (pos == -1) {
 				file.seekg(positionBeforeRead);
 				break; //must actually be reading something else, like the next animation or something. TODO how to deal with this?
-				//TODO
 				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
 			}
 			Group *group = FindGroupByName(line.substr(0, pos), groups);
-			if (group == NULL) {
+			if (group == nullptr) {
 				//can't find the group, but lets not lose the data
 				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
@@ -88,12 +87,11 @@ void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
 			if (pos == -1) {
 				file.seekg(positionBeforeRead);
 				break; //must actually be reading something else, like the next animation or something. TODO how to deal with this?
-				//TODO
 				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
 			}
 			//cout << "sub: " << line.substr(0, pos) << endl;
 			Group *group = FindGroupByName(line.substr(0, pos), groups);
-			if (group == NULL) {
+			if (group == nullptr) {
 				//can't find the group, but lets not lose the data
 				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
@@ -113,5 +111,5 @@ Group* GroupBuilder::FindGroupByName(string str, list<Group*> &groups) {
 			return (*group);
 	}
 
-	return NULL;
+	return nullptr;
 }

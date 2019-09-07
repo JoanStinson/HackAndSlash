@@ -5,7 +5,7 @@ class HpBar {
 public:
 	int x, y;
 	int barWidth = 200, barHeight = 30;
-	Creature *entity = NULL;
+	Creature *entity = nullptr;
 
 	void Draw();
 };

@@ -3,22 +3,24 @@
 #include "TimeManager.h"
 #include "AnimationSet.h"
 
+#define PLAYER "player"
+#define ENEMY "enemy"
+
 //Abstract Class. cannot instantiate an object of type Entity e.g cannot do Entity e;
 class Entity {
 public:
 	//reference constants
-	enum Direction { DIR_UP, DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_NONE };
+	enum Direction { UP, DOWN, LEFT, RIGHT, NONE };
 
 	//quick label to see what the entity is up to
 	int state;
-
 	float x, y;
 	int direction;
 	bool solid = true; //is this thing solid, can things pass through me
 	bool collideWithSolids = true; //sometimes we are solid, but I pass through other solids
 	bool dieOnSolids = false;
 	bool active = true; //entity turned on or off
-	string type = "entity"; //what type of entity is it? e.g hero, enemy, wall etc
+	string type; //what type of entity is it? e.g hero, enemy, wall etc
 	bool moving; //is the entity moving
 	float angle; //angle to move entity in (360 degree angle)
 	float moveSpeed;
@@ -37,16 +39,15 @@ public:
 	Animation *currentAnim; //current animation the entity is using
 	Frame *currentFrame; //the current frame in the above animation the entity using
 	float frameTimer; //helps animate frame to frame
+	static list<Entity*> entities;
 
 	//VIRTUAL FUNCTIONS
 	virtual void Update();
 	virtual void Draw();
-
 	virtual void Move(float angle);
 	virtual void UpdateMovement();
 	virtual void UpdateCollisionBox();
-
-	virtual void ChangeAnimation(int newState, bool resetFrameToBeginning) = 0;//abstract function
+	virtual void ChangeAnimation(int newState, bool resetFrameToBeginning = true) = 0;//abstract function
 	virtual void UpdateCollisions(); //how we bump into stuff in the world
 	virtual void CrashOntoSolid() { ; }
 
@@ -54,9 +55,6 @@ public:
 	static float DistBetweenTwoEntities(Entity *e1, Entity *e2);
 	static float AngleBetweenTwoEntities(Entity *e1, Entity *e2);
 	static int AngleToDir(float angle);
-
-	//global entities list I can refer to at anytime
-	static list<Entity*> entities;
 	static bool CompareEntity(const Entity* const &a, const Entity * const &b); //compare 2 entities in a list to help sorting (sorts based on y value)
 	static void RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities);
 	static void DeleteAllEntities(list<Entity*> *entityList, bool deleteEntities);

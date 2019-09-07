@@ -13,7 +13,7 @@ public:
 	static DataGroupType LoadRSDataGroupType(ifstream &file);
 
 	//STATIC DATA TYPES
-	static const int DATATYPE_STRING = 0, DATATYPE_POSITION = 1, DATATYPE_BOX = 2, DATATYPE_NUMBER = 3;
+	enum Type { BOX, NUMBER, POSITION, STRING };
 	string groupName; //e.g hitBoxes
 	int dataType; //what do we expect to see here e.g string, position, rectangle region, rotation, et
 	bool singleItem; //can this datagroup only have 1 item inside (usually false, but you never know)

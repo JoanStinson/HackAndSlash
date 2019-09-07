@@ -10,6 +10,6 @@ public:
 
 	string imageName;
 	SDL_Texture* spriteSheet; //holds the spritesheet image for all of our animations
-	SDL_Texture* whiteSpriteSheet = NULL; //I use this spritesheet to show damage
+	SDL_Texture* whiteSpriteSheet = nullptr; //I use this spritesheet to show damage
 	list<Animation> animations;
 };

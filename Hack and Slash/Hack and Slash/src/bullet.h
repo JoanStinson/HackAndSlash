@@ -13,6 +13,4 @@ public:
 	void UpdateDamages() { ; }
 	void HitLanded(Creature *entity);
 	virtual void CrashOntoSolid();
-
-	static const string BULLET_ANIM_BULLET;
 };

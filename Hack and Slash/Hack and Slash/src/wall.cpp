@@ -18,7 +18,7 @@ Wall::Wall(AnimationSet *animSet) {
 void Wall::Update() {
 	UpdateCollisionBox();
 
-	if (currentFrame == NULL || currentAnim == NULL)
+	if (currentFrame == nullptr || currentAnim == nullptr)
 		return;
 
 	frameTimer += TimeManager::timeController.dT;

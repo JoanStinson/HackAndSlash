@@ -517,6 +517,9 @@
     <ClInclude Include="src\Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Enemy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -583,6 +586,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #include "HpBar.h"
 
 void HpBar::Draw() {
-	if (entity != NULL) {
+	if (entity != nullptr) {
 		// draw outside of hp bar
 		SDL_SetRenderDrawColor(globals::renderer, 240, 51, 159, SDL_ALPHA_OPAQUE);
 		SDL_Rect barContainer = { x, y, barWidth, barHeight };

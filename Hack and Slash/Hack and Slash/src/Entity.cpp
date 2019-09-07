@@ -9,7 +9,7 @@ void Entity::Update() { ; }//override me to do something useful
 void Entity::Draw() {
 	//override me if you want something else or more specific to happen
 	//draws current frame
-	if (currentFrame != NULL && active) {
+	if (currentFrame != nullptr && active) {
 		currentFrame->Draw(animSet->spriteSheet, x - globals::camera.x, y - globals::camera.y);
 	}
 	//draw collsionBox
@@ -98,19 +98,11 @@ void Entity::UpdateCollisions() {
 		list<Entity*> collisions;
 
 		//BROAD PHASE
-		//list<Entity*>::iterator entity = ...
-		for (auto entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-			//if we collide with this entity with our currently unioned collisionbox, add to the list
-			if ((*entity)->active
-				//&& (*entity)->type != this->type
-				&& (*entity)->solid
-				&& collBetweenTwoRects(collisionBox, (*entity)->collisionBox)) {
-
-				//add it to the list
-				collisions.push_back(*entity);
-
-			}
+		for each(auto *entity in Entity::entities) {
+			if (entity->active && entity->solid && collBetweenTwoRects(collisionBox, entity->collisionBox))
+				collisions.push_back(entity);
 		}
+		
 		//if we have a list of potential entities we may hit, then lets check them properly to do collision resolution
 		if (collisions.size() > 0) {
 			UpdateCollisionBox();
@@ -122,10 +114,10 @@ void Entity::UpdateCollisions() {
 			SDL_Rect startingCollisionBox = lastCollisionBox;
 
 			//loop through the entities that are in our short list from broadphase
-			for (auto entity = collisions.begin(); entity != collisions.end(); entity++) {
+			for each (auto *entity in collisions) {
 				//temporary variables for normal x and y and also temp collisionTime
 				float tmpNormalX, tmpNormalY;
-				float tmpCollisionTime = sweptAABB(startingCollisionBox, totalXMove, totalYMove, (*entity)->collisionBox, tmpNormalX, tmpNormalY);
+				float tmpCollisionTime = sweptAABB(startingCollisionBox, totalXMove, totalYMove, entity->collisionBox, tmpNormalX, tmpNormalY);
 
 				//if this tmpcolltime is less than last colltime, use it instead
 				if (tmpCollisionTime < collisionTime) {
@@ -184,13 +176,13 @@ float Entity::AngleBetweenTwoEntities(Entity *e1, Entity *e2) {
 
 int Entity::AngleToDir(float angle) {
 	if ((angle >= 0 && angle <= 45) || angle >= 315 && angle <= 360)
-		return DIR_RIGHT;
+		return RIGHT;
 	else if (angle >= 45 && angle <= 135)
-		return DIR_DOWN;
+		return DOWN;
 	else if (angle >= 135 && angle <= 225)
-		return DIR_LEFT;
+		return LEFT;
 	else
-		return DIR_UP;
+		return UP;
 }
 
 bool Entity::CompareEntity(const Entity* const &a, const Entity * const &b) {

@@ -22,13 +22,11 @@ int Animation::GetEndFrameNumber() {
 
 Frame* Animation::GetFrame(int frameNumber) {
 	if (frames.size() == 0)
-		return NULL;
+		return nullptr;
 
 	list<Frame>::iterator i = frames.begin(); //point iterator to first frame in the frames list
 
-	int counter = 0;
-
-	for (counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
+	for (int counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
 		i++; //make iterator point to the next frame in the list
 	}
 

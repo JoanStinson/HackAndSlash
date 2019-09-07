@@ -11,37 +11,37 @@ public:
 	list<string>& GetStrData() { return strData; }
 
 	int GetGroupSize() {
-		if (type.dataType == type.DATATYPE_BOX)
+		if (type.dataType == DataGroupType::BOX)
 			return boxData.size();
-		else if (type.dataType == type.DATATYPE_NUMBER)
+		else if (type.dataType == DataGroupType::NUMBER)
 			return numData.size();
-		else if (type.dataType == type.DATATYPE_POSITION)
+		else if (type.dataType == DataGroupType::POSITION)
 			return posData.size();
-		else if (type.dataType == type.DATATYPE_STRING)
+		else if (type.dataType == DataGroupType::STRING)
 			return strData.size();
 	}
 
 	void AddToGroup(string str) override {
 		stringstream ss;
-		if (type.dataType == type.DATATYPE_BOX) {
+		if (type.dataType == DataGroupType::BOX) {
 			SDL_Rect box;
 			ss << str;
 			ss >> box.x >> box.y >> box.w >> box.h;
 			boxData.push_back(box);
 		}
-		else if (type.dataType == type.DATATYPE_NUMBER) {
+		else if (type.dataType == DataGroupType::NUMBER) {
 			float num;
 			ss << str;
 			ss >> num;
 			numData.push_back(num);
 		}
-		else if (type.dataType == type.DATATYPE_POSITION) {
+		else if (type.dataType == DataGroupType::POSITION) {
 			SDL_Point pos;
 			ss << str;
 			ss >> pos.x >> pos.y;
 			posData.push_back(pos);
 		}
-		else if (type.dataType == type.DATATYPE_STRING) {
+		else if (type.dataType == DataGroupType::STRING) {
 			if (str[0] == ' ')
 				str.erase(0, 1);
 			strData.push_back(str);

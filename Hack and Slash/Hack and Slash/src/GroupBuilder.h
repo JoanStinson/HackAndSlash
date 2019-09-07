@@ -16,7 +16,7 @@ public:
 	hitboxes: 24 45 57 79
 	If in doubt, check the fdset and see what happens with the data
 	*/
-	static const bool SavedInGroups; //TODO - Change based on above explaination
+	static const bool SavedInGroups; 
 
 	/**
 	builds a Group based on dataType. default is STRING (because we may want to ignore some data in a set, but still load it)

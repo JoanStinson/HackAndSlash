@@ -3,7 +3,7 @@
 
 AnimationSet::~AnimationSet() {
 	SDL_DestroyTexture(spriteSheet);
-	if (whiteSpriteSheet != NULL)
+	if (whiteSpriteSheet != nullptr)
 		SDL_DestroyTexture(whiteSpriteSheet);
 }
 
@@ -17,7 +17,7 @@ Animation* AnimationSet::GetAnimation(string name) {
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //loads a fdset file, also takes a list of what types of data we expect to loading.
@@ -50,7 +50,7 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 				SDL_FreeSurface(whiteSurface);
 			}
 			else {
-				whiteSpriteSheet = NULL;
+				whiteSpriteSheet = nullptr;
 			}
 
 			SDL_FreeSurface(spriteSurface);

@@ -32,7 +32,7 @@ Game::Game() {
 	SoundManager::soundManager.LoadSound("laugh", resPath + "laugh2.wav");
 
 	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str());//Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
-	if (song != NULL)
+	if (song != nullptr)
 		Mix_PlayMusic(song, -1);
 
 	//holds a list of group types. this list describes the types of groups of data our frames can have!
@@ -42,17 +42,17 @@ Game::Game() {
 	//collisionBoxes (although we have hardcoded the collision boxes)
 	DataGroupType colBoxType;
 	colBoxType.groupName = "collisionBox";
-	colBoxType.dataType = DataGroupType::DATATYPE_BOX;
+	colBoxType.dataType = DataGroupType::BOX;
 
 	//hitboxes
 	DataGroupType hitBoxType;
 	hitBoxType.groupName = "hitBox";
-	hitBoxType.dataType = DataGroupType::DATATYPE_BOX;
+	hitBoxType.dataType = DataGroupType::BOX;
 
 	//damage
 	DataGroupType dmgType;
 	dmgType.groupName = "damage";
-	dmgType.dataType = DataGroupType::DATATYPE_NUMBER;
+	dmgType.dataType = DataGroupType::NUMBER;
 
 	//add all of these dataTypes to the list
 	dataGroupTypes.push_back(colBoxType);
@@ -141,7 +141,7 @@ Game::~Game() {
 	Mix_PausedMusic();
 	Mix_FreeMusic(song);
 
-	if (scoreTexture != NULL) 
+	if (scoreTexture != nullptr)
 		SDL_DestroyTexture(scoreTexture);
 
 	Entity::DeleteAllEntities(&Entity::entities, false);
@@ -204,19 +204,19 @@ void Game::Update() {
 						bossActive = false;
 						buildBossNext = false;
 						//make hpBar point to no entities health
-						hpBar.entity = NULL;
+						hpBar.entity = nullptr;
 
 						Boss::roundKingsKilled = 0;
 						Glob::globsKilled = 0;
 						Grob::grobsKilled = 0;
-						if (scoreTexture != NULL) {
+						if (scoreTexture != nullptr) {
 							SDL_DestroyTexture(scoreTexture);
-							scoreTexture = NULL;
+							scoreTexture = nullptr;
 						}
 
 						//remove all existing enemies
-						for (list<Entity*>::iterator enemy = enemies.begin(); enemy != enemies.end(); enemy++) {
-							(*enemy)->active = false;
+						for each(auto *entity in enemies) {
+							entity->active = false;
 						}
 						player->Revive();
 					}
@@ -235,10 +235,8 @@ void Game::Update() {
 		}
 
 		//update all entities
-		for (list<Entity*>::iterator entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-			//remember how awesome polymorphism is?
-			//update all entities in game world at once
-			(*entity)->Update();
+		for each(auto *entity in Entity::entities) {
+			entity->Update();
 		}
 
 		//SPAWN ENEMIES
@@ -255,7 +253,7 @@ void Game::Update() {
 			}
 			enemyBuildTimer -= TimeManager::timeController.dT;
 			//if no bosses on the prowl, check to see if we should build some jerks
-			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < 10) {//TODO 10 - MAX_ENEMIES
+			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < MAX_ENEMIES) {
 				Glob *enemy = new Glob(globAnimSet);
 				//set enemies position to somewhere random within the arena's open space
 				enemy->x = randomNumber(globals::ScreenWidth - (2 * 32) - 32) + 32 + 16;
@@ -305,7 +303,7 @@ void Game::Update() {
 				enemiesToBuild = 2;
 
 				//when boss dead, make sure hpBar doesn't reference him anymore
-				hpBar.entity = NULL;
+				hpBar.entity = nullptr;
 			}
 
 		}
@@ -334,8 +332,8 @@ void Game::Draw() {
 		//sort all entities based on y(depth)
 		Entity::entities.sort(Entity::CompareEntity);
 		//draw all of the entities
-		for (list<Entity*>::iterator entity = Entity::entities.begin(); entity != Entity::entities.end(); entity++) {
-			(*entity)->Draw();
+		for each (auto *entity in Entity::entities) {
+			entity->Draw();
 		}
 
 		//draw UI stuff
@@ -343,7 +341,7 @@ void Game::Draw() {
 
 		if (overlayTimer <= 0 && player->hp < 1) {
 			RenderTexture(overlayImage, globals::renderer, 0, 0);
-			if (scoreTexture == NULL) {
+			if (scoreTexture == nullptr) {
 				//generate score text
 				SDL_Color color = { 255, 255, 255, 255 };//white
 

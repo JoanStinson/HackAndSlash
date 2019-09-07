@@ -76,7 +76,7 @@ void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 		dst.h = clip->h;
 	}
 	else {
-		SDL_QueryTexture(tex, NULL, NULL, &dst.w, &dst.h);
+		SDL_QueryTexture(tex, nullptr, nullptr, &dst.w, &dst.h);
 	}
 	RenderTexture(tex, ren, dst, clip);
 }
@@ -94,7 +94,6 @@ void RenderTexture(SDL_Texture *tex, SDL_Renderer *ren, int x, int y,
 SDL_Texture* RenderText(const std::string &message, const std::string &fontFile,
 	SDL_Color color, int fontSize, SDL_Renderer *renderer) {
 	//Open the font
-	//TODO: store fonts externally from this function call. Bad performance warning!!!
 	TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	if (font == nullptr) {
 		cout << "TTF_OpenFont error" << endl;
@@ -151,10 +150,10 @@ SDL_Texture* RenderText(const std::string &message, TTF_Font *font,
 }
 
 bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer* SDLRenderer) {
-	SDL_Surface* saveSurface = NULL;
-	SDL_Surface* infoSurface = NULL;
+	SDL_Surface* saveSurface = nullptr;
+	SDL_Surface* infoSurface = nullptr;
 	infoSurface = SDL_GetWindowSurface(SDLWindow);
-	if (infoSurface == NULL) {
+	if (infoSurface == nullptr) {
 		std::cerr << "Failed to create info surface from window in saveScreenshotBMP(string), SDL_GetError() - " << SDL_GetError() << "\n";
 	}
 	else {
@@ -166,23 +165,23 @@ bool SaveScreenshotBMP(std::string filepath, SDL_Window* SDLWindow, SDL_Renderer
 		else {
 			if (SDL_RenderReadPixels(SDLRenderer, &infoSurface->clip_rect, infoSurface->format->format, pixels, infoSurface->w * infoSurface->format->BytesPerPixel) != 0) {
 				std::cerr << "Failed to read pixel data from SDL_Renderer object. SDL_GetError() - " << SDL_GetError() << "\n";
-				pixels = NULL;
+				pixels = nullptr;
 				return false;
 			}
 			else {
 				saveSurface = SDL_CreateRGBSurfaceFrom(pixels, infoSurface->w, infoSurface->h, infoSurface->format->BitsPerPixel, infoSurface->w * infoSurface->format->BytesPerPixel, infoSurface->format->Rmask, infoSurface->format->Gmask, infoSurface->format->Bmask, infoSurface->format->Amask);
-				if (saveSurface == NULL) {
+				if (saveSurface == nullptr) {
 					std::cerr << "Couldn't create SDL_Surface from renderer pixel data. SDL_GetError() - " << SDL_GetError() << "\n";
 					return false;
 				}
 				SDL_SaveBMP(saveSurface, filepath.c_str());
 				SDL_FreeSurface(saveSurface);
-				saveSurface = NULL;
+				saveSurface = nullptr;
 			}
 			delete[] pixels;
 		}
 		SDL_FreeSurface(infoSurface);
-		infoSurface = NULL;
+		infoSurface = nullptr;
 	}
 	return true;
 }

@@ -26,9 +26,9 @@ void InputManager::Update(SDL_Event* e){
 
 	//button holds
 	//check for keys still being held
-	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
+	const Uint8 *keystates = SDL_GetKeyboardState(nullptr);
 	//if hero not able to move or no direction buttons are being held down, then stop moving (slide to a halt)
-	if ((hero->state != Player::HERO_STATE_MOVE && hero->state != Player::HERO_STATE_IDLE)
+	if ((hero->state != Player::MOVE && hero->state != Player::IDLE)
 		|| (!keystates[UP] && !keystates[DOWN] && !keystates[LEFT] && !keystates[RIGHT]))
 	{
 		hero->moving = false;

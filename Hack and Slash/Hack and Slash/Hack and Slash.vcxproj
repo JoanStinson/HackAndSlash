@@ -294,6 +294,7 @@
     <ClInclude Include="src\Creature.h" />
     <ClInclude Include="src\DataGroupType.h" />
     <ClInclude Include="src\DrawingFunctions.h" />
+    <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Frame.h" />
     <ClInclude Include="src\Game.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Creature.cpp" />
     <ClCompile Include="src\DrawingFunctions.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Frame.cpp" />
     <ClCompile Include="src\Game.cpp" />

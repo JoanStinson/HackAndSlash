@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 void Camera::Update() {
-	if (target != NULL) {
+	if (target != nullptr) {
 		// great, we're following someone
 		float targetX = target->x - globals::camera.w / 2;
 		float targetY = target->y - globals::camera.h / 2;

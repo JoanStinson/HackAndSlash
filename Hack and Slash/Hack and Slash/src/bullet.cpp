@@ -1,6 +1,6 @@
 #include "Bullet.h"
 
-const string Bullet::BULLET_ANIM_BULLET = "bullet";
+#define ANIM_BULLET "bullet"
 
 Bullet::Bullet(AnimationSet * animSet, int x, int y) {
 	this->animSet = animSet;
@@ -8,20 +8,18 @@ Bullet::Bullet(AnimationSet * animSet, int x, int y) {
 	collideWithSolids = true;
 	dieOnSolids = true;
 	moving = true;
-	type = "enemy";
+	type = ENEMY;
 	this->x = x;
 	this->y = y;
 	moveSpeed = 40;
 	moveSpeedMax = 40;
 	hp = hpMax = 1;
 	damage = 5;
-	collisionBoxW = 5;
-	collisionBoxH = 5;
-	collisionBox.w = collisionBoxW;
-	collisionBox.h = collisionBoxH;
+	collisionBox.w = collisionBoxW = 5;
+	collisionBox.h = collisionBoxH = 5;
 	collisionBoxYOffset = 0;
 
-	direction = DIR_DOWN;
+	direction = DOWN;
 	ChangeAnimation(0, true);
 	UpdateCollisionBox();
 	invincibleTimer = 0;
@@ -40,7 +38,7 @@ void Bullet::Update() {
 
 void Bullet::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	state = newState;
-	currentAnim = animSet->GetAnimation(BULLET_ANIM_BULLET);
+	currentAnim = animSet->GetAnimation(ANIM_BULLET);
 
 	if (resetFrameToBeginning)
 		currentFrame = currentAnim->GetFrame(0);
@@ -49,7 +47,7 @@ void Bullet::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 }
 
 void Bullet::UpdateAnimation() {
-	if (currentFrame == NULL || currentAnim == NULL) return;
+	if (currentFrame == nullptr || currentAnim == nullptr) return;
 
 	// if got frames, update frameTimer and animation
 	frameTimer += TimeManager::timeController.dT;
@@ -67,15 +65,11 @@ void Bullet::UpdateAnimation() {
 
 void Bullet::HitLanded(Creature *entity) {
 	//we crashed into an entity and damaged them, time to destroy bullet
-	//TODO USE OBJECT POOLING
 	active = false;
-
-	//TODO create hit effect
 }
 
 void Bullet::CrashOntoSolid() {
 	//for bullets, when they hit walls, destroy them
 	//TODO object pooling
 	active = false;
-	//TODO create hit effect
 }

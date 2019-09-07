@@ -4,7 +4,7 @@
 
 class Camera {
 public:
-	Entity *target = NULL;
+	Entity *target = nullptr;
 	float lerp = 2.6f;
 
 	void Update();

@@ -11,6 +11,8 @@
 #include "Boss.h"
 #include "HpBar.h"
 
+#define MAX_ENEMIES 10
+
 class Game {
 public:
 	Game();
@@ -34,7 +36,7 @@ public:
 	SDL_Texture* splashImage;
 	SDL_Texture* overlayImage;
 
-	SDL_Texture* scoreTexture = NULL; //for drawing strings to the screen
+	SDL_Texture* scoreTexture = nullptr; //for drawing strings to the screen
 
 	Player *player;
 	InputManager heroInput;
@@ -42,7 +44,7 @@ public:
 	list<Entity*> enemies;
 	list<Entity*> walls;
 
-	int enemyWavesTillBoss = 1;
+	int enemyWavesTillBoss = 3;
 	bool buildBossNext = false;
 	bool bossActive = false;
 
