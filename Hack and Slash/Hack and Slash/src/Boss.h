@@ -9,6 +9,7 @@ class Boss : public Enemy {
 public:
 
 	Boss(AnimationSet *animSet, AnimationSet *bulletAnimSet);
+	~Boss();
 	void Update();
 	void UpdateShoot();
 	void Think();
@@ -32,4 +33,7 @@ public:
 	//reference to bullet animations
 	AnimationSet *bulletAnimSet;
 	static int roundKingsKilled;
+
+	list<Bullet*> bullets;
+	int totalBullets = 10;
 };

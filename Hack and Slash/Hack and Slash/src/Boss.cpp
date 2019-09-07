@@ -34,6 +34,16 @@ Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 	ChangeAnimation(IDLE, true);
 
 	UpdateCollisionBox();
+
+	for (int i = 0; i < totalBullets; i++)
+		bullets.push_back(new Bullet(bulletAnimSet, x, y));
+}
+
+Boss::~Boss() {
+	delete bulletAnimSet;
+	for each (auto *bullet in bullets) {
+		bullets.remove(bullet), delete bullet;
+	}
 }
 
 void Boss::Update() {
@@ -55,6 +65,9 @@ void Boss::Update() {
 	UpdateDamages();
 	UpdateAnimation();
 	UpdateInvincibleTimer();
+
+
+
 }
 
 void Boss::UpdateShoot() {
@@ -69,12 +82,29 @@ void Boss::UpdateShoot() {
 		}
 		else if (shotTimer <= 0) { //otherwise if still shooting and its time to take a shot
 			shotTimer = 0.5;
-			Bullet *bullet = new Bullet(bulletAnimSet, x, y);
-			SM.PlaySound("shoot");
-			bullet->angle = angle;
-			Entity::entities.push_back(bullet);
+			//find an inactive bullet and shoot it, instead of instantiating and deleting
+			for each (auto *bullet in bullets) {
+				if (!bullet->active) {
+					bullet->Reset(x, y);
+					//bullet->active = true;
+					SM.PlaySound("shoot");
+					bullet->angle = angle;
+					Entity::entities.push_back(bullet);
+					break;
+				}
+			}
+			//Bullet *bullet = new Bullet(bulletAnimSet, x, y);
+
 		}
+
+
 	}
+	int activeBullets = 0;
+	for each (auto *bullet in bullets) {
+		if (bullet->active)
+			activeBullets++;
+	}
+	cout << "Current active number of bullets: " << activeBullets << endl;
 }
 
 void Boss::Think() {

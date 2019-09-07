@@ -2,7 +2,8 @@
 
 #define ANIM_BULLET "bullet"
 
-Bullet::Bullet(AnimationSet * animSet, int x, int y) {
+Bullet::Bullet(AnimationSet *animSet, int x, int y) {
+	active = false;
 	this->animSet = animSet;
 	solid = false;
 	collideWithSolids = true;
@@ -72,4 +73,22 @@ void Bullet::CrashOntoSolid() {
 	//for bullets, when they hit walls, destroy them
 	//TODO object pooling
 	active = false;
+}
+
+void Bullet::Reset(int x, int y) {
+	active = true;
+	this->x = x;
+	this->y = y;
+	moveSpeed = 40;
+	moveSpeedMax = 40;
+	hp = hpMax = 1;
+	damage = 5;
+	collisionBox.w = collisionBoxW = 5;
+	collisionBox.h = collisionBoxH = 5;
+	collisionBoxYOffset = 0;
+
+	direction = DOWN;
+	ChangeAnimation(0, true);
+	UpdateCollisionBox();
+	invincibleTimer = 0;
 }

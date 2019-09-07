@@ -13,4 +13,5 @@ public:
 	void UpdateDamages() { ; }
 	void HitLanded(Creature *entity);
 	virtual void CrashOntoSolid();
+	void Reset(int x, int y);
 };
