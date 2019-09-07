@@ -24,7 +24,7 @@ Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 	y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
-	hp = hpMax = 100;//default = 500
+	hp = hpMax = 500;//default = 500
 	damage = 0;
 	collisionBox.w = collisionBoxW = 50;
 	collisionBox.h = collisionBoxH = 30;

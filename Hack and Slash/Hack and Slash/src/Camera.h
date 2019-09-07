@@ -1,5 +1,4 @@
 #pragma once
-#include "Globals.h"
 #include "Entity.h"
 
 class Camera {

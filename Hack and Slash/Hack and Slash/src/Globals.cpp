@@ -4,9 +4,6 @@ namespace globals {
 
 	bool debugging = false;
 	bool smoothCamera = true;
-
-	//int ScreenWidth = 640, ScreenHeight = 352, ScreenScale = 2;
-	//SDL_Renderer* renderer = nullptr;
 	SDL_Rect camera;
 
 	string clipOffDataHeader(string data) {

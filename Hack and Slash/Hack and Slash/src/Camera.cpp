@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Globals.h"
 
 void Camera::Update() {
 	if (target != nullptr) {

@@ -1,6 +1,7 @@
 #include "Creature.h"
 #include "Math.h"
 #include "SoundManager.h"
+#include "Globals.h"
 
 void Creature::UpdateHitBox() {
 	//assume damage is 0 for now

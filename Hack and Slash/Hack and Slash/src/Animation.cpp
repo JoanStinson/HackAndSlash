@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include "Globals.h"
 
 Animation::Animation(string name) : name(name) {
 

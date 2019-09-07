@@ -1,5 +1,4 @@
 #pragma once
-#include "Globals.h"
 #include "Creature.h"
 #include "SoundManager.h"
 

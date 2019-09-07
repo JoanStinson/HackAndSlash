@@ -1,4 +1,5 @@
 #include "Frame.h"
+#include "Globals.h"
 
 void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	SDL_Rect dest; //destination of where we want to draw this frame

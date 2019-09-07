@@ -1,4 +1,5 @@
 #include "GroupBuilder.h"
+#include "Globals.h"
 
 const bool GroupBuilder::SavedInGroups = false;
 

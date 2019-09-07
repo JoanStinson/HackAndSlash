@@ -1,5 +1,4 @@
 #pragma once
-#include "Globals.h"
 #include "Group.h"
 #include "GroupType.h"
 

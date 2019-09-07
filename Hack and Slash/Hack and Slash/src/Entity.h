@@ -1,5 +1,4 @@
 #pragma once
-#include "Globals.h"
 #include "TimeManager.h"
 #include "AnimationSet.h"
 

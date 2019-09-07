@@ -30,8 +30,8 @@ Player::Player(AnimationSet *animSet) {
 	x = WINDOW.SCREEN_WIDTH / 2;
 	y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
-	moveSpeedMax = 80;
-	hp = hpMax = 20;
+	moveSpeedMax = 80;//defaault 80
+	hp = hpMax = 30;
 	damage = 0;
 	collisionBoxW = 20;
 	collisionBoxH = 24;

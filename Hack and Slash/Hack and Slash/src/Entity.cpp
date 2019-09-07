@@ -1,5 +1,6 @@
 #include "Entity.h"
 #include "Math.h"
+#include "Globals.h"
 using namespace math;
 
 list<Entity*> Entity::entities;
