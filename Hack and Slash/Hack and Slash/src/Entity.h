@@ -8,17 +8,10 @@
 //Abstract Class. cannot instantiate an object of type Entity e.g cannot do Entity e;
 class Entity {
 public:
-	virtual void Update();
+	virtual void Update() {}
 	virtual void Draw();
 	virtual void Move(float angle);
-	int state;
-	float x, y;
-	bool moving; //is the entity moving
-	bool active = true; //entity turned on or off
-	string type; //what type of entity is it? e.g hero, enemy, wall etc
-	float angle; //angle to move entity in (360 degree angle)
 
-	static list<Entity*> entities;
 	//HELP FUNCTIONS
 	static float DistBetweenTwoEntities(Entity *e1, Entity *e2);
 	static float AngleBetweenTwoEntities(Entity *e1, Entity *e2);
@@ -27,7 +20,23 @@ public:
 	static void RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities);
 	static void DeleteAllEntities(list<Entity*> *entityList, bool deleteEntities);
 
+	int state;
+	float x;
+	float y;
+	bool moving; //is the entity moving
+	bool active = true; //entity turned on or off
+	string type; //what type of entity is it? e.g hero, enemy, wall etc
+	float angle; //angle to move entity in (360 degree angle)
+	static list<Entity*> entities;
+
 protected:
+	//VIRTUAL FUNCTIONS
+	virtual void UpdateMovement();
+	virtual void UpdateCollisionBox();
+	virtual void ChangeAnimation(int newState, bool resetAnim = true) = 0;//abstract function
+	virtual void UpdateCollisions(); //how we bump into stuff in the world
+	virtual void CrashOntoSolid() {}
+
 	//reference constants
 	enum Direction { UP, DOWN, LEFT, RIGHT, NONE };
 
@@ -50,12 +59,4 @@ protected:
 	Animation *currentAnim; //current animation the entity is using
 	Frame *currentFrame; //the current frame in the above animation the entity using
 	float frameTimer; //helps animate frame to frame
-	
-
-	//VIRTUAL FUNCTIONS
-	virtual void UpdateMovement();
-	virtual void UpdateCollisionBox();
-	virtual void ChangeAnimation(int newState, bool resetAnim = true) = 0;//abstract function
-	virtual void UpdateCollisions(); //how we bump into stuff in the world
-	virtual void CrashOntoSolid() { ; }
 };

@@ -8,12 +8,12 @@
 #include "GroupBuilder.h"
 using namespace std;
 
-class Frame{
+class Frame {
 public:
 	void Draw(SDL_Texture *spriteSheet, float x, float y);
 	void LoadFrame(ifstream &file, list<DataGroupType> &groupTypes);
-	int GetFrameNumber();
-	float GetDuration();
+	int GetFrameNumber() const;
+	float GetDuration() const;
 	SDL_Point& GetOffSet();
 	list<Group*>& GetFrameData();
 

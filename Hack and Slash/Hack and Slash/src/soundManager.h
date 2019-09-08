@@ -15,8 +15,8 @@ public:
 		static SoundManager instance;
 		return instance;
 	}
-	void LoadSound(string name, string file);
-	void PlaySound(string name);
+	void LoadSound(const string &name, const string &file);
+	void PlaySound(const string &name);
 
 private:
 	// private constructor so that no objects can be created (disallow instantiation outside of the class)

@@ -14,29 +14,16 @@ using namespace math;
 
 int Boss::roundKingsKilled = 0;
 
-Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) : Enemy(animSet) {
-	//this->animSet = animSet;
+Boss::Boss(AnimationSet *animSet, AnimationSet *bulletAnimSet) : Enemy(animSet) {
 	this->bulletAnimSet = bulletAnimSet;
-
 	aiState = NORMAL;
-
-	//type = ENEMY;
-	//x = WINDOW.SCREEN_WIDTH / 2;
-	//y = WINDOW.SCREEN_HEIGHT / 2;
-	//moveSpeed = 0;
 	moveSpeedMax = 20;
-	hp = hpMax = 500;//default = 500
-	//damage = 0;
+	hp = maxHp = 500;
 	collisionBox.w = collisionBoxW = 50;
 	collisionBox.h = collisionBoxH = 30;
-
 	collisionBoxYOffset = -14;
-
 	ChangeAnimation(IDLE, true);
-
-	//UpdateCollisionBox();
-
-	for (int i = 0; i < totalBullets; i++)
+	for (int i = 0; i < TOTAL_BULLETS; i++)
 		bullets.push_back(new Bullet(bulletAnimSet, x, y));
 }
 
@@ -48,27 +35,16 @@ Boss::~Boss() {
 }
 
 void Boss::Update() {
-	//check if dead
 	CheckIfDead(DEAD);
-
-	//ai thinks what to do
 	Think();
-
 	UpdateShoot();
-
 	UpdateCollisionBox();
-
 	UpdateMovement();
-
 	UpdateCollisions();
-
 	UpdateHitBox();
 	UpdateDamages();
 	UpdateAnimation();
 	UpdateInvincibleTimer();
-
-
-
 }
 
 void Boss::UpdateShoot() {
@@ -206,7 +182,6 @@ void Boss::Shoot() {
 	}
 
 	ChangeAnimation(SHOOT, true);
-
 }
 
 void Boss::Slam() {
@@ -232,7 +207,6 @@ void Boss::Die() {
 	moving = false;
 	ChangeAnimation(DEAD, true);
 	SM.PlaySound("enemyDie");
-
 	roundKingsKilled++;
 }
 
@@ -248,12 +222,10 @@ void Boss::ChangeAnimation(int newState, bool resetAnim) {
 	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
-	if (resetAnim) {
+	if (resetAnim)
 		currentFrame = currentAnim->GetFrame(0);
-	}
-	else {
+	else
 		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
-	}
 }
 
 void Boss::UpdateAnimation() {

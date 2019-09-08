@@ -5,8 +5,6 @@ using namespace math;
 
 list<Entity*> Entity::entities;
 
-void Entity::Update() { ; }//override me to do something useful
-
 void Entity::Draw() {
 	//override me if you want something else or more specific to happen
 	//draws current frame
@@ -103,7 +101,7 @@ void Entity::UpdateCollisions() {
 			if (entity->active && entity->solid && collBetweenTwoRects(collisionBox, entity->collisionBox))
 				collisions.push_back(entity);
 		}
-		
+
 		//if we have a list of potential entities we may hit, then lets check them properly to do collision resolution
 		if (collisions.size() > 0) {
 			UpdateCollisionBox();
@@ -186,13 +184,8 @@ int Entity::AngleToDir(float angle) {
 		return UP;
 }
 
-bool Entity::CompareEntity(const Entity* const &a, const Entity * const &b) {
-	if (a != 0 && b != 0) {
-		return (a->y < b->y);
-	}
-	else {
-		return false;
-	}
+bool Entity::CompareEntity(const Entity* const &a, const Entity* const &b) {
+	return (a != 0 && b != 0) ? (a->y < b->y) : false;
 }
 
 void Entity::RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities) {

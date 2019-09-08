@@ -10,16 +10,13 @@ using namespace std;
 
 //ABSTRACT CLASS
 //groups manage a frames data
-class Group{
+class Group {
 public:
 	DataGroupType type; //describes its name, type and other rules
-	Group(){}
+	Group() {}
 	Group(DataGroupType type) : type(type) {}
 	//how many bits of data in here
 	virtual int GetGroupSize() = 0;
 	/*add to group using string. Converts string into correct data for each group type*/
 	virtual void AddToGroup(string str) = 0;
-
-
-	//virtual void draw() = 0;
 };

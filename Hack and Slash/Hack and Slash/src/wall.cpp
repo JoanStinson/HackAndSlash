@@ -2,17 +2,12 @@
 
 Wall::Wall(AnimationSet *animSet) {
 	this->animSet = animSet;
-
-	//basic setup
 	solid = true;
-
 	collisionBoxW = 32;
 	collisionBoxH = 32;
 	collisionBoxYOffset = -16;
-
 	UpdateCollisionBox();
 	ChangeAnimation(0, false);
-
 }
 
 void Wall::Update() {

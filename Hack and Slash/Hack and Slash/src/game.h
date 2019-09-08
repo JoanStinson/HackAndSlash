@@ -23,23 +23,20 @@ private:
 	void Draw();
 
 	Mix_Music* song;
-
 	AnimationSet* heroAnimSet;
 	AnimationSet* globAnimSet;
 	AnimationSet* grobAnimSet;
 	AnimationSet* wallAnimSet;
 	AnimationSet* roundKingAnimSet;
 	AnimationSet* bulletAnimSet;
-
 	SDL_Texture* backgroundImage;
 	SDL_Texture* splashImage;
 	SDL_Texture* overlayImage;
 	SDL_Texture* scoreTexture = nullptr; //for drawing strings to the screen
-
 	Player *player;
 	list<Entity*> enemies;
 	list<Entity*> walls;
-	int enemyWavesTillBoss = 1;
+	int enemyWavesTillBoss = 3;
 	bool buildBossNext = false;
 	bool bossActive = false;
 	HpBar hpBar;

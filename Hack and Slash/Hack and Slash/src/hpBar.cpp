@@ -8,7 +8,7 @@ void HpBar::Draw() {
 		SDL_RenderDrawRect(RENDERER(), &barContainer);
 
 		//percentage of entities health remaining
-		float hpPercent = entity->hp / (entity->hpMax*1.0f);//*1.0f upgrade math into float division so we dont lose decimals
+		float hpPercent = entity->hp / (entity->maxHp*1.0f);//*1.0f upgrade math into float division so we dont lose decimals
 		//example 50/100 = 0.5, but in integer division, it removes decimal, so we get 0
 
 		SDL_Rect hpRect = { x + 2, y + 2, (barWidth - 4)*hpPercent, barHeight - 4 };

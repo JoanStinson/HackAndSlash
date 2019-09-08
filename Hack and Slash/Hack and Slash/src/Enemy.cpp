@@ -1,6 +1,6 @@
 #include "Enemy.h"
 
-Enemy::Enemy(AnimationSet * animSet) : Creature(animSet) {
+Enemy::Enemy(AnimationSet *animSet) : Creature(animSet) {
 	type = ENEMY;
 }
 

@@ -1,7 +1,7 @@
 #include "Frame.h"
 #include "Utils.h"
 
-void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
+void Frame::Draw(SDL_Texture* spriteSheet, float x, float y) {
 	SDL_Rect dest; //destination of where we want to draw this frame
 	dest.x = x - offSet.x;
 	dest.y = y - offSet.y;
@@ -10,10 +10,9 @@ void Frame::Draw(SDL_Texture* spriteSheet, float x, float y){
 	RENDERER.RenderTexture(spriteSheet, dest, &clip);
 }
 
-void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes){
+void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes) {
 	//Ok, we dragged these groupTypes allllll the way here, so we could construct groups on our frame to hold the data in
 	GroupBuilder::BuildGroups(groupTypes, frameData);
-
 
 	string buffer;
 	//frame - dud data saying this is a frame
@@ -23,7 +22,7 @@ void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes){
 	stringstream ss; //good for building strings and reading from strings
 	buffer = utils::clipOffDataHeader(buffer);
 	ss << buffer;
-	ss >> clip.x >> clip.y >> clip.w >> clip.h; 
+	ss >> clip.x >> clip.y >> clip.w >> clip.h;
 	//offset/pivot
 	getline(file, buffer);
 	ss.clear();
@@ -46,15 +45,15 @@ void Frame::LoadFrame(ifstream &file, list<DataGroupType> &groupTypes){
 	GroupBuilder::LoadGroups(file, frameData);
 }
 
-int Frame::GetFrameNumber() {
+int Frame::GetFrameNumber() const {
 	return frameNumber;
 }
 
-float Frame::GetDuration() {
+float Frame::GetDuration() const {
 	return duration;
 }
 
-SDL_Point & Frame::GetOffSet() {
+SDL_Point& Frame::GetOffSet() {
 	return offSet;
 }
 

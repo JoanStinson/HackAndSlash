@@ -7,9 +7,9 @@ AnimationSet::~AnimationSet() {
 		SDL_DestroyTexture(whiteSpriteSheet);
 }
 
-Animation* AnimationSet::GetAnimation(string name) {
+Animation* AnimationSet::GetAnimation(const string &name) {
 	for (list<Animation>::iterator animation = animations.begin(); animation != animations.end(); animation++) {
-		Animation* anim = &(*animation);
+		Animation *anim = &(*animation);
 
 		//if we find a match on name, return that animation from the list
 		if (name == anim->GetName()) {
@@ -33,10 +33,10 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 	if (file.good()) {
 		getline(file, imageName);
 		if (setColourKey) {
-			SDL_Surface* spriteSurface = Renderer::Instance().LoadSurface(resPath + imageName);
+			SDL_Surface *spriteSurface = Renderer::Instance().LoadSurface(resPath + imageName);
 
 			//for transparency, we will grab the [transparentPixelIndex] from the surface we just made
-			SDL_Color* transparentPixel = &spriteSurface->format->palette->colors[transparentPixelIndex];
+			SDL_Color *transparentPixel = &spriteSurface->format->palette->colors[transparentPixelIndex];
 			SDL_SetColorKey(spriteSurface, 1, SDL_MapRGB(spriteSurface->format, transparentPixel->r, transparentPixel->g, transparentPixel->b));
 
 			spriteSheet = Renderer::Instance().ConvertSurfaceToTexture(spriteSurface, false);
@@ -76,10 +76,10 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 	file.close();
 }
 
-SDL_Texture * AnimationSet::GetSpriteSheet() {
+SDL_Texture* AnimationSet::GetSpriteSheet() const {
 	return spriteSheet;
 }
 
-SDL_Texture * AnimationSet::GetWhiteSpriteSheet() {
+SDL_Texture* AnimationSet::GetWhiteSpriteSheet() const {
 	return whiteSpriteSheet;
 }

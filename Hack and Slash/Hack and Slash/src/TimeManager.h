@@ -14,7 +14,7 @@ public:
 	void Pause();
 	void UnPause();
 	void Reset();
-	float GetDt();
+	float GetDt() const;
 
 private:
 	// private constructor so that no objects can be created (disallow instantiation outside of the class)

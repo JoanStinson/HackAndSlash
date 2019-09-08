@@ -23,38 +23,22 @@ using namespace math;
 #define ANIM_DIE "die"
 
 Player::Player(AnimationSet *animSet) : Creature(animSet) {
-	//this->animSet = animSet;
 	type = PLAYER;
-
-	//setup default hero values
-	//x = WINDOW.SCREEN_WIDTH / 2;
-	//y = WINDOW.SCREEN_HEIGHT / 2;
-	//moveSpeed = 0;
 	moveSpeedMax = 60;//defaault 80
-	hp = hpMax = 30;
-	//damage = 0;
+	hp = maxHp = 30;
 	collisionBoxW = 20;
 	collisionBoxH = 24;
 	collisionBoxYOffset = -20;
-
-	//direction = DOWN;
-
 	ChangeAnimation(IDLE, true);
-
-	//UpdateCollisionBox();
 }
 
 void Player::Update() {
-	//check if dead
 	CheckIfDead(DEAD);
-
 	UpdateCollisionBox();
 	UpdateMovement();
 	UpdateCollisions();
-
 	UpdateHitBox();
 	UpdateDamages();
-
 	UpdateAnimation();
 	UpdateInvincibleTimer();
 }
@@ -89,7 +73,7 @@ void Player::Die() {
 }
 
 void Player::Revive() {
-	hp = hpMax;
+	hp = maxHp;
 	ChangeAnimation(IDLE, true);
 	moving = false;
 	x = WINDOW.SCREEN_WIDTH / 2;
@@ -131,12 +115,10 @@ void Player::ChangeAnimation(int newState, bool resetAnim) {
 	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
-	if (resetAnim) {
+	if (resetAnim)
 		currentFrame = currentAnim->GetFrame(0);
-	}
-	else {
+	else
 		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
-	}
 }
 
 void Player::UpdateAnimation() {

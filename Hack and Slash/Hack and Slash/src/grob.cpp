@@ -16,32 +16,16 @@ using namespace math;
 int Grob::grobsKilled = 0;
 
 Grob::Grob(AnimationSet *animSet) : Enemy(animSet) {
-
-	//this->animSet = animSet;
-
-	//type = ENEMY;
-
-	//setup defaults
-	//x = WINDOW.SCREEN_WIDTH / 2;
-	//y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
-	hp = hpMax = 1;
-	//damage = 0;
+	hp = maxHp = 1;
 	collisionBox.w = collisionBoxW = 18;
 	collisionBox.h = collisionBoxH = 16;
-
 	collisionBoxYOffset = -14;
-
-	//direction = DOWN;
-
 	ChangeAnimation(IDLE, true);
-
-	//UpdateCollisionBox();
 }
 
 void Grob::Update() {
-	//check if dead
 	CheckIfDead(DEAD);
 
 	Think();
@@ -99,8 +83,6 @@ void Grob::Die() {
 	state = DEAD;
 	ChangeAnimation(state, true);
 	SM.PlaySound("enemyDie");
-
-	//add to our score count
 	Grob::grobsKilled++;
 }
 

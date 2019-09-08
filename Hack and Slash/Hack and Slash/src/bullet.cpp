@@ -14,12 +14,11 @@ Bullet::Bullet(AnimationSet *animSet, int x, int y) {
 	this->y = y;
 	moveSpeed = 40;
 	moveSpeedMax = 40;
-	hp = hpMax = 1;
+	hp = maxHp = 1;
 	damage = 5;
 	collisionBox.w = collisionBoxW = 5;
 	collisionBox.h = collisionBoxH = 5;
 	collisionBoxYOffset = 0;
-
 	direction = DOWN;
 	ChangeAnimation(0, true);
 	UpdateCollisionBox();
@@ -34,7 +33,6 @@ void Bullet::Update() {
 	UpdateHitBox();
 	UpdateDamages();
 	UpdateAnimation();
-
 }
 
 void Bullet::ChangeAnimation(int newState, bool resetAnim) {
@@ -65,13 +63,10 @@ void Bullet::UpdateAnimation() {
 }
 
 void Bullet::HitLanded(Creature *entity) {
-	//we crashed into an entity and damaged them, time to destroy bullet
 	active = false;
 }
 
 void Bullet::CrashOntoSolid() {
-	//for bullets, when they hit walls, destroy them
-	//TODO object pooling
 	active = false;
 }
 
@@ -81,12 +76,11 @@ void Bullet::Reset(int x, int y) {
 	this->y = y;
 	moveSpeed = 40;
 	moveSpeedMax = 40;
-	hp = hpMax = 1;
+	hp = maxHp = 1;
 	damage = 5;
 	collisionBox.w = collisionBoxW = 5;
 	collisionBox.h = collisionBoxH = 5;
 	collisionBoxYOffset = 0;
-
 	direction = DOWN;
 	ChangeAnimation(0, true);
 	UpdateCollisionBox();

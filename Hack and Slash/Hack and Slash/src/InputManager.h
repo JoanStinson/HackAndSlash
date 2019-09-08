@@ -5,7 +5,10 @@
 
 class InputManager {
 public:
-	inline static InputManager& Instance();
+	inline static InputManager& Instance() {
+		static InputManager instance;
+		return instance;
+	}
 	void Update(SDL_Event* e);
 	Player *player;
 
@@ -30,5 +33,4 @@ private:
 		X = SDL_SCANCODE_X,
 		Z = SDL_SCANCODE_Z
 	};
-
 };

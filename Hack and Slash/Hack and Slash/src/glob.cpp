@@ -24,43 +24,23 @@ using namespace math;
 int Glob::globsKilled = 0;
 
 Glob::Glob(AnimationSet *animSet) : Enemy(animSet) {
-	//this->animSet = animSet;
-
 	aiState = NORMAL;
-
-
-	//type = ENEMY;
-
-	//defaults
-	//x = WINDOW.SCREEN_WIDTH / 2;
-	//y = WINDOW.SCREEN_HEIGHT / 2;
-	//moveSpeed = 0;
 	moveSpeedMax = 20;
-	hp = hpMax = 10 + (rand() % 20); //10-29
-	//damage = 0;
+	hp = maxHp = 10 + (rand() % 20); //10-29
 	collisionBox.w = collisionBoxW = 18;
 	collisionBox.h = collisionBoxH = 20;
-
 	collisionBoxYOffset = -14;
-
-	//direction = DOWN;
 	ChangeAnimation(IDLE, true);
-
-	//UpdateCollisionBox();
 }
 
 void Glob::Update() {
-	//check if dead
 	CheckIfDead(DEAD);
-
 	Think();
-
 	UpdateCollisionBox();
 	UpdateMovement();
 	UpdateCollisions();
 	UpdateHitBox();
 	UpdateDamages();
-
 	UpdateAnimation();
 	UpdateInvincibleTimer();
 }
@@ -135,8 +115,6 @@ void Glob::Die() {
 	state = DEAD;
 	ChangeAnimation(state, true);
 	SM.PlaySound("enemyDie");
-
-	//add to our score count
 	Glob::globsKilled++;
 }
 

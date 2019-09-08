@@ -1,23 +1,20 @@
 #include "Animation.h"
 #include "Utils.h"
 
-Animation::Animation(string name) : name(name) {
+Animation::Animation(const string &name) : name(name) {}
 
-}
-
-int Animation::GetNextFrameNumber(int frameNumber) {
-	//return (frameNumber + 1) % frames.size();
+int Animation::GetNextFrameNumber(int frameNumber) const {
 	if (frameNumber + 1 < frames.size())
 		return frameNumber + 1;
 	else
 		return 0;
 }
 
-Frame* Animation::GetNextFrame(Frame* frame) {
+Frame* Animation::GetNextFrame(Frame *frame) {
 	return GetFrame(GetNextFrameNumber(frame->GetFrameNumber()));
 }
 
-int Animation::GetEndFrameNumber() {
+int Animation::GetEndFrameNumber() const {
 	return frames.size() - 1;
 }
 
@@ -26,11 +23,9 @@ Frame* Animation::GetFrame(int frameNumber) {
 		return nullptr;
 
 	list<Frame>::iterator i = frames.begin(); //point iterator to first frame in the frames list
-
 	for (int counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
 		i++; //make iterator point to the next frame in the list
 	}
-
 	Frame *frame = &(*i); //make frame point to the frame inside the list our iterator is pointing at
 						//*i = gets frame at i's position in the list (de-referencing)
 						//& = get the memory address of whatever is on the right (referencing)
@@ -55,6 +50,6 @@ void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
 	}
 }
 
-string& Animation::GetName() {
+string Animation::GetName() const {
 	return name;
 }
