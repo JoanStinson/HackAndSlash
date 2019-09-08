@@ -2,22 +2,23 @@
 #include "Window.h"
 
 Renderer::Renderer() {
-	//setup renderer
+	// Setup renderer
 	renderer = SDL_CreateRenderer(WINDOW(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (renderer == nullptr) {
 		SDL_DestroyWindow(WINDOW());
 		SDL_Quit();
 		cout << "renderer error" << endl;
 	}
-	//this is the size to draw things at, before we scale it to the screen size dimensions mentioned in createWindow
+	// This is the size to draw things at, before we scale it to the screen size dimensions mentioned in createWindow
 	SDL_RenderSetLogicalSize(renderer, WINDOW.SCREEN_WIDTH, WINDOW.SCREEN_HEIGHT);
 
-	//initialise sdl_image
+	// Initialise sdl_image
 	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
 		SDL_Quit();
 		cout << "sdl image did not initialise" << endl;
 	}
-	//initialise text to font 
+
+	// Initialise text to font 
 	if (TTF_Init() != 0) {
 		SDL_Quit();
 		cout << "sdl ttf did not initialise" << endl;
@@ -27,7 +28,6 @@ Renderer::Renderer() {
 /**
 * Loads an image into a texture on the rendering device
 * @param file The image file to load
-* @param ren The renderer to load the texture onto
 * @return the loaded texture, or nullptr if something went wrong.
 */
 SDL_Texture* Renderer::LoadTexture(const string &file) {
@@ -68,7 +68,6 @@ SDL_Texture* Renderer::ConvertSurfaceToTexture(SDL_Surface* surface, bool cleanS
 * Draw an SDL_Texture to an SDL_Renderer at some destination rect
 * taking a clip of the texture if desired
 * @param tex The source texture we want to draw
-* @param ren The renderer we want to draw to
 * @param dst The destination rectangle to render the texture to
 * @param clip The sub-section of the texture to draw (clipping rect)
 *		default of nullptr draws the entire texture
@@ -82,7 +81,6 @@ void Renderer::RenderTexture(SDL_Texture *tex, SDL_Rect dst, SDL_Rect *clip) {
 * If a clip is passed, the clip's width and height will be used instead of
 *	the texture's
 * @param tex The source texture we want to draw
-* @param ren The renderer we want to draw to
 * @param x The x coordinate to draw to
 * @param y The y coordinate to draw to
 * @param clip The sub-section of the texture to draw (clipping rect)
@@ -108,18 +106,17 @@ void Renderer::RenderTexture(SDL_Texture *tex, int x, int y, SDL_Rect *clip) {
 * @param fontFile The font we want to use to render the text
 * @param color The color we want the text to be
 * @param fontSize The size we want the font to be
-* @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
 SDL_Texture* Renderer::RenderText(const string &message, const string &fontFile, SDL_Color color, int fontSize) {
-	//Open the font
+	// Open the font
 	TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
 	if (font == nullptr) {
 		cout << "TTF_OpenFont error" << endl;
 		return nullptr;
 	}
-	//We need to first render to a surface as that's what TTF_RenderText
-	//returns, then load that surface into a texture
+	// We need to first render to a surface as that's what TTF_RenderText
+	// returns, then load that surface into a texture
 	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
 	if (surf == nullptr) {
 		TTF_CloseFont(font);
@@ -130,7 +127,7 @@ SDL_Texture* Renderer::RenderText(const string &message, const string &fontFile,
 	if (texture == nullptr) {
 		cout << "CreateTexture" << endl;
 	}
-	//Clean up the surface and font
+	// Clean up the surface and font
 	SDL_FreeSurface(surf);
 	TTF_CloseFont(font);
 	return texture;
@@ -142,7 +139,6 @@ SDL_Texture* Renderer::RenderText(const string &message, const string &fontFile,
 * @param fontFile The font we want to use to render the text
 * @param color The color we want the text to be
 * @param fontSize The size we want the font to be
-* @param renderer The renderer to load the texture in
 * @return An SDL_Texture containing the rendered message, or nullptr if something went wrong
 */
 SDL_Texture* Renderer::RenderText(const string &message, TTF_Font *font, SDL_Color color) {
@@ -150,8 +146,8 @@ SDL_Texture* Renderer::RenderText(const string &message, TTF_Font *font, SDL_Col
 		cout << "TTF_OpenFont" << endl;
 		return nullptr;
 	}
-	//We need to first render to a surface as that's what TTF_RenderText
-	//returns, then load that surface into a texture
+	// We need to first render to a surface as that's what TTF_RenderText
+	// returns, then load that surface into a texture
 	SDL_Surface *surf = TTF_RenderText_Blended(font, message.c_str(), color);
 	if (surf == nullptr) {
 		cout << "TTF_RenderText" << endl;
@@ -161,7 +157,7 @@ SDL_Texture* Renderer::RenderText(const string &message, TTF_Font *font, SDL_Col
 	if (texture == nullptr) {
 		cout << "CreateTexture" << endl;
 	}
-	//Clean up the surface and font
+	// Clean up the surface and font
 	SDL_FreeSurface(surf);
 	//	TTF_CloseFont(font);
 	return texture;

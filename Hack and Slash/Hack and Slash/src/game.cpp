@@ -4,7 +4,7 @@
 using namespace math;
 
 Game::Game(const string &name, int screenWidth, int screenHeight, int screenScale) {
-	Window::Instance(move(name), screenWidth, screenHeight, screenScale); //Initialises Window Singleton for the first time.
+	Window::Instance(move(name), screenWidth, screenHeight, screenScale); // Initialises window singleton instance 
 
 	string resPath = utils::getResourcePath();
 	backgroundImage = RENDERER.LoadTexture(resPath + "map.png");
@@ -14,49 +14,50 @@ Game::Game(const string &name, int screenWidth, int screenHeight, int screenScal
 	splashShowing = true;
 	overlayTimer = 2;
 
-	// setup camera
+	// Setup camera
 	RENDERER.camera.x = 0;
 	RENDERER.camera.y = 0;
 	RENDERER.camera.w = screenWidth;
 	RENDERER.camera.h = screenHeight;
 
-	//load up sounds
+	// Load up sounds
 	SM.LoadSound("hit", resPath + "Randomize2.wav");
 	SM.LoadSound("enemyHit", resPath + "Hit_Hurt9.wav");
 	SM.LoadSound("swing", resPath + "Randomize21.wav");
 	SM.LoadSound("dash", resPath + "dash.wav");
 	SM.LoadSound("growl", resPath + "Randomize34.wav");
 	SM.LoadSound("enemyDie", resPath + "Randomize41.wav");
-	//new sounds for boss
+
+	// New sounds for boss
 	SM.LoadSound("crash", resPath + "crash.wav");
 	SM.LoadSound("smash", resPath + "smash.wav");
 	SM.LoadSound("shoot", resPath + "shoot2.wav");
 	SM.LoadSound("laugh", resPath + "laugh2.wav");
 
-	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str());//Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
+	song = Mix_LoadMUS(string(resPath + "Fatal Theory.wav").c_str()); // Song by Ryan Beveridge https://soundcloud.com/ryan-beveridge
 	if (song != nullptr)
 		Mix_PlayMusic(song, -1);
 
-	//holds a list of group types. this list describes the types of groups of data our frames can have!
+	// Holds a list of group types. this list describes the types of groups of data our frames can have!
 	list<DataGroupType> dataGroupTypes;
 
-	//so what data can a frame have?
-	//collisionBoxes (although we have hardcoded the collision boxes)
+	// So what data can a frame have?
+	// CollisionBoxes (although we have hardcoded the collision boxes)
 	DataGroupType colBoxType;
 	colBoxType.groupName = "collisionBox";
 	colBoxType.dataType = DataGroupType::BOX;
 
-	//hitboxes
+	// Hitboxes
 	DataGroupType hitBoxType;
 	hitBoxType.groupName = "hitBox";
 	hitBoxType.dataType = DataGroupType::BOX;
 
-	//damage
+	// Damage
 	DataGroupType dmgType;
 	dmgType.groupName = "damage";
 	dmgType.dataType = DataGroupType::NUMBER;
 
-	//add all of these dataTypes to the list
+	// Add all of these dataTypes to the list
 	dataGroupTypes.push_back(colBoxType);
 	dataGroupTypes.push_back(hitBoxType);
 	dataGroupTypes.push_back(dmgType);
@@ -79,47 +80,47 @@ Game::Game(const string &name, int screenWidth, int screenHeight, int screenScal
 	wallAnimSet = new AnimationSet();
 	wallAnimSet->LoadAnimationSet("wall.fdset", dataGroupTypes);
 
-	//build hero entity
+	// Build hero entity
 	player = new Player(heroAnimSet);
 	player->invincibleTimer = 0;
 	player->x = screenWidth / 2;
 	player->y = screenHeight / 2;
-	//tells keyboard input to manage hero
+	// Tells keyboard input to manage hero
 	IM.player = player;
-	//add hero to the entity list
+	// Add hero to the entity list
 	Entity::entities.push_back(player);
 
-	//Get camera to follow hero
+	// Get camera to follow hero
 	camController.SetTarget(player);
 
 	int tileSize = 32;
-	//build all the walls for this game
-	//first. build walls on top and bottom of screen
+	// Build all the walls for this game
+	// First. build walls on top and bottom of screen
 	for (int i = 0; i < screenWidth / tileSize; i++) {
-		//fills in top row
+		// Fills in top row
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
 		newWall->y = tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
 
-		//re-using pointer to create bottom row
+		// Re-using pointer to create bottom row
 		newWall = new Wall(wallAnimSet);
 		newWall->x = i * tileSize + tileSize / 2;
 		newWall->y = screenHeight - tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
 	}
-	//now the sides
+	// Now the sides
 	for (int i = 1; i < screenHeight / tileSize - 1; i++) {
-		//fills in left column
+		// Fills in left column
 		Wall* newWall = new Wall(wallAnimSet);
 		newWall->x = tileSize / 2;
 		newWall->y = i * tileSize + tileSize / 2;
 		walls.push_back(newWall);
 		Entity::entities.push_back(newWall);
 
-		//re-using pointer to create right column
+		// Re-using pointer to create right column
 		newWall = new Wall(wallAnimSet);
 		newWall->x = screenWidth - tileSize / 2;
 		newWall->y = i * tileSize + tileSize / 2;
@@ -130,9 +131,9 @@ Game::Game(const string &name, int screenWidth, int screenHeight, int screenScal
 	buildBossNext = false;
 	bossActive = false;
 
-	//setup hpBar's x and y to be centered
-	hpBar.x = screenWidth / 2.0f - (hpBar.barWidth / 2.0f); //centered horizontally
-	hpBar.y = screenHeight - hpBar.barHeight - 20;//20 pixels off the bottom of the screen
+	// Setup hpBar's x and y to be centered
+	hpBar.x = screenWidth / 2.0f - (hpBar.barWidth / 2.0f); // Centered horizontally
+	hpBar.y = screenHeight - hpBar.barHeight - 20; // 20 pixels off the bottom of the screen
 }
 
 Game::~Game() {
@@ -157,47 +158,44 @@ Game::~Game() {
 
 	delete player;
 
-	//delete all of the wall entities
+	// Delete all of the wall entities
 	Entity::DeleteAllEntities(&walls, true);
 	Entity::DeleteAllEntities(&enemies, true);
 }
 
-void Game::Update() {
-	//enemy related
-	int enemiesToBuild = 2;
-	int enemiesBuilt = 0;
-	float enemyBuildTimer = 1;
+void Game::Run() {
 
 	bool quit = false;
 
 	SDL_Event e;
-	//setup my time controller before the game starts
+	// Setup my time controller before the game starts
 	TM.Reset();
-	//game loop!
+
+	/// GAME LOOP ///
 	while (!quit) {
 		TM.UpdateTime();
 
 		Entity::RemoveInactiveEntities(&Entity::entities, false);
-		//remove/delete enemies in the enemy list who are dead/inactive
+		// Remove/delete enemies in the enemy list who are dead/inactive
 		Entity::RemoveInactiveEntities(&enemies, true);
 
-		//check for any events that might have happened
+		// Check for any events that might have happened
 		while (SDL_PollEvent(&e)) {
-			//close the window
+			// Close the window
 			if (e.type == SDL_QUIT)
 				quit = true;
-			//if keydown event
+			// If keydown event
 			if (e.type == SDL_KEYDOWN) {
-				//switch case on which button was pressed
+				// Switch case on which button was pressed
 				switch (e.key.keysym.scancode) {
-				case SDL_SCANCODE_ESCAPE: //esc key
+				case SDL_SCANCODE_ESCAPE: // Esc key
 					quit = true;
 					break;
 				case SDL_SCANCODE_SPACE:
 					if (splashShowing)
 						splashShowing = false;
 					if (overlayTimer <= 0 && player->hp < 1) {
-						//cleanup and restart the game
+						// Cleanup and restart the game
 						enemiesToBuild = 2;
 						enemiesBuilt = 0;
 						enemyBuildTimer = 3;
@@ -205,18 +203,19 @@ void Game::Update() {
 						enemyWavesTillBoss = 3;
 						bossActive = false;
 						buildBossNext = false;
-						//make hpBar point to no entities health
+						// Make hpBar point to no entities health
 						hpBar.entity = nullptr;
 
 						Boss::roundKingsKilled = 0;
 						Glob::globsKilled = 0;
 						Grob::grobsKilled = 0;
+
 						if (scoreTexture != nullptr) {
 							SDL_DestroyTexture(scoreTexture);
 							scoreTexture = nullptr;
 						}
 
-						//remove all existing enemies
+						// Remove all existing enemies
 						for each(auto *entity in enemies) {
 							entity->active = false;
 						}
@@ -230,96 +229,100 @@ void Game::Update() {
 			}
 			IM.Update(&e);
 		}
-		//make our overlay timer tick down
-		if (player->hp < 1 && overlayTimer > 0) {
-			overlayTimer -= TM.GetDt();
-		}
 
-		//update all entities
-		for each(auto *entity in Entity::entities) {
-			entity->Update();
-		}
+		/// Update all entities ///
+		Update();
 
-		//SPAWN ENEMIES
-		if (player->hp > 0 && !splashShowing) {
-			if (enemiesToBuild == enemiesBuilt && enemies.size() <= 0) {
-				enemiesToBuild = enemiesToBuild + 2;
-				enemiesBuilt = 0;
-				enemyBuildTimer = 4;
-				enemyWavesTillBoss--;
-
-				if (enemyWavesTillBoss <= 0) {
-					buildBossNext = true;
-				}
-			}
-			enemyBuildTimer -= TM.GetDt();
-			//if no bosses on the prowl, check to see if we should build some jerks
-			if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < MAX_ENEMIES) {
-				Glob *enemy = new Glob(globAnimSet);
-				//set enemies position to somewhere random within the arena's open space
-				enemy->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16;
-				enemy->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16;
-				enemy->invincibleTimer = 0.1;
-
-				//PUSHBACK
-				enemies.push_back(enemy);
-				Entity::entities.push_back(enemy);
-
-				if (enemiesBuilt % 5 == 0) {
-					Grob *grob = new Grob(grobAnimSet);
-					grob->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16; //random x value between our walls
-					grob->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16; //random x value between our walls
-					grob->invincibleTimer = 0.01;
-
-					// PUSHBACK
-					enemies.push_back(grob);
-					Entity::entities.push_back(grob);
-				}
-
-				enemiesBuilt++;
-				enemyBuildTimer = 1;
-			}
-
-			//FOR THE BOSS
-			if (buildBossNext && enemyBuildTimer <= 0 && enemies.size() == 0) {
-				Boss *round = new Boss(roundKingAnimSet, bulletAnimSet);
-				round->invincibleTimer = 0.1;
-				enemies.push_back(round);
-				Entity::entities.push_back(round);
-
-				//make hpBar point to Boss
-				hpBar.entity = round;
-
-
-				bossActive = true;
-				buildBossNext = false;
-				enemyWavesTillBoss = 3;
-			}
-
-			//if there was a boss, but hes dead now, then go back to spawning normal enemies till the next boss
-			if (bossActive && enemies.size() == 0) {
-				bossActive = false;
-				buildBossNext = false;
-				enemiesBuilt = 0;
-				enemiesToBuild = 2;
-
-				//when boss dead, make sure hpBar doesn't reference him anymore
-				hpBar.entity = nullptr;
-			}
-
-		}
-
-		//update camera positions
-		camController.Update();
-
-		//draw all entities
+		/// Draw all entities ///
 		Draw();
 	}
+}
 
+void Game::Update() {
+	// Make our overlay timer tick down
+	if (player->hp < 1 && overlayTimer > 0) {
+		overlayTimer -= TM.GetDt();
+	}
+
+	// Update all entities
+	for each(auto *entity in Entity::entities) {
+		entity->Update();
+	}
+
+	// Spawn enemies
+	if (player->hp > 0 && !splashShowing) {
+		if (enemiesToBuild == enemiesBuilt && enemies.size() <= 0) {
+			enemiesToBuild = enemiesToBuild + 2;
+			enemiesBuilt = 0;
+			enemyBuildTimer = 4;
+			enemyWavesTillBoss--;
+
+			if (enemyWavesTillBoss <= 0) {
+				buildBossNext = true;
+			}
+		}
+		enemyBuildTimer -= TM.GetDt();
+		// If no bosses on the prowl, check to see if we should build some jerks
+		if (!buildBossNext && !bossActive && enemyBuildTimer <= 0 && enemiesBuilt < enemiesToBuild && enemies.size() < MAX_ENEMIES) {
+			Glob *enemy = new Glob(globAnimSet);
+			// Set enemies position to somewhere random within the arena's open space
+			enemy->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16;
+			enemy->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16;
+			enemy->invincibleTimer = 0.1;
+
+			// Pushback
+			enemies.push_back(enemy);
+			Entity::entities.push_back(enemy);
+
+			if (enemiesBuilt % 5 == 0) {
+				Grob *grob = new Grob(grobAnimSet);
+				grob->x = randomNumber(WINDOW.SCREEN_WIDTH - (2 * 32) - 32) + 32 + 16; // Random x value between our walls
+				grob->y = randomNumber(WINDOW.SCREEN_HEIGHT - (2 * 32) - 32) + 32 + 16; // Random x value between our walls
+				grob->invincibleTimer = 0.01;
+
+				// Pushback
+				enemies.push_back(grob);
+				Entity::entities.push_back(grob);
+			}
+
+			enemiesBuilt++;
+			enemyBuildTimer = 1;
+		}
+
+		// Boss
+		if (buildBossNext && enemyBuildTimer <= 0 && enemies.size() == 0) {
+			Boss *round = new Boss(roundKingAnimSet, bulletAnimSet);
+			round->invincibleTimer = 0.1;
+			enemies.push_back(round);
+			Entity::entities.push_back(round);
+
+			// Make hpBar point to boss
+			hpBar.entity = round;
+
+			bossActive = true;
+			buildBossNext = false;
+			enemyWavesTillBoss = 3;
+		}
+
+		// If there was a boss, but hes dead now, then go back to spawning normal enemies till the next boss
+		if (bossActive && enemies.size() == 0) {
+			bossActive = false;
+			buildBossNext = false;
+			enemiesBuilt = 0;
+			enemiesToBuild = 2;
+
+			// When boss dead, make sure hpBar doesn't reference him anymore
+			hpBar.entity = nullptr;
+		}
+
+	}
+
+	// Update camera positions
+	camController.Update();
 }
 
 void Game::Draw() {
-	//clear the screen
+	// Clear the screen
 	SDL_SetRenderDrawColor(RENDERER(), 145, 133, 129, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(RENDERER());
 
@@ -327,24 +330,24 @@ void Game::Draw() {
 		RENDERER.RenderTexture(splashImage, 0, 0);
 	}
 	else {
-		//draw the background
+		// Draw the background
 		RENDERER.RenderTexture(backgroundImage, 0 - RENDERER.camera.x, 0 - RENDERER.camera.y);
 
-		//sort all entities based on y(depth)
+		// Sort all entities based on y(depth)
 		Entity::entities.sort(Entity::CompareEntity);
-		//draw all of the entities
+		// Draw all of the entities
 		for each (auto *entity in Entity::entities) {
 			entity->Draw();
 		}
 
-		//draw UI stuff
+		// Draw UI stuff
 		hpBar.Draw();
 
 		if (overlayTimer <= 0 && player->hp < 1) {
 			RENDERER.RenderTexture(overlayImage, 0, 0);
 			if (scoreTexture == nullptr) {
-				//generate score text
-				SDL_Color color = { 255, 255, 255, 255 };//white
+				// Generate score text
+				SDL_Color color = { 255, 255, 255, 255 }; // White
 
 				stringstream ss;
 				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + Boss::roundKingsKilled;
@@ -355,6 +358,6 @@ void Game::Draw() {
 			RENDERER.RenderTexture(scoreTexture, 20, 50);
 		}
 	}
-	//after we're done drawing/rendering, show it to the screen
+	// After we're done drawing/rendering, show it to the screen
 	SDL_RenderPresent(RENDERER());
 }

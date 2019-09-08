@@ -18,9 +18,9 @@ public:
 	list<Group*>& GetFrameData();
 
 private:
-	int frameNumber; //or frame index
-	SDL_Rect clip; //its the region on the spritesheet where this frame is
-	float duration; //how long does frame run for
-	SDL_Point offSet; //pivot point to help align frames in an animation
-	list<Group*> frameData;//holds groups of additional data for the frame
+	int frameNumber;													/*!< Frame index */
+	SDL_Rect clip;														/*!< Its the region on the spritesheet where this frame is */
+	float duration;														/*!< How long does frame run for */
+	SDL_Point offSet;													/*!< Pivot point to help align frames in an animation */
+	list<Group*> frameData;												/*!< Holds groups of additional data for the frame */
 };

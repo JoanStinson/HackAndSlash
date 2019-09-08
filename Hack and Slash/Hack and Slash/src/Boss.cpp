@@ -48,18 +48,18 @@ void Boss::Update() {
 }
 
 void Boss::UpdateShoot() {
-	//update all our shooting stuff
+	// Update all our shooting stuff
 	if (state == SHOOT) {
 		shootTimer -= TM.GetDt();
-		shotTimer -= TM.GetDt();
+		delayShoot -= TM.GetDt();
 
-		//if shooting time is over, stop shooting
+		// If shooting time is over, stop shooting
 		if (shootTimer <= 0) {
 			ChangeAnimation(IDLE, true);
 		}
-		else if (shotTimer <= 0) { //otherwise if still shooting and its time to take a shot
-			shotTimer = 0.5;
-			//find an inactive bullet and shoot it, instead of instantiating and deleting
+		else if (delayShoot <= 0) { //Otherwise if still shooting and its time to take a shot
+			delayShoot = 0.5;
+			// Find an inactive bullet and shoot it, instead of instantiating and deleting
 			for each (auto *bullet in bullets) {
 				if (!bullet->active) {
 					bullet->Reset(x, y);
@@ -85,20 +85,20 @@ void Boss::UpdateShoot() {
 }
 
 void Boss::Think() {
-	//finds closest hero
+	// Finds closest hero
 	FindPlayer();
 
-	//if there is a hero we can target, do the thinking
+	// If there is a hero we can target, do the thinking
 	if (target != nullptr) {
-		//only tick down think timer if in IDLE state
+		// Only tick down think timer if in IDLE state
 		if (state == IDLE) {
 			thinkTimer -= TM.GetDt();
 		}
 
-		// keep setting angle to point towards target
+		// Keep setting angle to point towards target
 		angle = Entity::AngleBetweenTwoEntities(this, target);
 
-		//CHECK  WHICH PHASE WE ARE IN MY FRIEND
+		// Check in which phase we are 
 		if (hp > 250) {
 			aiState = NORMAL;
 		}
@@ -109,32 +109,29 @@ void Boss::Think() {
 			aiState = FRENETIC;
 		}
 
-		//if thinkTimer is up, work out what to do next
+		// If thinkTimer is up, work out what to do next
 		if (thinkTimer <= 0 && state == IDLE) {
-			//reset animations, we're about to do something new
+			// Reset animations, we're about to do something new
 			frameTimer = 0;
 
-			//in normal phase do:
+			// In normal phase do:
 			if (aiState == NORMAL) {
 				//reset timer
 				thinkTimer = 2;
 
-				//randomly select iehter slam or charge
-				//peniseeeeeeeeeeeeeeeeeeeeees
+				// Randomly select iehter slam or charge
 				int action = randomNumber(4);
 				if (action % 2 == 0) {
-					//eat it bitch!
 					Slam();
 				}
 				else
 					Charge();
 			}
 			else if (aiState == DAMAGED) {
-				//reset timer
+				// Reset timer
 				thinkTimer = 1.5;
 
-				//randomly select iehter slam or charge
-				//peniseeeeeeeeeeeeeeeeeeeeees
+				// Randomly select iehter slam or charge
 				int action = randomNumber(6);
 				if (action < 2) {
 					//eat it bitch!
@@ -145,8 +142,8 @@ void Boss::Think() {
 				else
 					JumpTelegraph();
 			}
-			else { //assuming we are in frantic phase
-				//reset timer
+			else { // Assuming we are in frantic phase
+				// Reset timer
 				thinkTimer = 1;
 				int action = randomNumber(4);
 				if (action % 2 == 0)
@@ -158,7 +155,7 @@ void Boss::Think() {
 		}
 	}
 	else {
-		//targeting no one
+		// Targeting no one
 		moving = 0;
 		ChangeAnimation(IDLE, (state != IDLE));
 	}
@@ -172,11 +169,11 @@ void Boss::Charge() {
 
 void Boss::Shoot() {
 	moving = false;
-	//5s of shooting at the player
+	// 5s of shooting at the player
 	shootTimer = 5;
-	//take first shot immediately during shooting time
-	shotTimer = 0;
-	//if damaged or frantic, have a shorter shooting time
+	// Take first shot immediately during shooting time
+	delayShoot = 0;
+	// If damaged or frantic, have a shorter shooting time
 	if (aiState != NORMAL) {
 		shootTimer = 3;
 	}
@@ -234,9 +231,9 @@ void Boss::UpdateAnimation() {
 	}
 
 	frameTimer += TM.GetDt();
-	//if frameTimer greater then frame duration:
+	// If frameTimer greater then frame duration:
 	if (frameTimer >= currentFrame->GetDuration()) {
-		// if at the end of animation
+		// If at the end of animation
 		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == CHARGE)
 				Shoot();
@@ -246,20 +243,20 @@ void Boss::UpdateAnimation() {
 				ChangeAnimation(IDLE, true);
 			else if (state == DEAD) {
 				frameTimer = 0;
-				//if somehow alive again
+				// If somehow alive again
 				if (hp > 0)
 					ChangeAnimation(IDLE, true);
 				else
 					active = false;
 			}
 		}
-		else { //not end of animation, so move to next frame normally
+		else { // Not end of animation, so move to next frame normally
 			currentFrame = currentAnim->GetNextFrame(currentFrame);
-			//IF THE NEW FRAME IS DEALING DAMAGE, we might want to make sounds
+			// If the new frame is dealing damage, play sounds 
 			GroupType<float> *damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->GetFrameData()));
-			//if does damage
+			// If does damage
 			if (damages != nullptr && damages->GetGroupSize() > 0) {
-				// and if its Slam state
+				// And if its slam state
 				if (state == SLAM) {
 					SM.PlaySound("smash");
 				}

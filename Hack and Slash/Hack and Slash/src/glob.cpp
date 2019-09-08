@@ -26,7 +26,7 @@ int Glob::globsKilled = 0;
 Glob::Glob(AnimationSet *animSet) : Enemy(animSet) {
 	aiState = NORMAL;
 	moveSpeedMax = 20;
-	hp = maxHp = 10 + (rand() % 20); //10-29
+	hp = maxHp = 10 + (rand() % 20); // 10-29
 	collisionBox.w = collisionBoxW = 18;
 	collisionBox.h = collisionBoxH = 20;
 	collisionBoxYOffset = -14;
@@ -48,11 +48,11 @@ void Glob::Update() {
 void Glob::Think() {
 	if (state == IDLE || state == MOVE) {
 		thinkTimer -= TM.GetDt();
-		//time to choose an action
+		// Time to choose an action
 		if (thinkTimer <= 0) {
-			//reset the timer
-			thinkTimer = rand() % 5;//0-5seconds
-			int action = rand() % 10; //0-9
+			// Reset the timer
+			thinkTimer = rand() % 5; // 0-5
+			int action = rand() % 10; // 0-9
 
 			if (action < 3) {
 				moving = false;
@@ -61,24 +61,24 @@ void Glob::Think() {
 			}
 			else {
 				FindPlayer();
-				//found a target and its alive, lets get 'em
+				// Found a target and its alive, lets get 'em
 				if (target != nullptr && target->hp > 0) {
 					float dist = Entity::DistBetweenTwoEntities(this, target);
-					//if in range, ATTACK!
+					// If in range, attack!
 					if (dist < 100) {
-						Telegraph(); //telegraph our attack first so players have a chance to dodge
+						Telegraph(); // Telegraph our attack first so players have a chance to dodge
 						aiState = NORMAL;
 
 					}
 					else {
-						//otherwise move up to the player/target
+						// Otherwise move up to the player/target
 						aiState = CHASE;
 						moving = true;
 						ChangeAnimation(MOVE, state != MOVE);
 					}
 				}
 				else {
-					//no targets, go idle
+					// No targets, go idle
 					moving = false;
 					aiState = NORMAL;
 					ChangeAnimation(IDLE, true);
@@ -87,11 +87,11 @@ void Glob::Think() {
 
 		}
 	}
-	//if chasing a target, then do that
+	// If chasing a target, then do that
 	if (aiState == CHASE && hp > 0 && active) {
-		//get the angle between me and the target
+		// Get the angle between me and the target
 		angle = Entity::AngleBetweenTwoEntities(this, target);
-		//move that way
+		// Move that way
 		Move(angle);
 	}
 }
@@ -162,22 +162,22 @@ void Glob::UpdateAnimation() {
 	if (currentFrame == nullptr || currentAnim == nullptr)
 		return;
 
-	//if we're in moveState but not actually going anywhere then
+	// If we're in moveState but not actually going anywhere then
 	if (state == MOVE && !moving) {
 		ChangeAnimation(IDLE, true);
 	}
-	//if we're idle but we're actually moving, then
+	// If we're idle but we're actually moving, then
 	if (state != MOVE && moving) {
 		ChangeAnimation(MOVE, true);
 	}
 
 	frameTimer += TM.GetDt();
-	//time to change frames
+	// Time to change frames
 	if (frameTimer >= currentFrame->GetDuration()) {
-		//if at the end of the animation
+		// If at the end of the animation
 		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == TELEGRAPH) {
-				//done telegraphing, now attack
+				// Done telegraphing, now attack
 				Attack();
 			}
 			else if (state == ATTACK) {
@@ -185,19 +185,19 @@ void Glob::UpdateAnimation() {
 			}
 			else if (state == DEAD) {
 				frameTimer = 0;
-				//if some how alive again, then change state back to moving
+				// If some how alive again, then change state back to moving
 				if (hp > 0)
 					ChangeAnimation(MOVE, true);
 				else
 					active = false;
 			}
 			else {
-				//loop animation
+				// Loop animation
 				currentFrame = currentAnim->GetFrame(0);
 			}
 		}
 		else {
-			//otherwise just move to the next frame
+			// Otherwise just move to the next frame
 			currentFrame = currentAnim->GetNextFrame(currentFrame);
 		}
 		frameTimer = 0;

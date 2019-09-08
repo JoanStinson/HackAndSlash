@@ -41,17 +41,18 @@ namespace math {
 		return abs(sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2)));
 	}
 
-	// return type: gives 0-1 depending on where collision is. 1 means, no collisions, 0 means collide immediately and 0.5 is half way etc.
-	// params: movingBox is entity being checked
-	// xv and vy are the velocities our moving box is moving at
-	// otherbox is some other entities collision box we may collide with
-	// normalx and normaly let us know which side of otherBox we collided with. these are pass by reference
+	/*! Return type: gives 0-1 depending on where collision is. 1 means, no collisions, 0 means collide immediately and 0.5 is half way etc.
+	* params: movingBox is entity being checked
+	* xv and vy are the velocities our moving box is moving at
+	* otherbox is some other entities collision box we may collide with
+	* normalx and normaly let us know which side of otherBox we collided with. these are pass by reference
+	*/
 	float math::sweptAABB(SDL_Rect &boxA, float vx, float vy, SDL_Rect &boxB, float &normalX, float &normalY) {
 
 		float xInvEntry, xInvExit;
 		float yInvEntry, yInvExit;
 
-		//find the distance between the objects on the near and far sides or both x and y
+		// Find the distance between the objects on the near and far sides or both x and y
 		if (vx > 0.0f) {
 			xInvEntry = boxB.x - (boxA.x + boxA.w);
 			xInvExit = (boxB.x + boxB.w) - boxA.x;
@@ -70,7 +71,7 @@ namespace math {
 			yInvExit = boxB.y - (boxA.y + boxA.h);
 		}
 
-		//find time of collision and time of leacing for each axis (if statement is to prevent dividing by zero)
+		// Find time of collision and time of leacing for each axis (if statement is to prevent dividing by zero)
 		float xEntry, xExit;
 		float yEntry, yExit;
 
@@ -92,32 +93,32 @@ namespace math {
 			yExit = yInvExit / vy;
 		}
 
-		//find the earliest/latest times of collision
+		// Find the earliest/latest times of collision
 		float entryTime = std::max(xEntry, yEntry);
 		float exitTime = std::min(xExit, yExit);
 
-		//if there was NO collision
+		// If there was NO collision
 		if (entryTime > exitTime || xEntry < 0.0f && yEntry < 0.0f || xEntry > 1.0f || yEntry > 1.0f) {
 			normalX = 0.0f;
 			normalY = 0.0f;
 			return 1.0f;
 		}
 		else {
-			//there was a collision :()))))))))))))))))))))))))))))))))
-			//work out which sides/normals of the otherbox we collided with
+			// There was a collision 
+			// Work out which sides/normals of the otherbox we collided with
 			if (xEntry > yEntry) {
-				// assume we hit otherbox on the x axis
+				// Assume we hit otherbox on the x axis
 				if (xInvEntry < 0.0f) {
-					normalX = 1;//hit right hand side
-					normalY = 0;//not hit top or bottom
+					normalX = 1; // Hit right hand side
+					normalY = 0; // Not hit top or bottom
 				}
 				else {
-					normalX = -1;//hit left hand side
-					normalY = 0;//not hit top or bottom of box
+					normalX = -1; // Hit left hand side
+					normalY = 0; // Not hit top or bottom of box
 				}
 			}
 			else {
-				//assume we hit otherbox on y axis
+				// Assume we hit otherbox on y axis
 				if (yEntry < 0.0f) {
 					normalX = 0;
 					normalY = 1;
@@ -127,7 +128,7 @@ namespace math {
 					normalY = -1;
 				}
 			}
-			//return the time of collision
+			// Return the time of collision
 			return entryTime;
 		}
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL.h"
 
+/*! Math calculations such as angles and distances, decoupled from the game's logic */
 namespace math {
 
 	float angleBetweenTwoPoints(float x1, float y1, float x2, float y2);

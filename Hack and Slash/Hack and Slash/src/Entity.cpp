@@ -6,14 +6,14 @@ using namespace math;
 list<Entity*> Entity::entities;
 
 void Entity::Draw() {
-	//override me if you want something else or more specific to happen
-	//draws current frame
+	// Override me if you want something else or more specific to happen
+	// Draws current frame
 	if (currentFrame != nullptr && active) {
 		currentFrame->Draw(animSet->GetSpriteSheet(), x - RENDERER.camera.x, y - RENDERER.camera.y);
 	}
-	//draw collsionBox
+	// Draw collsionBox
 	if (solid && utils::debugging) {
-		//sets the current drawing colour (Doesn't affect textures and what not)
+		// Sets the current drawing colour (Doesn't affect textures and what not)
 		SDL_SetRenderDrawColor(RENDERER(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawRect(RENDERER(), &collisionBox);
 	}
@@ -25,7 +25,7 @@ void Entity::Move(float angle) {
 	this->angle = angle;
 
 	int newDirection = AngleToDir(angle);
-	//if direction changed, update current animation
+	// If direction changed, update current animation
 	if (direction != newDirection) {
 		direction = newDirection;
 		ChangeAnimation(state, false);
@@ -34,20 +34,20 @@ void Entity::Move(float angle) {
 
 void Entity::UpdateMovement() {
 	UpdateCollisionBox();
-	//store collisiobox before we move
+	// Store collisiobox before we move
 	lastCollisionBox = collisionBox;
 
-	//reset total moves
+	// Reset total moves
 	totalXMove = 0;
 	totalYMove = 0;
 
 	if (moveSpeed > 0) {
-		//works out move distance using speed, dt(time since last loop) and multiplies by lerp
+		// Works out move distance using speed, dt(time since last loop) and multiplies by lerp
 		float moveDist = moveSpeed * (TM.GetDt())*moveLerp;
 		if (moveDist > 0) {
-			//xmove = distance * cos(angle in radians)
+			// xmove = distance * cos(angle in radians)
 			float xMove = moveDist * (cos(angle*M_PI / 180));
-			//ymove = distance * sin(angle in radians)
+			// ymove = distance * sin(angle in radians)
 			float yMove = moveDist * (sin(angle*M_PI / 180));
 
 			x += xMove;
@@ -60,7 +60,8 @@ void Entity::UpdateMovement() {
 				moveSpeed -= moveDist;
 		}
 	}
-	//sliding around!
+
+	// Sliding around!
 	if (slideAmount > 0) {
 		float slideDist = slideAmount * TM.GetDt()*moveLerp;
 		if (slideDist > 0) {
@@ -78,9 +79,9 @@ void Entity::UpdateMovement() {
 			slideAmount = 0;
 		}
 	}
-	//now that we've moved, move the collisionBox up to where we are now
+	// Now that we've moved, move the collisionBox up to where we are now
 	UpdateCollisionBox();
-	//to help with collision checking, union collisionBox with lastCollisionBox
+	// To help with collision checking, union collisionBox with lastCollisionBox
 	SDL_UnionRect(&collisionBox, &lastCollisionBox, &collisionBox);
 }
 
@@ -93,32 +94,32 @@ void Entity::UpdateCollisionBox() {
 
 void Entity::UpdateCollisions() {
 	if (active && collideWithSolids && (moveSpeed > 0 || slideAmount > 0)) {
-		//list of potential collisions
+		// List of potential collisions
 		list<Entity*> collisions;
 
-		//BROAD PHASE
+		// Broad phase
 		for each(auto *entity in Entity::entities) {
 			if (entity->active && entity->solid && collBetweenTwoRects(collisionBox, entity->collisionBox))
 				collisions.push_back(entity);
 		}
 
-		//if we have a list of potential entities we may hit, then lets check them properly to do collision resolution
+		// If we have a list of potential entities we may hit, then lets check them properly to do collision resolution
 		if (collisions.size() > 0) {
 			UpdateCollisionBox();
 
-			float collisionTime = 1;//1 means no collisions, anything less, e.g 0.234, means we collided part of the of our movement
-			float normalX, normalY;//to help work out which side we crash into stuff
+			float collisionTime = 1; // 1 means no collisions, anything less, e.g 0.234, means we collided part of the of our movement
+			float normalX, normalY; // To help work out which side we crash into stuff
 
-			// our collisionbox before we tried to move
+			// Our collisionbox before we tried to move
 			SDL_Rect startingCollisionBox = lastCollisionBox;
 
-			//loop through the entities that are in our short list from broadphase
+			// Loop through the entities that are in our short list from broadphase
 			for each (auto *entity in collisions) {
-				//temporary variables for normal x and y and also temp collisionTime
+				// Temporary variables for normal x and y and also temp collisionTime
 				float tmpNormalX, tmpNormalY;
 				float tmpCollisionTime = sweptAABB(startingCollisionBox, totalXMove, totalYMove, entity->collisionBox, tmpNormalX, tmpNormalY);
 
-				//if this tmpcolltime is less than last colltime, use it instead
+				// If this tmpcolltime is less than last colltime, use it instead
 				if (tmpCollisionTime < collisionTime) {
 					collisionTime = tmpCollisionTime;
 					normalX = tmpNormalX;
@@ -126,33 +127,33 @@ void Entity::UpdateCollisions() {
 				}
 			}
 
-			//if there was a collision, lets slide off of it
+			// If there was a collision, lets slide off of it
 			if (collisionTime < 1.0f) {
-				// if we die on solids, run the crash function
+				// If we die on solids, run the crash function
 				if (dieOnSolids) {
 					CrashOntoSolid();
 				}
 
-				//move our collisionBox position up to where we collided
+				// Move our collisionBox position up to where we collided
 				startingCollisionBox.x += totalXMove * collisionTime;
 				startingCollisionBox.y += totalYMove * collisionTime;
 
-				//how much move time was remaining
+				// How much move time was remaining
 				float remainingTime = 1.0f - collisionTime;
-				//update entities x and y to where we bumped into other entity
+				// Update entities x and y to where we bumped into other entity
 				x = startingCollisionBox.x + (startingCollisionBox.w / 2);
 				y = startingCollisionBox.y - collisionBoxYOffset;
-				//collision response:slide
-				//work out dotproduct using remainintime
+				// Collision response:slide
+				// Work out dotproduct using remainintime
 				float dotProd = (totalXMove * normalY + totalYMove * normalX)*remainingTime;
 				totalXMove = dotProd * normalY;
 				totalYMove = dotProd * normalX;
 				x += totalXMove;
 				y += totalYMove;
-				//store collisionBox at this point
+				// Store collisionBox at this point
 				UpdateCollisionBox();
 
-				//BECAUSE OUR SLIDING MAY HAVE BUMPED INTO OTHER, BETTER RUN THE FUNCTION AGAIN, recursive wtfff broo :'''(()()()()()(
+				// BECAUSE OUR SLIDING MAY HAVE BUMPED INTO OTHER, BETTER RUN THE FUNCTION AGAIN, recursive function
 				UpdateCollisions();
 			}
 		}
@@ -190,7 +191,7 @@ bool Entity::CompareEntity(const Entity* const &a, const Entity* const &b) {
 
 void Entity::RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities) {
 	for (auto entity = entityList->begin(); entity != entityList->end();) {
-		//if entity is not active
+		// If entity is not active
 		if (!(*entity)->active) {
 			if (deleteEntities)
 				delete (*entity);

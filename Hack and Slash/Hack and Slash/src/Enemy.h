@@ -8,9 +8,7 @@ public:
 	void FindPlayer();
 
 protected:
-	//who should I case
-	Creature *target = nullptr;
-	int aiState;
-	//when this is 0, think of something new to do (used for AI)
-	float thinkTimer = 0;
+	Creature *target = nullptr;										/*!< Who should I chase */
+	int aiState;													/*!< The current state of the AI */
+	float thinkTimer = 0;											/*!< When this is 0, think of something new to do (used for AI) */
 };

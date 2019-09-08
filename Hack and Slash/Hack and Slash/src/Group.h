@@ -8,15 +8,15 @@
 #include "DataGroupType.h"
 using namespace std;
 
-//ABSTRACT CLASS
-//groups manage a frames data
+/*! Abstract class 
+Groups manage a frames data
+*/
 class Group {
 public:
-	DataGroupType type; //describes its name, type and other rules
 	Group() {}
 	Group(DataGroupType type) : type(type) {}
-	//how many bits of data in here
-	virtual int GetGroupSize() = 0;
-	/*add to group using string. Converts string into correct data for each group type*/
-	virtual void AddToGroup(string str) = 0;
+	virtual int GetGroupSize() = 0;									//!< How many bits of data in here
+	virtual void AddToGroup(string str) = 0;						//!< Add to group using string. Converts string into correct data for each group type
+
+	DataGroupType type;												/*!< Describes its name, type and other rules */
 };

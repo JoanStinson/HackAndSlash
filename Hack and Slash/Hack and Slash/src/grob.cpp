@@ -27,24 +27,13 @@ Grob::Grob(AnimationSet *animSet) : Enemy(animSet) {
 
 void Grob::Update() {
 	CheckIfDead(DEAD);
-
 	Think();
-
-	//update collision boxes
 	UpdateCollisionBox();
-	//update movement/input
 	UpdateMovement();
-
-	//bump into stuff
 	UpdateCollisions();
-
-	//only care about damage hitboxes after we're landed on a final spot in our code
 	UpdateHitBox();
 	UpdateDamages();
-
-	//update animations
 	UpdateAnimation();
-	//update timers and things
 	UpdateInvincibleTimer();
 }
 
@@ -53,20 +42,20 @@ void Grob::Think() {
 		thinkTimer -= TM.GetDt();
 
 		if (thinkTimer <= 0) {
-			//reset timer
+			// Reset timer
 			thinkTimer = 0.5;
 			int action = rand() % 10;
-			//be idle
+			// Be idle
 			if (action < 3) {
 
-				//otherwise move towards player to get into range
-				angle = rand() % 360; //random angle to move in
+				// Otherwise move towards player to get into range
+				angle = rand() % 360; // Random angle to move in
 				moving = true;
 				ChangeAnimation(MOVE, state != MOVE);
 
 			}
 			else {
-				//otherwise just be happy and idle :/
+				// Otherwise just be happy and idle :/
 				moving = false;
 				ChangeAnimation(IDLE, true);
 			}
@@ -110,53 +99,53 @@ void Grob::ChangeAnimation(int newState, bool resetFrameToBegging) {
 	if (resetFrameToBegging)
 		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber()); //change direction for example, wanna change animation, but not what frame we were on
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber()); // Change direction for example, wanna change animation, but not what frame we were on
 
 }
 
 void Grob::UpdateAnimation() {
 	if (currentFrame == nullptr || currentAnim == nullptr)
-		return; //cant do much with no frame or no animation
+		return; // Can't do much with no frame or no animation
 
-	//if in a moving state, but not actually moving, return to idle 
+	// If in a moving state, but not actually moving, return to idle 
 	if (state == MOVE && !moving) {
 		ChangeAnimation(IDLE, true);
 	}
-	//if should show running animation, lets change the state properly
+	// If should show running animation, lets change the state properly
 	if (state != MOVE && moving) {
 		ChangeAnimation(MOVE, true);
 	}
 
 	frameTimer += TM.GetDt();
-	//time to change frames
+	// Time to change frames
 	if (frameTimer >= currentFrame->GetDuration()) {
-		//if at the end of the animation
+		// If at the end of the animation
 		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
-			//depends on current animation and whats going on a bit
+			// Depends on current animation and whats going on a bit
 			if (state == DEAD) {
 				frameTimer = 0;
-				//if some how alive again, then change state back to moving
+				// If some how alive again, then change state back to moving
 				if (hp > 0)
 					ChangeAnimation(MOVE, true);
 				else
 					active = false;
 			}
 			else {
-				//just reset the animation
+				// Just reset the animation
 				currentFrame = currentAnim->GetFrame(0);
 			}
 
 		}
 		else {
-			//just move to the next frame in the animation
+			// Just move to the next frame in the animation
 			currentFrame = currentAnim->GetNextFrame(currentFrame);
 		}
-		frameTimer = 0; //crucial step. If we miss this, the next frame skips real quick
+		frameTimer = 0; // Crucial step. If we miss this, the next frame skips real quick
 	}
 }
 
 void Grob::UpdateHitBox() {
-	//grobs are a constantly walking pain box
+	// Grobs are a constantly walking pain box
 	hitBox.w = collisionBox.w + 2;
 	hitBox.h = collisionBox.h + 2;
 	hitBox.x = collisionBox.x - 1;

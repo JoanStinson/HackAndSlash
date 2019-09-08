@@ -15,19 +15,19 @@ Creature::Creature(AnimationSet *animSet) {
 }
 
 void Creature::UpdateHitBox() {
-	//assume damage is 0 for now
+	// Assume damage is 0 for now
 	damage = 0;
 
 	GroupType<SDL_Rect>* hitBoxes = dynamic_cast<GroupType<SDL_Rect>*>(GroupBuilder::FindGroupByName("hitBox", currentFrame->GetFrameData()));
 	if (hitBoxes != nullptr && hitBoxes->GetGroupSize() > 0) {
-		//update hitbox
+		// Update hitbox
 		SDL_Rect hb = hitBoxes->GetBoxData().front();
 		hitBox.x = x - currentFrame->GetOffSet().x + hb.x;
 		hitBox.y = y - currentFrame->GetOffSet().y + hb.y;
 		hitBox.w = hb.w;
 		hitBox.h = hb.h;
 
-		//update damage
+		// Update damage
 		GroupType<float>* damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->GetFrameData()));
 		if (damages != nullptr && damages->GetGroupSize() > 0) {
 			damage = damages->GetNumData().front();
@@ -39,14 +39,14 @@ void Creature::UpdateDamages(const string &type, const string &hitSFX, const flo
 	if (active && hp > 0 && this->invincibleTimer <= 0) {
 		for each (auto *entity in Entity::entities) {
 			if (entity->active && entity->type == type) {
-				//we know enemies are living entities, so cast it to that
+				// We know enemies are living entities, so cast it to that
 				Creature* enemy = dynamic_cast<Creature*>(entity);
 
 				if (enemy->damage > 0 && math::collBetweenTwoRects(collisionBox, enemy->hitBox)) {
-					enemy->HitLanded(this); //let attacker know they hit
+					enemy->HitLanded(this); // Let attacker know they hit
 					hp -= enemy->damage;
 
-					//still alive!!
+					// If still alive
 					if (hp > 0) {
 						SM.PlaySound(hitSFX);
 						this->invincibleTimer = invincibleTimer;
@@ -86,9 +86,9 @@ void Creature::Draw() {
 		}
 
 	}
-	//draw collsionBox
+	// Draw collsionBox
 	if (solid && utils::debugging) {
-		//sets the current drawing colour (Doesn't affect textures and what not)
+		// Sets the current drawing colour (Doesn't affect textures and what not)
 		SDL_SetRenderDrawColor(RENDERER(), 0, 0, 255, 255);
 		SDL_RenderDrawRect(RENDERER(), &lastCollisionBox);
 

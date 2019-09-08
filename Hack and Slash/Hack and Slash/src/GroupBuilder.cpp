@@ -36,40 +36,39 @@ Group* GroupBuilder::AddGroupStringToGroup(string name, list<Group*> &groups) {
 	dgt.groupName = name;
 	dgt.singleItem = false;
 	Group *group = new GroupType<string>(dgt);
-	groups.push_back(group); //ok, we just added some random group on the fly for this frame only. cool, I hope
+	groups.push_back(group); // Added some random group on the fly for this frame only
 	return group;
 }
 
 void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
-	//read each group in:
+	// Read each group in
 	while (!file.eof()) {
 
-		//first, get the next line out of the file
+		// First, get the next line out of the file
 		int positionBeforeRead = file.tellg();
 		string line;
 		getline(file, line);
 		if (line.empty() || line == "")
-			break; //must actually be at the end of the file
+			break; // Must actually be at the end of the file
 		if (SavedInGroups) {
-			//find the semi colon
+			// Find the semi colon
 			int pos = line.find(":", 0);
 			if (pos == -1) {
 				file.seekg(positionBeforeRead);
-				break; //must actually be reading something else, like the next animation or something. TODO how to deal with this?
-				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
+				break; 
 			}
 			Group *group = FindGroupByName(line.substr(0, pos), groups);
 			if (group == nullptr) {
-				//can't find the group, but lets not lose the data
+				// Can't find the group, but lets not lose the data
 				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
-			//ok, get the rest of the string and work out how many of these we have to build
+			// Get the rest of the string and work out how many of these we have to build
 			string numStr = line.substr(pos + 1, line.length() - pos + 2);
 			stringstream ss;
 			ss << numStr << endl;
 			int num;
 			ss >> num;
-			//finally can read in all the data
+			// Finally can read in all the data
 			for (int i = 0; i < num; i++) {
 				if (!file.good())
 					break;
@@ -81,26 +80,21 @@ void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
 
 		}
 		else {
-			//dealing with 1 item at a time, regardless of in a group or not
-			//find the semi colon
-
+			// Dealing with 1 item at a time, regardless of in a group or not
+			// Find the semi colon
 			int pos = line.find(":", 0);
 			if (pos == -1) {
 				file.seekg(positionBeforeRead);
-				break; //must actually be reading something else, like the next animation or something. TODO how to deal with this?
-				//somehow backtrack to the start of this line, so the rest of the reading can happen for other animations
+				break; 
 			}
-			//cout << "sub: " << line.substr(0, pos) << endl;
 			Group *group = FindGroupByName(line.substr(0, pos), groups);
 			if (group == nullptr) {
-				//can't find the group, but lets not lose the data
+				// Can't find the group, but lets not lose the data
 				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
-			//clean up string so we can add data to the group
-			line = utils::clipOffDataHeader(line);//get rid of the 'groupName: '
+			// Clean up string so we can add data to the group
+			line = utils::clipOffDataHeader(line); // Get rid of the 'groupName: '
 			group->AddToGroup(line);
-			//done, keep going
-
 		}
 	}
 
@@ -111,6 +105,5 @@ Group* GroupBuilder::FindGroupByName(string str, list<Group*> &groups) {
 		if (str == (*group)->type.groupName)
 			return (*group);
 	}
-
 	return nullptr;
 }

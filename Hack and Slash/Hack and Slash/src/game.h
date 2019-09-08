@@ -17,9 +17,10 @@ class Game {
 public:
 	Game(const string &name, int screenWidth, int screenHeight, int screenScale);
 	~Game();
-	void Update();
+	void Run();
 
 private:
+	void Update();
 	void Draw();
 
 	Mix_Music* song;
@@ -32,7 +33,7 @@ private:
 	SDL_Texture* backgroundImage;
 	SDL_Texture* splashImage;
 	SDL_Texture* overlayImage;
-	SDL_Texture* scoreTexture = nullptr; //for drawing strings to the screen
+	SDL_Texture* scoreTexture = nullptr; 
 	Player *player;
 	list<Entity*> enemies;
 	list<Entity*> walls;
@@ -43,4 +44,7 @@ private:
 	bool splashShowing;
 	float overlayTimer;
 	Camera camController;
+	int enemiesToBuild = 2;
+	int enemiesBuilt = 0;
+	float enemyBuildTimer = 1;
 };

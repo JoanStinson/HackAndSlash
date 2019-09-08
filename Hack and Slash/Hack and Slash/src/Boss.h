@@ -29,12 +29,9 @@ private:
 	enum State { IDLE, CHARGE, SHOOT, SLAM, JUMP_TELEGRAPH, JUMP, DEAD };
 	enum Phase { NORMAL, DAMAGED, FRENETIC };
 
-	//how long to shoot for
-	float shootTimer = 0;
-	//how long between bullets
-	float shotTimer = 0;
-	//reference to bullet animations
-	AnimationSet *bulletAnimSet;
+	float shootTimer = 0;												/*!< How long to shoot for */
+	float delayShoot = 0;												/*!< How long to shoot between bullets */
+	AnimationSet *bulletAnimSet; 										/*!< Reference to bullet animations */
 	list<Bullet*> bullets;
 	const int TOTAL_BULLETS = 10;
 };

@@ -13,17 +13,11 @@ public:
 	Player *player;
 
 private:
-	// private constructor so that no objects can be created (disallow instantiation outside of the class)
-	InputManager() = default;
-	//~InputManager();
-	// delete copy constructor 
-	InputManager(const InputManager&) = delete;
-	// delete copy assignment operator
-	InputManager& operator=(const InputManager&) = delete;
-	// delete move constructor
-	InputManager(InputManager &&) = delete;
-	// delete move assignment operator
-	InputManager& operator=(InputManager &&) = delete;
+	InputManager() = default;												//!< Private constructor so that no objects can be created (disallow instantiation outside of the class)
+	InputManager(const InputManager&) = delete; 							//!< Delete copy constructor 
+	InputManager& operator=(const InputManager&) = delete; 					//!< Delete copy assignment operator
+	InputManager(InputManager &&) = delete; 								//!< Delete move constructor
+	InputManager& operator=(InputManager &&) = delete; 						//!< Delete move assignment operator
 
 	enum Key {
 		UP = SDL_SCANCODE_UP,

@@ -5,58 +5,58 @@
 #define PLAYER "player"
 #define ENEMY "enemy"
 
-//Abstract Class. cannot instantiate an object of type Entity e.g cannot do Entity e;
+/*! Abstract class, cannot instantiate an object of type Entity e.g can't do Entity e; */
 class Entity {
 public:
 	virtual void Update() {}
 	virtual void Draw();
 	virtual void Move(float angle);
 
-	//HELP FUNCTIONS
+	/* Helper Methods */
 	static float DistBetweenTwoEntities(Entity *e1, Entity *e2);
 	static float AngleBetweenTwoEntities(Entity *e1, Entity *e2);
 	static int AngleToDir(float angle);
-	static bool CompareEntity(const Entity* const &a, const Entity * const &b); //compare 2 entities in a list to help sorting (sorts based on y value)
+	static bool CompareEntity(const Entity* const &a,					//!< Compare 2 entities in a list to help sorting (sorts based on y value)
+		const Entity* const &b); 
 	static void RemoveInactiveEntities(list<Entity*> *entityList, bool deleteEntities);
 	static void DeleteAllEntities(list<Entity*> *entityList, bool deleteEntities);
 
 	int state;
 	float x;
 	float y;
-	bool moving; //is the entity moving
-	bool active = true; //entity turned on or off
-	string type; //what type of entity is it? e.g hero, enemy, wall etc
-	float angle; //angle to move entity in (360 degree angle)
+	bool moving;														/*!< Is the entity moving */
+	bool active = true;													/*!< Entity turned on or off */
+	string type;														/*!< What type of entity is it? e.g hero, enemy, wall etc */
+	float angle;														/*!< Angle to move entity in (360 degree angle) */
 	static list<Entity*> entities;
 
 protected:
-	//VIRTUAL FUNCTIONS
+	/* Virtual Methods */
 	virtual void UpdateMovement();
 	virtual void UpdateCollisionBox();
-	virtual void ChangeAnimation(int newState, bool resetAnim = true) = 0;//abstract function
-	virtual void UpdateCollisions(); //how we bump into stuff in the world
+	virtual void ChangeAnimation(int newState,							//!< Abstract function
+		bool resetAnim = true) = 0; 
+	virtual void UpdateCollisions();									//!< How we bump into stuff in the world
 	virtual void CrashOntoSolid() {}
 
-	//reference constants
 	enum Direction { UP, DOWN, LEFT, RIGHT, NONE };
 
-	//quick label to see what the entity is up to
 	int direction;
-	bool solid = true; //is this thing solid, can things pass through me
-	bool collideWithSolids = true; //sometimes we are solid, but I pass through other solids
+	bool solid = true;													/*!< Is this thing solid, can things pass through me */
+	bool collideWithSolids = true;										/*!< Sometimes we are solid, but I pass through other solids */
 	bool dieOnSolids = false;
 	float moveSpeed;
 	float moveSpeedMax;
-	float slideAngle; //direction pushed in
-	float slideAmount; //amount of push in the slideAngle
+	float slideAngle;													/*!< Direction pushed in */
+	float slideAmount;													/*!< Amount of push in the slideAngle */
 	float moveLerp = 4;
-	float totalXMove, totalYMove; //keeps track of total x,y movement per movement turn. just incase we need to retract movement
-	SDL_Rect collisionBox; //box describing the size of our entity and this is used to bump into things
-	SDL_Rect lastCollisionBox; //where our collisionbox was last
-	int collisionBoxW, collisionBoxH; //our default collisionBox sizes
-	float collisionBoxYOffset; //from my entities y value, where should I sit this collisionBox
-	AnimationSet *animSet; //set of all animations this entity can have
-	Animation *currentAnim; //current animation the entity is using
-	Frame *currentFrame; //the current frame in the above animation the entity using
-	float frameTimer; //helps animate frame to frame
+	float totalXMove, totalYMove;										/*!< Keeps track of total x,y movement per movement turn. just incase we need to retract movement */
+	SDL_Rect collisionBox;												/*!< Box describing the size of our entity and this is used to bump into things */
+	SDL_Rect lastCollisionBox;											/*!< Where our collisionbox was last */
+	int collisionBoxW, collisionBoxH;									/*!< Our default collisionBox sizes */
+	float collisionBoxYOffset;											/*!< From my entities y value, where should I sit this collisionBox */
+	AnimationSet *animSet;												/*!< Set of all animations this entity can have */
+	Animation *currentAnim;												/*!< Current animation the entity is using */
+	Frame *currentFrame;												/*!< The current frame in the above animation the entity using */
+	float frameTimer;													/*!< Helps animate frame to frame */
 };

@@ -22,13 +22,13 @@ Frame* Animation::GetFrame(int frameNumber) {
 	if (frames.size() == 0)
 		return nullptr;
 
-	list<Frame>::iterator i = frames.begin(); //point iterator to first frame in the frames list
+	list<Frame>::iterator i = frames.begin(); // Point iterator to first frame in the frames list
 	for (int counter = 0; counter < frameNumber && counter < GetEndFrameNumber(); counter++) {
-		i++; //make iterator point to the next frame in the list
+		i++; // Make iterator point to the next frame in the list
 	}
-	Frame *frame = &(*i); //make frame point to the frame inside the list our iterator is pointing at
-						//*i = gets frame at i's position in the list (de-referencing)
-						//& = get the memory address of whatever is on the right (referencing)
+	Frame *frame = &(*i); // Make frame point to the frame inside the list our iterator is pointing at
+						  // *i = gets frame at i's position in the list (de-referencing)
+						  // & = get the memory address of whatever is on the right (referencing)
 
 	return frame;
 }

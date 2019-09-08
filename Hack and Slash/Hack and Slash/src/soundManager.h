@@ -6,7 +6,6 @@
 #include <iostream>
 using namespace std;
 
-//Abbreviation to the SoundManager singleton instance
 #define SM SoundManager::Instance()
 
 class SoundManager {
@@ -19,17 +18,12 @@ public:
 	void PlaySound(const string &name);
 
 private:
-	// private constructor so that no objects can be created (disallow instantiation outside of the class)
-	SoundManager();
+	SoundManager();														//!< Private constructor so that no objects can be created (disallow instantiation outside of the class)
 	~SoundManager();
-	// delete copy constructor 
-	SoundManager(const SoundManager&) = delete;
-	// delete copy assignment operator
-	SoundManager& operator=(const SoundManager&) = delete;
-	// delete move constructor
-	SoundManager(SoundManager &&) = delete;
-	// delete move assignment operator
-	SoundManager& operator=(SoundManager &&) = delete;
+	SoundManager(const SoundManager&) = delete; 						//!< Delete copy constructor 
+	SoundManager& operator=(const SoundManager&) = delete; 				//!< Delete copy assignment operator
+	SoundManager(SoundManager &&) = delete; 							//!< Delete move constructor
+	SoundManager& operator=(SoundManager &&) = delete; 					//!< Delete move assignment operator
 
-	map<string, Mix_Chunk*> sounds;
+	map<string, Mix_Chunk*> sounds;										/*!< Stores all the in-game sounds, very easy to filter using the song's name (aka string) */
 };

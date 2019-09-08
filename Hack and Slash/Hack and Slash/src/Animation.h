@@ -5,14 +5,14 @@ using namespace std;
 class Animation {
 public:
 	Animation(const string &name = "");
-	int GetNextFrameNumber(int frameNumber) const; //returns the next frame number in the list
-	Frame* GetNextFrame(Frame *frame);
-	int GetEndFrameNumber() const; //returns the last frames number
-	Frame* GetFrame(int frameNumber); //get frame using frame number
+	int GetNextFrameNumber(int frameNumber) const;							//!< Returns the next frame number in the list
+	Frame* GetNextFrame(Frame *frame);										//!< Returns the next frame in the list
+	int GetEndFrameNumber() const;											//!< Returns the last frames number
+	Frame* GetFrame(int frameNumber);										//!< Get frame using frame number
 	void LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes);
 	string GetName() const;
 
 private:
-	string name; //name of the animation
-	list<Frame> frames; //list of our frames
+	string name;															/*!< Name of the animation */
+	list<Frame> frames;														/*!< List of our frames */
 };

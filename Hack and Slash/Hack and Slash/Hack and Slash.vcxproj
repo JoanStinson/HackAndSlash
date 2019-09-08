@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>COPY /Y "$(SolutionDir)$(SolutionName)\Lib\x86\SDL2.dll" "$(TargetDir)SDL2.dll"</Command>
@@ -108,7 +108,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>COPY /Y "$(SolutionDir)$(SolutionName)\Lib\x64\SDL2.dll" "$(TargetDir)SDL2.dll"</Command>

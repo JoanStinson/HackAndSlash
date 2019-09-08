@@ -20,18 +20,14 @@ public:
 	const string NAME;
 
 private:
-	// private constructor so that no objects can be created (disallow instantiation outside of the class)
-	Window();
-	Window(const string &name, const int screenWidth, const int screenHeight, const int screenScale);
+	Window();															//!< Private constructor so that no objects can be created (disallow instantiation outside of the class)
+	Window(const string &name, const int screenWidth, 
+		const int screenHeight, const int screenScale);
 	~Window();
-	// delete copy constructor 
-	Window(const Window&) = delete;
-	// delete copy assignment operator
-	Window& operator=(const Window&) = delete;
-	// delete move constructor
-	Window(Window &&) = delete;
-	// delete move assignment operator
-	Window& operator=(Window &&) = delete;
+	Window(const Window&) = delete; 									//!< Delete copy constructor 
+	Window& operator=(const Window&) = delete; 							//!< Delete copy assignment operator
+	Window(Window &&) = delete; 										//!< Delete move constructor
+	Window& operator=(Window &&) = delete; 								//!< Delete move assignment operator
 
 	SDL_Window *window = nullptr;
 };

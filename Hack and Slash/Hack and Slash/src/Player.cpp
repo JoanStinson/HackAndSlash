@@ -24,7 +24,7 @@ using namespace math;
 
 Player::Player(AnimationSet *animSet) : Creature(animSet) {
 	type = PLAYER;
-	moveSpeedMax = 60;//defaault 80
+	moveSpeedMax = 60; // default 80
 	hp = maxHp = 30;
 	collisionBoxW = 20;
 	collisionBoxH = 24;
@@ -57,7 +57,7 @@ void Player::Dash() {
 		moving = false;
 		frameTimer = 0;
 
-		//push the hero in the direction they are travelling
+		// Push the player in the direction he is travelling in
 		slideAngle = angle;
 		slideAmount = 300;
 		invincibleTimer = 0.1;
@@ -123,37 +123,37 @@ void Player::ChangeAnimation(int newState, bool resetAnim) {
 
 void Player::UpdateAnimation() {
 	if (currentFrame == nullptr || currentAnim == nullptr)
-		return; //cant do much with animations without pointers pointing to them :S
+		return; // Can't do much with animations without pointers pointing to them 
 
-	//if state says moving, but we're not, then change state/anim to idle
+	// If state says moving, but we're not, then change state/anim to idle
 	if (state == MOVE && !moving) {
 		ChangeAnimation(IDLE, true);
 	}
-	//if should be showing running animation, lets change state properly
+	// If should be showing running animation, lets change state properly
 	if (state != MOVE && moving) {
 		ChangeAnimation(MOVE, true);
 	}
 
 	frameTimer += TM.GetDt();
-	//time to change frames :D
+	// Time to change frames 
 	if (frameTimer >= currentFrame->GetDuration()) {
-		//if we're at the end of an animation?
+		// If we're at the end of an animation?
 		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == SLASH || state == DASH) {
-				//change back to moving state/anim
+				// Change back to moving state/anim
 				ChangeAnimation(MOVE, true);
 			}
 			else if (state == DEAD && hp > 0) {
-				//was dead, but now have more hp, get back up (move state)
+				// Was dead, but now have more hp, get back up (move state)
 				ChangeAnimation(MOVE, true);
 			}
 			else {
-				//just reset animation (loops it back round)
+				// Just reset animation (loops it back round)
 				currentFrame = currentAnim->GetFrame(0);
 			}
 		}
 		else {
-			//just move onto the next frame in this animation
+			// Just move onto the next frame in this animation
 			currentFrame = currentAnim->GetNextFrame(currentFrame);
 		}
 		frameTimer = 0;

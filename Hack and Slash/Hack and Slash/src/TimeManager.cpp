@@ -12,7 +12,7 @@ void TimeManager::UpdateTime() {
 	}
 	else {
 		Uint32 timeDiff = SDL_GetTicks() - lastUpdate;
-		dt = timeDiff / 1000.0; //move these milliseconds into the decimal place area e.g 104 ticks = 0.104 seconds
+		dt = timeDiff / 1000.0; // Move these milliseconds into the decimal place area e.g 104 ticks = 0.104 seconds
 	}
 	lastUpdate = SDL_GetTicks();
 }
