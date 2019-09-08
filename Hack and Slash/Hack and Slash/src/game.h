@@ -18,6 +18,8 @@ public:
 	Game(const string &name, int screenWidth, int screenHeight, int screenScale);
 	~Game();
 	void Update();
+
+private:
 	void Draw();
 
 	Mix_Music* song;
@@ -35,19 +37,13 @@ public:
 	SDL_Texture* scoreTexture = nullptr; //for drawing strings to the screen
 
 	Player *player;
-	//InputManager heroInput;
-
 	list<Entity*> enemies;
 	list<Entity*> walls;
-
 	int enemyWavesTillBoss = 1;
 	bool buildBossNext = false;
 	bool bossActive = false;
-
 	HpBar hpBar;
-
 	bool splashShowing;
 	float overlayTimer;
-
 	Camera camController;
 };

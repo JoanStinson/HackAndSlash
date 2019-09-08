@@ -5,21 +5,7 @@
 
 class InputManager {
 public:
-
-	enum Key {
-		UP = SDL_SCANCODE_UP,
-		DOWN = SDL_SCANCODE_DOWN,
-		LEFT = SDL_SCANCODE_LEFT,
-		RIGHT = SDL_SCANCODE_RIGHT,
-		Z = SDL_SCANCODE_Z, 
-		X = SDL_SCANCODE_X
-	};
-
-	inline static InputManager& Instance() {
-		static InputManager instance;
-		return instance;
-	}
-
+	inline static InputManager& Instance();
 	void Update(SDL_Event* e);
 	Player *player;
 
@@ -35,5 +21,14 @@ private:
 	InputManager(InputManager &&) = delete;
 	// delete move assignment operator
 	InputManager& operator=(InputManager &&) = delete;
+
+	enum Key {
+		UP = SDL_SCANCODE_UP,
+		DOWN = SDL_SCANCODE_DOWN,
+		LEFT = SDL_SCANCODE_LEFT,
+		RIGHT = SDL_SCANCODE_RIGHT,
+		X = SDL_SCANCODE_X,
+		Z = SDL_SCANCODE_Z
+	};
 
 };

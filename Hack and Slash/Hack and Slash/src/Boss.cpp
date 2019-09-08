@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "Math.h"
 #include "Window.h"
+#include "Utils.h"
 using namespace math;
 
 #define ANIM_IDLE "idle"
@@ -13,19 +14,19 @@ using namespace math;
 
 int Boss::roundKingsKilled = 0;
 
-Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
-	this->animSet = animSet;
+Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) : Enemy(animSet) {
+	//this->animSet = animSet;
 	this->bulletAnimSet = bulletAnimSet;
 
 	aiState = NORMAL;
 
-	type = ENEMY;
-	x = WINDOW.SCREEN_WIDTH / 2;
-	y = WINDOW.SCREEN_HEIGHT / 2;
-	moveSpeed = 0;
+	//type = ENEMY;
+	//x = WINDOW.SCREEN_WIDTH / 2;
+	//y = WINDOW.SCREEN_HEIGHT / 2;
+	//moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 500;//default = 500
-	damage = 0;
+	//damage = 0;
 	collisionBox.w = collisionBoxW = 50;
 	collisionBox.h = collisionBoxH = 30;
 
@@ -33,7 +34,7 @@ Boss::Boss(AnimationSet * animSet, AnimationSet * bulletAnimSet) {
 
 	ChangeAnimation(IDLE, true);
 
-	UpdateCollisionBox();
+	//UpdateCollisionBox();
 
 	for (int i = 0; i < totalBullets; i++)
 		bullets.push_back(new Bullet(bulletAnimSet, x, y));
@@ -86,25 +87,25 @@ void Boss::UpdateShoot() {
 			for each (auto *bullet in bullets) {
 				if (!bullet->active) {
 					bullet->Reset(x, y);
-					//bullet->active = true;
 					SM.PlaySound("shoot");
 					bullet->angle = angle;
 					Entity::entities.push_back(bullet);
 					break;
 				}
 			}
-			//Bullet *bullet = new Bullet(bulletAnimSet, x, y);
-
 		}
 
 
 	}
-	int activeBullets = 0;
-	for each (auto *bullet in bullets) {
-		if (bullet->active)
-			activeBullets++;
+
+	if (utils::debugging) {
+		int activeBullets = 0;
+		for each (auto *bullet in bullets) {
+			if (bullet->active)
+				activeBullets++;
+		}
+		cout << "Current active number of bullets: " << activeBullets << endl;
 	}
-	cout << "Current active number of bullets: " << activeBullets << endl;
 }
 
 void Boss::Think() {
@@ -235,7 +236,7 @@ void Boss::Die() {
 	roundKingsKilled++;
 }
 
-void Boss::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+void Boss::ChangeAnimation(int newState, bool resetAnim) {
 	state = newState;
 	switch (state) {
 	default: case IDLE: currentAnim = animSet->GetAnimation(ANIM_IDLE); break;
@@ -247,11 +248,11 @@ void Boss::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
-	if (resetFrameToBeginning) {
+	if (resetAnim) {
 		currentFrame = currentAnim->GetFrame(0);
 	}
 	else {
-		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
 	}
 }
 
@@ -262,9 +263,9 @@ void Boss::UpdateAnimation() {
 
 	frameTimer += TM.GetDt();
 	//if frameTimer greater then frame duration:
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		// if at the end of animation
-		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
+		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == CHARGE)
 				Shoot();
 			else if (state == JUMP_TELEGRAPH)
@@ -283,7 +284,7 @@ void Boss::UpdateAnimation() {
 		else { //not end of animation, so move to next frame normally
 			currentFrame = currentAnim->GetNextFrame(currentFrame);
 			//IF THE NEW FRAME IS DEALING DAMAGE, we might want to make sounds
-			GroupType<float> *damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->frameData));
+			GroupType<float> *damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->GetFrameData()));
 			//if does damage
 			if (damages != nullptr && damages->GetGroupSize() > 0) {
 				// and if its Slam state

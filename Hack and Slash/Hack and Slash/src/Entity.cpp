@@ -1,6 +1,6 @@
 #include "Entity.h"
 #include "Math.h"
-#include "Globals.h"
+#include "Utils.h"
 using namespace math;
 
 list<Entity*> Entity::entities;
@@ -11,10 +11,10 @@ void Entity::Draw() {
 	//override me if you want something else or more specific to happen
 	//draws current frame
 	if (currentFrame != nullptr && active) {
-		currentFrame->Draw(animSet->spriteSheet, x - globals::camera.x, y - globals::camera.y);
+		currentFrame->Draw(animSet->GetSpriteSheet(), x - RENDERER.camera.x, y - RENDERER.camera.y);
 	}
 	//draw collsionBox
-	if (solid && globals::debugging) {
+	if (solid && utils::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
 		SDL_SetRenderDrawColor(RENDERER(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawRect(RENDERER(), &collisionBox);

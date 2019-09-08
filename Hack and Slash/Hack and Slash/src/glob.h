@@ -7,12 +7,15 @@
 class Glob : public Enemy {
 public:
 	Glob(AnimationSet *animSet);
-	void Update();
+
+	void ChangeAnimation(int newState, bool resetAnim = true) override;
+
+	void Update() override;
+	void Die() override;
+
 	void Think();
 	void Telegraph();
-	void Attack();
-	void Die();
-	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void Attack();	
 	void UpdateAnimation();
 	void UpdateDamages();
 

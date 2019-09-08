@@ -23,30 +23,30 @@ using namespace math;
 
 int Glob::globsKilled = 0;
 
-Glob::Glob(AnimationSet *animSet) {
-	this->animSet = animSet;
+Glob::Glob(AnimationSet *animSet) : Enemy(animSet) {
+	//this->animSet = animSet;
 
 	aiState = NORMAL;
 
 
-	type = ENEMY;
+	//type = ENEMY;
 
 	//defaults
-	x = WINDOW.SCREEN_WIDTH / 2;
-	y = WINDOW.SCREEN_HEIGHT / 2;
-	moveSpeed = 0;
+	//x = WINDOW.SCREEN_WIDTH / 2;
+	//y = WINDOW.SCREEN_HEIGHT / 2;
+	//moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 10 + (rand() % 20); //10-29
-	damage = 0;
+	//damage = 0;
 	collisionBox.w = collisionBoxW = 18;
 	collisionBox.h = collisionBoxH = 20;
 
 	collisionBoxYOffset = -14;
 
-	direction = DOWN;
+	//direction = DOWN;
 	ChangeAnimation(IDLE, true);
 
-	UpdateCollisionBox();
+	//UpdateCollisionBox();
 }
 
 void Glob::Update() {
@@ -140,7 +140,7 @@ void Glob::Die() {
 	Glob::globsKilled++;
 }
 
-void Glob::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+void Glob::ChangeAnimation(int newState, bool resetAnim) {
 	state = newState;
 	switch (state) {
 	default: case IDLE: switch (direction) {
@@ -174,10 +174,10 @@ void Glob::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
-	if (resetFrameToBeginning)
+	if (resetAnim)
 		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
 }
 
 void Glob::UpdateAnimation() {
@@ -195,9 +195,9 @@ void Glob::UpdateAnimation() {
 
 	frameTimer += TM.GetDt();
 	//time to change frames
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		//if at the end of the animation
-		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
+		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == TELEGRAPH) {
 				//done telegraphing, now attack
 				Attack();

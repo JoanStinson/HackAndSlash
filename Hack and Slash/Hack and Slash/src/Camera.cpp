@@ -1,23 +1,27 @@
 #include "Camera.h"
-#include "Globals.h"
+#include "Renderer.h"
 
 void Camera::Update() {
 	if (target != nullptr) {
 		// great, we're following someone
-		float targetX = target->x - globals::camera.w / 2;
-		float targetY = target->y - globals::camera.h / 2;
+		float targetX = target->x - RENDERER.camera.w / 2;
+		float targetY = target->y - RENDERER.camera.h / 2;
 
-		if (globals::smoothCamera) {
+		if (RENDERER.smoothCamera) {
 			// MOVE to target position
-			globals::camera.x += ((targetX)-globals::camera.x)*lerp*TM.GetDt();
-			globals::camera.y += ((targetY)-globals::camera.y)*lerp*TM.GetDt();
+			RENDERER.camera.x += ((targetX)-RENDERER.camera.x)*lerp*TM.GetDt();
+			RENDERER.camera.y += ((targetY)-RENDERER.camera.y)*lerp*TM.GetDt();
 		}
 		else {
 			//if just lock on hero, no movement
-			globals::camera.x = targetX;
-			globals::camera.y = targetY;
+			RENDERER.camera.x = targetX;
+			RENDERER.camera.y = targetY;
 		}
 	}
 	// else, dont follow
 
+}
+
+void Camera::SetTarget(Entity *entity) {
+	target = entity;
 }

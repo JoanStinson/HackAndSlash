@@ -5,8 +5,8 @@ Window::Window(const string &name, const int screenWidth, const int screenHeight
 	: NAME(name), SCREEN_WIDTH(screenWidth), SCREEN_HEIGHT(screenHeight), SCREEN_SCALE(screenScale) {
 	//setup SDL
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+		SDL_Quit();
 		cout << "error initialising SDL" << endl;
-		//return 1;
 	}
 
 	//setup window
@@ -14,7 +14,6 @@ Window::Window(const string &name, const int screenWidth, const int screenHeight
 	if (window == nullptr) {
 		SDL_Quit();
 		cout << "window error" << endl;
-		//return 1;
 	}
 }
 

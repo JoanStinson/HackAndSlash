@@ -12,7 +12,12 @@ class Frame{
 public:
 	void Draw(SDL_Texture *spriteSheet, float x, float y);
 	void LoadFrame(ifstream &file, list<DataGroupType> &groupTypes);
+	int GetFrameNumber();
+	float GetDuration();
+	SDL_Point& GetOffSet();
+	list<Group*>& GetFrameData();
 
+private:
 	int frameNumber; //or frame index
 	SDL_Rect clip; //its the region on the spritesheet where this frame is
 	float duration; //how long does frame run for

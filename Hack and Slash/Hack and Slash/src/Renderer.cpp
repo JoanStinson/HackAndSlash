@@ -8,7 +8,6 @@ Renderer::Renderer() {
 		SDL_DestroyWindow(WINDOW());
 		SDL_Quit();
 		cout << "renderer error" << endl;
-		//return 1;
 	}
 	//this is the size to draw things at, before we scale it to the screen size dimensions mentioned in createWindow
 	SDL_RenderSetLogicalSize(renderer, WINDOW.SCREEN_WIDTH, WINDOW.SCREEN_HEIGHT);
@@ -17,13 +16,11 @@ Renderer::Renderer() {
 	if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
 		SDL_Quit();
 		cout << "sdl image did not initialise" << endl;
-		//return 1;
 	}
 	//initialise text to font 
 	if (TTF_Init() != 0) {
 		SDL_Quit();
 		cout << "sdl ttf did not initialise" << endl;
-		//return 1;
 	}
 }
 

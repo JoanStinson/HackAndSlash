@@ -8,7 +8,7 @@ public:
 	Bullet(AnimationSet *animSet, int x, int y);
 	void Update();
 	void Die() {};
-	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void ChangeAnimation(int newState, bool resetAnim = true);
 	void UpdateAnimation();
 	void UpdateDamages() { ; }
 	void HitLanded(Creature *entity);

@@ -7,9 +7,9 @@
 
 class Boss : public Enemy {
 public:
-
 	Boss(AnimationSet *animSet, AnimationSet *bulletAnimSet);
 	~Boss();
+
 	void Update();
 	void UpdateShoot();
 	void Think();
@@ -19,10 +19,12 @@ public:
 	void JumpTelegraph();
 	void Jump();
 	void Die();
-	void ChangeAnimation(int newState, bool resetFrameToBeginning);
+	void ChangeAnimation(int newState, bool resetAnim = true);
 	void UpdateAnimation();
 	void UpdateDamages();
+	static int roundKingsKilled;
 
+private:
 	enum State { IDLE, CHARGE, SHOOT, SLAM, JUMP_TELEGRAPH, JUMP, DEAD };
 	enum Phase { NORMAL, DAMAGED, FRENETIC };
 
@@ -32,7 +34,7 @@ public:
 	float shotTimer = 0;
 	//reference to bullet animations
 	AnimationSet *bulletAnimSet;
-	static int roundKingsKilled;
+
 
 	list<Bullet*> bullets;
 	int totalBullets = 10;

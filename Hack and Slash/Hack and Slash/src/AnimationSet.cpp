@@ -1,5 +1,5 @@
 #include "AnimationSet.h"
-#include "Globals.h"
+#include "Utils.h"
 
 AnimationSet::~AnimationSet() {
 	SDL_DestroyTexture(spriteSheet);
@@ -12,7 +12,7 @@ Animation* AnimationSet::GetAnimation(string name) {
 		Animation* anim = &(*animation);
 
 		//if we find a match on name, return that animation from the list
-		if (name == anim->name) {
+		if (name == anim->GetName()) {
 			return anim;
 		}
 	}
@@ -28,7 +28,7 @@ Animation* AnimationSet::GetAnimation(string name) {
 void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupTypes, bool setColourKey, int transparentPixelIndex, bool createWhiteTexture) {
 
 	ifstream file;
-	string resPath = globals::getResourcePath();
+	string resPath = utils::getResourcePath();
 	file.open(resPath + fileName);
 	if (file.good()) {
 		getline(file, imageName);
@@ -61,7 +61,7 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 		string buffer;
 		getline(file, buffer);
 		stringstream ss;
-		buffer = globals::clipOffDataHeader(buffer);
+		buffer = utils::clipOffDataHeader(buffer);
 		ss << buffer;
 		int numberOfAnimations;
 		ss >> numberOfAnimations;
@@ -74,4 +74,12 @@ void AnimationSet::LoadAnimationSet(string fileName, list<DataGroupType> &groupT
 
 	}
 	file.close();
+}
+
+SDL_Texture * AnimationSet::GetSpriteSheet() {
+	return spriteSheet;
+}
+
+SDL_Texture * AnimationSet::GetWhiteSpriteSheet() {
+	return whiteSpriteSheet;
 }

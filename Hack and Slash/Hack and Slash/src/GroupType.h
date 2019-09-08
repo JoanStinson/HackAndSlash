@@ -10,7 +10,7 @@ public:
 	list<SDL_Point>& GetPosData() { return posData; }
 	list<string>& GetStrData() { return strData; }
 
-	int GetGroupSize() {
+	int GetGroupSize() override {
 		if (type.dataType == DataGroupType::BOX)
 			return boxData.size();
 		else if (type.dataType == DataGroupType::NUMBER)

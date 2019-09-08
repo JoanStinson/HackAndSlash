@@ -1,10 +1,8 @@
-#include "Globals.h"
+#include "Utils.h"
 
-namespace globals {
+namespace utils {
 
 	bool debugging = false;
-	bool smoothCamera = true;
-	SDL_Rect camera;
 
 	string clipOffDataHeader(string data) {
 		int pos = data.find(":", 0);//returns where we find the : in the string, otherwise, return -1

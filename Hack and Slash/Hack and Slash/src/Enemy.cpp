@@ -1,5 +1,9 @@
 #include "Enemy.h"
 
+Enemy::Enemy(AnimationSet * animSet) : Creature(animSet) {
+	type = ENEMY;
+}
+
 void Enemy::FindPlayer() {
 	target = nullptr;
 	//find closest target

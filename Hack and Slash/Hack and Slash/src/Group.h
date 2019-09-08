@@ -13,12 +13,8 @@ using namespace std;
 class Group{
 public:
 	DataGroupType type; //describes its name, type and other rules
-	Group(){
-		//nothing...
-	}
-	Group(DataGroupType type){
-		this->type = type;
-	}
+	Group(){}
+	Group(DataGroupType type) : type(type) {}
 	//how many bits of data in here
 	virtual int GetGroupSize() = 0;
 	/*add to group using string. Converts string into correct data for each group type*/

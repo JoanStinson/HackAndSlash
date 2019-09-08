@@ -37,14 +37,14 @@ void Bullet::Update() {
 
 }
 
-void Bullet::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+void Bullet::ChangeAnimation(int newState, bool resetAnim) {
 	state = newState;
 	currentAnim = animSet->GetAnimation(ANIM_BULLET);
 
-	if (resetFrameToBeginning)
+	if (resetAnim)
 		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
 }
 
 void Bullet::UpdateAnimation() {
@@ -53,9 +53,9 @@ void Bullet::UpdateAnimation() {
 	// if got frames, update frameTimer and animation
 	frameTimer += TM.GetDt();
 
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		// if its the end of the animation, restart it
-		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber())
+		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber())
 			currentFrame = currentAnim->GetFrame(0);
 		else
 			currentFrame = currentAnim->GetNextFrame(currentFrame);

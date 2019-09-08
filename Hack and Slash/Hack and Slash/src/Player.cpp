@@ -22,26 +22,26 @@ using namespace math;
 #define ANIM_DASH_RIGHT "dashRight"
 #define ANIM_DIE "die"
 
-Player::Player(AnimationSet *animSet) {
-	this->animSet = animSet;
+Player::Player(AnimationSet *animSet) : Creature(animSet) {
+	//this->animSet = animSet;
 	type = PLAYER;
 
 	//setup default hero values
-	x = WINDOW.SCREEN_WIDTH / 2;
-	y = WINDOW.SCREEN_HEIGHT / 2;
-	moveSpeed = 0;
+	//x = WINDOW.SCREEN_WIDTH / 2;
+	//y = WINDOW.SCREEN_HEIGHT / 2;
+	//moveSpeed = 0;
 	moveSpeedMax = 60;//defaault 80
 	hp = hpMax = 30;
-	damage = 0;
+	//damage = 0;
 	collisionBoxW = 20;
 	collisionBoxH = 24;
 	collisionBoxYOffset = -20;
 
-	direction = DOWN;
+	//direction = DOWN;
 
 	ChangeAnimation(IDLE, true);
 
-	UpdateCollisionBox();
+	//UpdateCollisionBox();
 }
 
 void Player::Update() {
@@ -97,7 +97,7 @@ void Player::Revive() {
 	slideAmount = 0;
 }
 
-void Player::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+void Player::ChangeAnimation(int newState, bool resetAnim) {
 	state = newState;
 	switch (state) {
 	default: case IDLE: switch (direction) {
@@ -131,11 +131,11 @@ void Player::ChangeAnimation(int newState, bool resetFrameToBeginning) {
 	case DEAD: currentAnim = animSet->GetAnimation(ANIM_DIE); break;
 	}
 
-	if (resetFrameToBeginning) {
+	if (resetAnim) {
 		currentFrame = currentAnim->GetFrame(0);
 	}
 	else {
-		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber);
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber());
 	}
 }
 
@@ -154,9 +154,9 @@ void Player::UpdateAnimation() {
 
 	frameTimer += TM.GetDt();
 	//time to change frames :D
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		//if we're at the end of an animation?
-		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
+		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			if (state == SLASH || state == DASH) {
 				//change back to moving state/anim
 				ChangeAnimation(MOVE, true);

@@ -4,11 +4,9 @@
 #include <SDL.h>
 using namespace std;
 
-namespace globals {
+namespace utils {
 
 	extern bool debugging;
-	extern bool smoothCamera;
-	extern SDL_Rect camera;
 
 	//clips off header. e.g "clip: 50 114 44 49" turns into "50 114 44 49"
 	string clipOffDataHeader(string data);

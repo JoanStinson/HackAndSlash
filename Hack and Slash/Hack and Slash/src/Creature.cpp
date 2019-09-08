@@ -1,23 +1,34 @@
 #include "Creature.h"
 #include "Math.h"
 #include "SoundManager.h"
-#include "Globals.h"
+#include "Utils.h"
+#include "Window.h"
+
+Creature::Creature(AnimationSet *animSet) {
+	this->animSet = animSet;
+	x = WINDOW.SCREEN_WIDTH / 2;
+	y = WINDOW.SCREEN_HEIGHT / 2;
+	moveSpeed = 0;
+	damage = 0;
+	direction = DOWN;
+	UpdateCollisionBox();
+}
 
 void Creature::UpdateHitBox() {
 	//assume damage is 0 for now
 	damage = 0;
 
-	GroupType<SDL_Rect>* hitBoxes = dynamic_cast<GroupType<SDL_Rect>*>(GroupBuilder::FindGroupByName("hitBox", currentFrame->frameData));
+	GroupType<SDL_Rect>* hitBoxes = dynamic_cast<GroupType<SDL_Rect>*>(GroupBuilder::FindGroupByName("hitBox", currentFrame->GetFrameData()));
 	if (hitBoxes != nullptr && hitBoxes->GetGroupSize() > 0) {
 		//update hitbox
 		SDL_Rect hb = hitBoxes->GetBoxData().front();
-		hitBox.x = x - currentFrame->offSet.x + hb.x;
-		hitBox.y = y - currentFrame->offSet.y + hb.y;
+		hitBox.x = x - currentFrame->GetOffSet().x + hb.x;
+		hitBox.y = y - currentFrame->GetOffSet().y + hb.y;
 		hitBox.w = hb.w;
 		hitBox.h = hb.h;
 
 		//update damage
-		GroupType<float>* damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->frameData));
+		GroupType<float>* damages = dynamic_cast<GroupType<float>*>(GroupBuilder::FindGroupByName("damage", currentFrame->GetFrameData()));
 		if (damages != nullptr && damages->GetGroupSize() > 0) {
 			damage = damages->GetNumData().front();
 		}
@@ -67,16 +78,16 @@ void Creature::CheckIfDead(int deadState) {
 
 void Creature::Draw() {
 	if (currentFrame != nullptr && active) {
-		if (invincibleTimer > 0 && animSet->whiteSpriteSheet != nullptr) {
-			currentFrame->Draw(animSet->whiteSpriteSheet, x - globals::camera.x, y - globals::camera.y);
+		if (invincibleTimer > 0 && animSet->GetWhiteSpriteSheet() != nullptr) {
+			currentFrame->Draw(animSet->GetWhiteSpriteSheet(), x - RENDERER.camera.x, y - RENDERER.camera.y);
 		}
 		else {
-			currentFrame->Draw(animSet->spriteSheet, x - globals::camera.x, y - globals::camera.y);
+			currentFrame->Draw(animSet->GetSpriteSheet(), x - RENDERER.camera.x, y - RENDERER.camera.y);
 		}
 
 	}
 	//draw collsionBox
-	if (solid && globals::debugging) {
+	if (solid && utils::debugging) {
 		//sets the current drawing colour (Doesn't affect textures and what not)
 		SDL_SetRenderDrawColor(RENDERER(), 0, 0, 255, 255);
 		SDL_RenderDrawRect(RENDERER(), &lastCollisionBox);

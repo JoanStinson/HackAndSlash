@@ -298,7 +298,6 @@
     <ClInclude Include="src\Frame.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Glob.h" />
-    <ClInclude Include="src\Globals.h" />
     <ClInclude Include="src\Grob.h" />
     <ClInclude Include="src\Group.h" />
     <ClInclude Include="src\GroupBuilder.h" />
@@ -310,6 +309,7 @@
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\SoundManager.h" />
     <ClInclude Include="src\TimeManager.h" />
+    <ClInclude Include="src\Utils.h" />
     <ClInclude Include="src\Wall.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
@@ -325,7 +325,6 @@
     <ClCompile Include="src\Frame.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Glob.cpp" />
-    <ClCompile Include="src\Globals.cpp" />
     <ClCompile Include="src\Grob.cpp" />
     <ClCompile Include="src\GroupBuilder.cpp" />
     <ClCompile Include="src\HpBar.cpp" />
@@ -336,6 +335,7 @@
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\SoundManager.cpp" />
     <ClCompile Include="src\TimeManager.cpp" />
+    <ClCompile Include="src\Utils.cpp" />
     <ClCompile Include="src\Wall.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>

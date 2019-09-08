@@ -1,5 +1,5 @@
 #include "Animation.h"
-#include "Globals.h"
+#include "Utils.h"
 
 Animation::Animation(string name) : name(name) {
 
@@ -14,7 +14,7 @@ int Animation::GetNextFrameNumber(int frameNumber) {
 }
 
 Frame* Animation::GetNextFrame(Frame* frame) {
-	return GetFrame(GetNextFrameNumber(frame->frameNumber));
+	return GetFrame(GetNextFrameNumber(frame->GetFrameNumber()));
 }
 
 int Animation::GetEndFrameNumber() {
@@ -43,7 +43,7 @@ void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
 	string buffer;
 	getline(file, buffer);
 	stringstream ss;
-	buffer = globals::clipOffDataHeader(buffer);
+	buffer = utils::clipOffDataHeader(buffer);
 	ss << buffer;
 	int numberOfFrames;
 	ss >> numberOfFrames;
@@ -53,4 +53,8 @@ void Animation::LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes) {
 		newFrame.LoadFrame(file, groupTypes);
 		frames.push_back(newFrame);
 	}
+}
+
+string& Animation::GetName() {
+	return name;
 }

@@ -1,12 +1,12 @@
 #include "Game.h"
 #include "Math.h"
-#include "Globals.h"
+#include "Utils.h"
 using namespace math;
 
 Game::Game(const string &name, int screenWidth, int screenHeight, int screenScale) {
 	Window::Instance(move(name), screenWidth, screenHeight, screenScale); //Initialises Window Singleton for the first time.
 
-	string resPath = globals::getResourcePath();
+	string resPath = utils::getResourcePath();
 	backgroundImage = RENDERER.LoadTexture(resPath + "map.png");
 	splashImage = RENDERER.LoadTexture(resPath + "cyborgtitle.png");
 	overlayImage = RENDERER.LoadTexture(resPath + "overlay.png");
@@ -15,10 +15,10 @@ Game::Game(const string &name, int screenWidth, int screenHeight, int screenScal
 	overlayTimer = 2;
 
 	// setup camera
-	globals::camera.x = 0;
-	globals::camera.y = 0;
-	globals::camera.w = screenWidth;
-	globals::camera.h = screenHeight;
+	RENDERER.camera.x = 0;
+	RENDERER.camera.y = 0;
+	RENDERER.camera.w = screenWidth;
+	RENDERER.camera.h = screenHeight;
 
 	//load up sounds
 	SM.LoadSound("hit", resPath + "Randomize2.wav");
@@ -90,7 +90,7 @@ Game::Game(const string &name, int screenWidth, int screenHeight, int screenScal
 	Entity::entities.push_back(player);
 
 	//Get camera to follow hero
-	camController.target = player;
+	camController.SetTarget(player);
 
 	int tileSize = 32;
 	//build all the walls for this game
@@ -224,9 +224,8 @@ void Game::Update() {
 					}
 					break;
 				case SDL_SCANCODE_C:
-					globals::smoothCamera = !globals::smoothCamera;
+					RENDERER.smoothCamera = !RENDERER.smoothCamera;
 					break;
-
 				}
 			}
 			IM.Update(&e);
@@ -329,7 +328,7 @@ void Game::Draw() {
 	}
 	else {
 		//draw the background
-		RENDERER.RenderTexture(backgroundImage, 0 - globals::camera.x, 0 - globals::camera.y);
+		RENDERER.RenderTexture(backgroundImage, 0 - RENDERER.camera.x, 0 - RENDERER.camera.y);
 
 		//sort all entities based on y(depth)
 		Entity::entities.sort(Entity::CompareEntity);
@@ -350,7 +349,7 @@ void Game::Draw() {
 				stringstream ss;
 				ss << "Enemies dispatched: " << Glob::globsKilled + Grob::grobsKilled + Boss::roundKingsKilled;
 
-				string resPath = globals::getResourcePath();
+				string resPath = utils::getResourcePath();
 				scoreTexture = RENDERER.RenderText(ss.str(), resPath + "vermin_vibes_1989.ttf", color, 30);
 			}
 			RENDERER.RenderTexture(scoreTexture, 20, 50);

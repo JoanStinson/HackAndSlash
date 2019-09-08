@@ -93,6 +93,9 @@ public:
 		return renderer;
 	}
 
+	SDL_Rect camera;
+	bool smoothCamera = true;
+
 private:
 	// private constructor so that no objects can be created (disallow instantiation outside of the class)
 	Renderer();

@@ -46,3 +46,8 @@ void InputManager::Update(SDL_Event* e) {
 			player->Move(0);
 	}
 }
+
+inline InputManager & InputManager::Instance() {
+	static InputManager instance;
+	return instance;
+}

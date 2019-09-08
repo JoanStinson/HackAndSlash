@@ -11,7 +11,9 @@ public:
 	int GetEndFrameNumber(); //returns the last frames number
 	Frame* GetFrame(int frameNumber); //get frame using frame number
 	void LoadAnimation(ifstream &file, list<DataGroupType> &groupTypes);
+	string& GetName();
 
+private:
 	string name; //name of the animation
 	list<Frame> frames; //list of our frames
 };

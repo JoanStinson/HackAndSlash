@@ -23,14 +23,14 @@ void Wall::Update() {
 
 	frameTimer += TM.GetDt();
 
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		currentFrame = currentAnim->GetNextFrame(currentFrame);
 
 		frameTimer = 0;
 	}
 }
 
-void Wall::ChangeAnimation(int newState, bool resetFrameToBeginning) {
+void Wall::ChangeAnimation(int newState, bool resetAnim) {
 	currentAnim = animSet->GetAnimation("wall");
 	currentFrame = currentAnim->GetFrame(0);
 }

@@ -3,6 +3,8 @@
 
 class Enemy : public Creature {
 public:
+	Enemy();
+	Enemy(AnimationSet *animSet);
 	void FindPlayer();
 	//who should I case
 	Creature *target = nullptr;

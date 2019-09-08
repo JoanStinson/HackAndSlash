@@ -15,29 +15,29 @@ using namespace math;
 
 int Grob::grobsKilled = 0;
 
-Grob::Grob(AnimationSet *animSet) {
+Grob::Grob(AnimationSet *animSet) : Enemy(animSet) {
 
-	this->animSet = animSet;
+	//this->animSet = animSet;
 
-	type = ENEMY;
+	//type = ENEMY;
 
 	//setup defaults
-	x = WINDOW.SCREEN_WIDTH / 2;
-	y = WINDOW.SCREEN_HEIGHT / 2;
+	//x = WINDOW.SCREEN_WIDTH / 2;
+	//y = WINDOW.SCREEN_HEIGHT / 2;
 	moveSpeed = 0;
 	moveSpeedMax = 20;
 	hp = hpMax = 1;
-	damage = 0;
+	//damage = 0;
 	collisionBox.w = collisionBoxW = 18;
 	collisionBox.h = collisionBoxH = 16;
 
 	collisionBoxYOffset = -14;
 
-	direction = DOWN;
+	//direction = DOWN;
 
 	ChangeAnimation(IDLE, true);
 
-	UpdateCollisionBox();
+	//UpdateCollisionBox();
 }
 
 void Grob::Update() {
@@ -128,7 +128,7 @@ void Grob::ChangeAnimation(int newState, bool resetFrameToBegging) {
 	if (resetFrameToBegging)
 		currentFrame = currentAnim->GetFrame(0);
 	else
-		currentFrame = currentAnim->GetFrame(currentFrame->frameNumber); //change direction for example, wanna change animation, but not what frame we were on
+		currentFrame = currentAnim->GetFrame(currentFrame->GetFrameNumber()); //change direction for example, wanna change animation, but not what frame we were on
 
 }
 
@@ -147,9 +147,9 @@ void Grob::UpdateAnimation() {
 
 	frameTimer += TM.GetDt();
 	//time to change frames
-	if (frameTimer >= currentFrame->duration) {
+	if (frameTimer >= currentFrame->GetDuration()) {
 		//if at the end of the animation
-		if (currentFrame->frameNumber == currentAnim->GetEndFrameNumber()) {
+		if (currentFrame->GetFrameNumber() == currentAnim->GetEndFrameNumber()) {
 			//depends on current animation and whats going on a bit
 			if (state == DEAD) {
 				frameTimer = 0;

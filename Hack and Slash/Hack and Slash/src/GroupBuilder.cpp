@@ -1,5 +1,5 @@
 #include "GroupBuilder.h"
-#include "Globals.h"
+#include "Utils.h"
 
 const bool GroupBuilder::SavedInGroups = false;
 
@@ -97,7 +97,7 @@ void GroupBuilder::LoadGroups(ifstream &file, list<Group*> &groups) {
 				group = AddGroupStringToGroup(line.substr(0, pos), groups);
 			}
 			//clean up string so we can add data to the group
-			line = globals::clipOffDataHeader(line);//get rid of the 'groupName: '
+			line = utils::clipOffDataHeader(line);//get rid of the 'groupName: '
 			group->AddToGroup(line);
 			//done, keep going
 
