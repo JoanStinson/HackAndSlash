@@ -1,9 +1,27 @@
 # Hack and Slash Game
 A simple hack and slash game inspired in "Hyper Light Drifter" by Heart Machine (2016). The proyect was made using the library SDL 
-and C++ with some design patterns and doxygen documentation. 
-Game created by [Joan Ginard Mateo](https://github.com/JoanStinson).
-Repository can be found [here](https://github.com/JoanStinson/Hack_and_Slash).
-Art created by [Matthew Carr](http://www.2hitstudio.com) and music by [Ryan Beveridge](https://soundcloud.com/ryan-beveridge).
+and C++ with some design patterns and doxygen documentation.
+
+<p align="center">
+  <a>
+    <img alt="Made With SDL" src="https://img.shields.io/badge/made%20with-SDL-57b9d3.svg?logo=CPlusPlus">
+  </a>
+  <a>
+    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/HackAndSlash?&logo=github">
+  </a>
+  <a>
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JoanStinson/HackAndSlash?logo=Mapbox&color=orange">
+  </a>
+  <a>
+    <img alt="Repo Size" src="https://img.shields.io/github/repo-size/JoanStinson/HackAndSlash?logo=VirtualBox">
+  </a>
+  <a>
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/JoanStinson/HackAndSlash/total?color=brightgreen">
+  </a>
+  <a>
+    <img alt="Last Release" src="https://img.shields.io/github/v/release/JoanStinson/HackAndSlash?include_prereleases&logo=Dropbox&color=yellow">
+  </a>
+</p>
 
 ![](Minions.gif)
 
