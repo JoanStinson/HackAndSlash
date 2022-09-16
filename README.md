@@ -1,4 +1,4 @@
-# Hack and Slash Game
+# Hack and Slash
 A simple hack and slash game inspired in "Hyper Light Drifter" by Heart Machine (2016). The proyect was made using the library SDL 
 and C++ with some design patterns and doxygen documentation.
 
